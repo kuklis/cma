@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CMA</title>
+    <link>https://kuklis.github.io/cma/</link>
+    <description>Recent content on CMA</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
+    <lastBuildDate>Thu, 25 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>vRA8 with ServiceNow External Approvals</title>
+      <link>https://kuklis.github.io/cma/post/vra8-servicenow-approval/</link>
+      <pubDate>Thu, 25 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vra8-servicenow-approval/</guid>
+      <description>
+        
+          &lt;p&gt;Let&#39;s use ServiceNow with vRealize Automation 8 as an external approval system.&lt;/p&gt;
+&lt;div class=&#34;toc&#34;&gt;
+    &lt;H3&gt;Table of Contents&lt;/H3&gt;
+    &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#history&#34;&gt;History&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#vra8-approval-system&#34;&gt;vRA8 approval system&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#limitations&#34;&gt;Limitations&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#workaround&#34;&gt;Workaround&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#sequence&#34;&gt;Sequence&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#policy&#34;&gt;Policy&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#servicenow&#34;&gt;ServiceNow&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#vro&#34;&gt;vRO&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#workflows&#34;&gt;Workflows&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#configuration-element&#34;&gt;Configuration Element&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#vra&#34;&gt;vRA&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#event-broker-subscription&#34;&gt;Event Broker Subscription&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#test-catalog-request&#34;&gt;Test Catalog Request&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+  &lt;/div&gt;
+&lt;h2 id=&#34;history&#34;&gt;History&lt;/h2&gt;
+&lt;p&gt;vRA7 approval system supports easy &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Automation/7.6/com.vmware.vra.prepare.use.doc/GUID-67A61A9A-BF1D-4938-976C-A72DEED58163.html&#34;&gt;integration with external systems&lt;/a&gt; via event subscriptions. Event messages are created when approvals required and workflow subscriptions provide integration with external systems, such as ServiceNow or other service management platforms.&lt;br&gt;
+Based on the workflow output requests are approved / rejected.&lt;/p&gt;
+&lt;h2 id=&#34;vra8-approval-system&#34;&gt;vRA8 approval system&lt;/h2&gt;
+&lt;h3 id=&#34;limitations&#34;&gt;Limitations&lt;/h3&gt;
+&lt;p&gt;vRA8 (up to 8.3) &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Automation/8.3/vrealize-automation-transition/GUID-BFCAEA52-C996-4C5A-A0A7-08A029143C66.html&#34;&gt;does not support approvals via EBS&lt;/a&gt;, only vRA users can approve. Event broker subscriptions can be used to start a vRO workflow right after the requests submitted but potentially long-running workflows do not give any feedback to the user why the deployment takes so long.&lt;/p&gt;
+&lt;h3 id=&#34;workaround&#34;&gt;Workaround&lt;/h3&gt;
+&lt;p&gt;To provide a better user experience we&#39;ll reuse the current approval policies. The idea is to set a service user as the approver, and approve the vRA request via REST API. We need a background process to wait for the external approval to happen and once the decision is made this process can let the vRA request go. This background process will be running on vRO as a scheduled workflow.&lt;/p&gt;
+&lt;p&gt;We&#39;ll run this external system polling workflow recurrently. This helps to avoid long-running workflows: we check if the external approval has happened and go back sleeping if it has not.&lt;/p&gt;
+&lt;h3 id=&#34;sequence&#34;&gt;Sequence&lt;/h3&gt;
+&lt;p&gt;The following diagram shows the steps in case of a deployment request.
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/approval-sequence.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;policy&#34;&gt;Policy&lt;/h3&gt;
+&lt;p&gt;Let&#39;s create an approval policy in Service Broker for Deployment Create action. Approver is a service user:
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/approval-policy.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;servicenow&#34;&gt;ServiceNow&lt;/h2&gt;
+&lt;p&gt;You can register a developer ServiceNow instance at &lt;a href=&#34;https://developer.servicenow.com/&#34;&gt;https://developer.servicenow.com/&lt;/a&gt; if needed.&lt;/p&gt;
+&lt;p&gt;We need a catalog item that is not auto-approving. Ordering the catalog item results in a request that we&#39;ll wait to be approved. We will use a default demo catalog item for testing purposes: &lt;em&gt;VM Provisioning&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Also a service user must be created for REST API. This user needs access to the chosen catalog item.&lt;/p&gt;
+&lt;h2 id=&#34;vro&#34;&gt;vRO&lt;/h2&gt;
+&lt;p&gt;We need two REST endpoints. ServiceNow API uses Basic authentication, so we create a REST host providing the credentials as well:
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/snow-endpoint.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;For vRA REST API we also add a REST host. As vRA use token authentication, we don&#39;t provide any authentication method:
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/vra-endpoint.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;workflows&#34;&gt;Workflows&lt;/h3&gt;
+&lt;p&gt;Now import the integration package &lt;em&gt;com.servicenow.approval&lt;/em&gt; that will provide the workflows:
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/vro-workflows.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Workflow Name&lt;/th&gt;
+&lt;th&gt;Function&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Request Approval&lt;/td&gt;
+&lt;td&gt;Open ServiceNow request and schedule polling workflow&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Catalog - VM Provisioning&lt;/td&gt;
+&lt;td&gt;Request the catalog item (subflow)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Poll SNOW and Approve vRA&lt;/td&gt;
+&lt;td&gt;The scheduled workflow checking ServiceNow and approving in vRA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Check Approval Status&lt;/td&gt;
+&lt;td&gt;Fetches the approval status of the request opened (subflow)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;configuration-element&#34;&gt;Configuration Element&lt;/h3&gt;
+&lt;p&gt;For vRA API authentication we store the vRA API user credentials:
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/vro-confelement.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;These needs to be bound to the corresponding variables of the polling workflow:
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/vro-polling-wf-credentials.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;vra&#34;&gt;vRA&lt;/h2&gt;
+&lt;h3 id=&#34;event-broker-subscription&#34;&gt;Event Broker Subscription&lt;/h3&gt;
+&lt;p&gt;Now we create the EBS that&#39;ll trigger the workflow &lt;em&gt;Request Approval&lt;/em&gt;. Event topic is &lt;em&gt;Deployment Requested&lt;/em&gt;:&lt;br&gt;
+Event is fired before deployment is provisioned for both cloud template and catalog requests&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/vra-ebs.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We filter the event by type to ensure only deployment create will trigger it:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;event.data.eventType == &amp;quot;CREATE_DEPLOYMENT&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;test-catalog-request&#34;&gt;Test Catalog Request&lt;/h3&gt;
+&lt;p&gt;Let&#39;s try the solution out in Service Broker. After submitting the request, we can see an approval is needed:
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/vra-approval-pending.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Request is opened and pending for approval:
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/snow-request.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once it is approved, the deployment completes:
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/vra-deployment-success.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In case ServiceNow request is rejected, vRA deployment is also rejected:
+&lt;img src=&#34;https://kuklis.github.io/cma/img/vra8-servicenow-approval/vra-deployment-rejected.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>
