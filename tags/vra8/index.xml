@@ -99,7 +99,7 @@ Based on the workflow output requests are approved / rejected.&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h3 id=&#34;download&#34;&gt;Download&lt;/h3&gt;
-&lt;p&gt;Workflows can be downloaded: &lt;a href=&#34;https://github.com/kuklis/vra8-servicenow-approval&#34;&gt;https://github.com/kuklis/vra8-servicenow-approval&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Workflows and package can be downloaded: &lt;a href=&#34;https://github.com/kuklis/vra8-servicenow-approval&#34;&gt;https://github.com/kuklis/vra8-servicenow-approval&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vra&#34;&gt;vRA&lt;/h2&gt;
 &lt;h3 id=&#34;event-broker-subscription&#34;&gt;Event Broker Subscription&lt;/h3&gt;
 &lt;p&gt;Now we create the EBS that&#39;ll trigger the workflow &lt;em&gt;Request Approval&lt;/em&gt;. Event topic is &lt;em&gt;Deployment Requested&lt;/em&gt;:&lt;br&gt;
