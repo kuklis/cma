@@ -6,11 +6,11 @@
     <description>Recent content in API on CMA</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
-    <lastBuildDate>Thu, 25 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/categories/api/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 25 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/categories/api/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>vRA8 with ServiceNow External Approvals</title>
       <link>https://kuklis.github.io/cma/post/vra8-servicenow-approval/</link>
-      <pubDate>Thu, 25 Feb 2021 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 25 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://kuklis.github.io/cma/post/vra8-servicenow-approval/</guid>
       <description>
@@ -33,7 +33,7 @@
     &lt;li&gt;&lt;a href=&#34;#vro&#34;&gt;vRO&lt;/a&gt;
       &lt;ul&gt;
         &lt;li&gt;&lt;a href=&#34;#workflows&#34;&gt;Workflows&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href=&#34;#configuration-element&#34;&gt;Configuration Element&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#download&#34;&gt;Download&lt;/a&gt;&lt;/li&gt;
       &lt;/ul&gt;
     &lt;/li&gt;
     &lt;li&gt;&lt;a href=&#34;#vra&#34;&gt;vRA&lt;/a&gt;
@@ -67,7 +67,7 @@ Based on the workflow output requests are approved / rejected.&lt;/p&gt;
 &lt;h2 id=&#34;vro&#34;&gt;vRO&lt;/h2&gt;
 &lt;p&gt;We need two REST endpoints. ServiceNow API uses Basic authentication, so we create a REST host providing the credentials as well:&lt;br&gt;
 &lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-servicenow-approval/snow-endpoint.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;For vRA REST API we also add a REST host. As vRA use token authentication, we don&#39;t provide any authentication method:&lt;br&gt;
+&lt;p&gt;For vRA REST API we use the &lt;a href=&#34;https://marketplace.cloud.vmware.com/services/details/vmware-vrealize-orchestrator-plug-in-for-vrealize-automation-1&#34;&gt;Orchestrator Plug-in for vRealize Automation&lt;/a&gt;:&lt;br&gt;
 &lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-servicenow-approval/vra-endpoint.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;workflows&#34;&gt;Workflows&lt;/h3&gt;
 &lt;p&gt;Now import the integration package &lt;em&gt;com.servicenow.approval&lt;/em&gt; that will provide the workflows:&lt;br&gt;
@@ -98,11 +98,8 @@ Based on the workflow output requests are approved / rejected.&lt;/p&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h3 id=&#34;configuration-element&#34;&gt;Configuration Element&lt;/h3&gt;
-&lt;p&gt;For vRA API authentication we store the vRA API user credentials:&lt;br&gt;
-&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-servicenow-approval/vro-confelement.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;These needs to be bound to the corresponding variables of the polling workflow:&lt;br&gt;
-&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-servicenow-approval/vro-polling-wf-credentials.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;download&#34;&gt;Download&lt;/h3&gt;
+&lt;p&gt;Workflows can be downloaded: &lt;a href=&#34;https://github.com/kuklis/vra8-servicenow-approval&#34;&gt;https://github.com/kuklis/vra8-servicenow-approval&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vra&#34;&gt;vRA&lt;/h2&gt;
 &lt;h3 id=&#34;event-broker-subscription&#34;&gt;Event Broker Subscription&lt;/h3&gt;
 &lt;p&gt;Now we create the EBS that&#39;ll trigger the workflow &lt;em&gt;Request Approval&lt;/em&gt;. Event topic is &lt;em&gt;Deployment Requested&lt;/em&gt;:&lt;br&gt;

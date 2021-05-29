@@ -7,12 +7,12 @@
 <meta name="generator" content="Hugo 0.81.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<script async src="https://www.googletagmanager.com/gtag/js?id=XXXXXXXXXX"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=192534286"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'XXXXXXXXXX');
+  gtag('config', '192534286');
 </script>
   
 <meta property="og:locale" content="en" />
@@ -116,7 +116,7 @@
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
-      Feb 25, 2021</span>
+      Apr 25, 2021</span>
       <a href='https://kuklis.github.io/cma/tags/vra8' title="vRA8" class="post_tag button button_translucent">vRA8
       </a>
       <a href='https://kuklis.github.io/cma/tags/servicenow' title="ServiceNow" class="post_tag button button_translucent">ServiceNow
@@ -169,7 +169,7 @@
     <li><a href="#vro">vRO</a>
       <ul>
         <li><a href="#workflows">Workflows</a></li>
-        <li><a href="#configuration-element">Configuration Element</a></li>
+        <li><a href="#download">Download</a></li>
       </ul>
     </li>
     <li><a href="#vra">vRA</a>
@@ -203,7 +203,7 @@ Based on the workflow output requests are approved / rejected.</p>
 <h2 id="vro">vRO</h2>
 <p>We need two REST endpoints. ServiceNow API uses Basic authentication, so we create a REST host providing the credentials as well:<br>
 <img src="/cma/img/vra8-servicenow-approval/snow-endpoint.png" alt=""></p>
-<p>For vRA REST API we also add a REST host. As vRA use token authentication, we don't provide any authentication method:<br>
+<p>For vRA REST API we use the <a href="https://marketplace.cloud.vmware.com/services/details/vmware-vrealize-orchestrator-plug-in-for-vrealize-automation-1">Orchestrator Plug-in for vRealize Automation</a>:<br>
 <img src="/cma/img/vra8-servicenow-approval/vra-endpoint.png" alt=""></p>
 <h3 id="workflows">Workflows</h3>
 <p>Now import the integration package <em>com.servicenow.approval</em> that will provide the workflows:<br>
@@ -234,11 +234,8 @@ Based on the workflow output requests are approved / rejected.</p>
 </tr>
 </tbody>
 </table>
-<h3 id="configuration-element">Configuration Element</h3>
-<p>For vRA API authentication we store the vRA API user credentials:<br>
-<img src="/cma/img/vra8-servicenow-approval/vro-confelement.png" alt=""></p>
-<p>These needs to be bound to the corresponding variables of the polling workflow:<br>
-<img src="/cma/img/vra8-servicenow-approval/vro-polling-wf-credentials.png" alt=""></p>
+<h3 id="download">Download</h3>
+<p>Workflows can be downloaded: <a href="https://github.com/kuklis/vra8-servicenow-approval">https://github.com/kuklis/vra8-servicenow-approval</a></p>
 <h2 id="vra">vRA</h2>
 <h3 id="event-broker-subscription">Event Broker Subscription</h3>
 <p>Now we create the EBS that'll trigger the workflow <em>Request Approval</em>. Event topic is <em>Deployment Requested</em>:<br>
