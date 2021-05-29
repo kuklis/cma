@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>vRA8 with ServiceNow External Approvals | CMA</title>
+<title>vRA8 Azure cloud account storage exception | CMA</title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.81.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -18,14 +18,14 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Approving vRA8 Actions in ServiceNow">
+<meta name="description" content="One possible cause identified and resolved">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="@kuklis_k">
-<meta name="twitter:title" content="vRA8 with ServiceNow External Approvals" />
-<meta property="og:url" content="https://kuklis.github.io/cma/post/vra8-servicenow-approval/" />
-<meta property="og:title" content="vRA8 with ServiceNow External Approvals" />
-<meta property="og:description" content="Approving vRA8 Actions in ServiceNow" />
-<meta property="og:image" content="https://kuklis.github.io/cma/images/snow.png" />
+<meta name="twitter:title" content="vRA8 Azure cloud account storage exception" />
+<meta property="og:url" content="https://kuklis.github.io/cma/post/vra8-azure-storage-exception/" />
+<meta property="og:title" content="vRA8 Azure cloud account storage exception" />
+<meta property="og:description" content="One possible cause identified and resolved" />
+<meta property="og:image" content="https://kuklis.github.io/cma/images/azure.png" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://kuklis.github.io/cma/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://kuklis.github.io/cma/icons/favicon-32x32.png'>
 <link rel="manifest" href='https://kuklis.github.io/cma/icons/site.webmanifest'>
@@ -33,7 +33,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-<link rel="canonical" href="https://kuklis.github.io/cma/post/vra8-servicenow-approval/">
+<link rel="canonical" href="https://kuklis.github.io/cma/post/vra8-azure-storage-exception/">
 
     
 
@@ -110,30 +110,30 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">vRA8 with ServiceNow External Approvals</h1><div class="post_meta">
+    <h1 class="post_title">vRA8 Azure cloud account storage exception</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
-      Apr 25, 2021</span>
+      May 3, 2021</span>
       <a href='https://kuklis.github.io/cma/tags/vra8' title="vRA8" class="post_tag button button_translucent">vRA8
       </a>
-      <a href='https://kuklis.github.io/cma/tags/servicenow' title="ServiceNow" class="post_tag button button_translucent">ServiceNow
+      <a href='https://kuklis.github.io/cma/tags/azure' title="Azure" class="post_tag button button_translucent">Azure
       </a>
-      <a href='https://kuklis.github.io/cma/tags/approvals' title="approvals" class="post_tag button button_translucent">approvals
+      <a href='https://kuklis.github.io/cma/tags/proxy' title="proxy" class="post_tag button button_translucent">proxy
       </a>
 </div>
 
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=vRA8%20with%20ServiceNow%20External%20Approvals&url=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-servicenow-approval%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=vRA8%20Azure%20cloud%20account%20storage%20exception&url=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-azure-storage-exception%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-servicenow-approval%2f&t=vRA8%20with%20ServiceNow%20External%20Approvals" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-azure-storage-exception%2f&t=vRA8%20Azure%20cloud%20account%20storage%20exception" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -143,7 +143,7 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://kuklis.github.io/cma/post/vra8-servicenow-approval/" title="Copy Link" class="link link_yank">
+    <a href="https://kuklis.github.io/cma/post/vra8-azure-storage-exception/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -151,108 +151,72 @@
   </div>
 
     
-    <p>Let's use ServiceNow with vRealize Automation 8 as an external approval system.</p>
-<div class="toc">
-    <H3>Table of Contents</H3>
-    <nav id="TableOfContents">
-  <ul>
-    <li><a href="#history">History</a></li>
-    <li><a href="#vra8-approval-system">vRA8 approval system</a>
-      <ul>
-        <li><a href="#limitations">Limitations</a></li>
-        <li><a href="#workaround">Workaround</a></li>
-        <li><a href="#sequence">Sequence</a></li>
-        <li><a href="#policy">Policy</a></li>
-      </ul>
-    </li>
-    <li><a href="#servicenow">ServiceNow</a></li>
-    <li><a href="#vro">vRO</a>
-      <ul>
-        <li><a href="#workflows">Workflows</a></li>
-        <li><a href="#download">Download</a></li>
-      </ul>
-    </li>
-    <li><a href="#vra">vRA</a>
-      <ul>
-        <li><a href="#event-broker-subscription">Event Broker Subscription</a></li>
-        <li><a href="#test-catalog-request">Test Catalog Request</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-<h2 id="history">History</h2>
-<p>vRA7 approval system supports easy <a href="https://docs.vmware.com/en/vRealize-Automation/7.6/com.vmware.vra.prepare.use.doc/GUID-67A61A9A-BF1D-4938-976C-A72DEED58163.html">integration with external systems</a> via event subscriptions. Event messages are created when approvals required and workflow subscriptions provide integration with external systems, such as ServiceNow or other service management platforms.<br>
-Based on the workflow output requests are approved / rejected.</p>
-<h2 id="vra8-approval-system">vRA8 approval system</h2>
-<h3 id="limitations">Limitations</h3>
-<p>vRA8 (up to 8.3) <a href="https://docs.vmware.com/en/vRealize-Automation/8.3/vrealize-automation-transition/GUID-BFCAEA52-C996-4C5A-A0A7-08A029143C66.html">does not support approvals via EBS</a>, only vRA users can approve. Event broker subscriptions can be used to start a vRO workflow right after the requests submitted but potentially long-running workflows do not give any feedback to the user why the deployment takes so long.</p>
-<h3 id="workaround">Workaround</h3>
-<p>To provide a better user experience we'll reuse the current approval policies. The idea is to set a service user as the approver, and approve the vRA request via REST API. We need a background process to wait for the external approval to happen and once the decision is made this process can let the vRA request go. This background process will be running on vRO as a scheduled workflow.</p>
-<p>We'll run this external system polling workflow recurrently. This helps to avoid long-running workflows: we check if the external approval has happened and go back sleeping if it has not.</p>
-<h3 id="sequence">Sequence</h3>
-<p>The following diagram shows the steps in case of a deployment request.<br>
-<img src="/cma/img/vra8-servicenow-approval/approval-sequence.png" alt=""></p>
-<h3 id="policy">Policy</h3>
-<p>Let's create an approval policy in Service Broker for Deployment Create action. Approver is a service user:<br>
-<img src="/cma/img/vra8-servicenow-approval/approval-policy.png" alt=""></p>
-<h2 id="servicenow">ServiceNow</h2>
-<p>You can register a developer ServiceNow instance at <a href="https://developer.servicenow.com/">https://developer.servicenow.com/</a> if needed.</p>
-<p>We need a catalog item that is not auto-approving. Ordering the catalog item results in a request that we'll wait to be approved. We will use a default demo catalog item for testing purposes: <em>VM Provisioning</em></p>
-<p>Also a service user must be created for REST API. This user needs access to the chosen catalog item.</p>
-<h2 id="vro">vRO</h2>
-<p>We need two REST endpoints. ServiceNow API uses Basic authentication, so we create a REST host providing the credentials as well:<br>
-<img src="/cma/img/vra8-servicenow-approval/snow-endpoint.png" alt=""></p>
-<p>For vRA REST API we use the <a href="https://marketplace.cloud.vmware.com/services/details/vmware-vrealize-orchestrator-plug-in-for-vrealize-automation-1?slug=true">Orchestrator Plug-in for vRealize Automation</a>:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-endpoint.png" alt=""></p>
-<h3 id="workflows">Workflows</h3>
-<p>Now import the integration package <em>com.servicenow.approval</em> that will provide the workflows:<br>
-<img src="/cma/img/vra8-servicenow-approval/vro-workflows.png" alt=""></p>
-<table>
-<thead>
-<tr>
-<th>Workflow Name</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Request Approval</td>
-<td>Open ServiceNow request and schedule polling workflow</td>
-</tr>
-<tr>
-<td>Catalog - VM Provisioning</td>
-<td>Request the catalog item (subflow)</td>
-</tr>
-<tr>
-<td>Poll SNOW and Approve vRA</td>
-<td>The scheduled workflow checking ServiceNow and approving in vRA</td>
-</tr>
-<tr>
-<td>Check Approval Status</td>
-<td>Fetches the approval status of the request opened (subflow)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="download">Download</h3>
-<p>Workflows and package can be downloaded: <a href="https://github.com/kuklis/vra8-servicenow-approval">https://github.com/kuklis/vra8-servicenow-approval</a></p>
-<h2 id="vra">vRA</h2>
-<h3 id="event-broker-subscription">Event Broker Subscription</h3>
-<p>Now we create the EBS that'll trigger the workflow <em>Request Approval</em>. Event topic is <em>Deployment Requested</em>:<br>
-Event is fired before deployment is provisioned for both cloud template and catalog requests<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-ebs.png" alt=""></p>
-<p>We filter the event by type to ensure only deployment create will trigger it:</p>
-<pre><code>event.data.eventType == &quot;CREATE_DEPLOYMENT&quot;
-</code></pre>
-<h3 id="test-catalog-request">Test Catalog Request</h3>
-<p>Let's try the solution out in Service Broker. After submitting the request, we can see an approval is needed:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-approval-pending.png" alt=""></p>
-<p>Request is opened and pending for approval:<br>
-<img src="/cma/img/vra8-servicenow-approval/snow-request.png" alt=""></p>
-<p>Once it is approved, the deployment completes:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-deployment-success.png" alt=""></p>
-<p>In case ServiceNow request is rejected, vRA deployment is also rejected:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-deployment-rejected.png" alt=""></p><div id="disqus_thread"></div>
+    <p>Transparent HTTPS proxy causing troubles.</p>
+<p>An Azure cloud account is added in Cloud Assembly following <a href="https://docs.vmware.com/en/vRealize-Automation/8.3/Using-and-Managing-Cloud-Assembly/GUID-F7656A16-6E21-4D5E-8F3A-AF38D365555F.html">Configure Microsoft Azure for use with vRealize Automation Cloud Assembly</a>.</p>
+<p>It showed regions and storage accounts, could access flavors and images, but Compute resources had no Azure entries.</p>
+<p>The account reported a warning and showed data collection error:</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln"> 1</span>java.lang.IllegalStateException: Azure enumeration adapter &#39;/provisioning/azure/storage-enumeration-adapter-v2&#39; for &#39;/resources/endpoints/yyyyyyyyyyyyyyyyyyyy&#39;: FAILED with com.microsoft.azure.storage.StorageException: 
+<span class="ln"> 2</span>	at com.microsoft.azure.storage.StorageException.translateException(StorageException.java:87)
+<span class="ln"> 3</span>	at com.microsoft.azure.storage.core.ExecutionEngine.executeWithRetry(ExecutionEngine.java:220)
+<span class="ln"> 4</span>	at com.microsoft.azure.storage.blob.CloudBlobClient.listContainersWithPrefixSegmented(CloudBlobClient.java:348)
+<span class="ln"> 5</span>	at com.microsoft.azure.storage.blob.CloudBlobClient.listContainersSegmented(CloudBlobClient.java:261)
+<span class="ln"> 6</span>	at com.vmware.photon.controller.model.adapters.azure.enumeration.AzureStorageEnumerationAdapterServiceV2.lambda$getStorageContainersAndDisks$37(AzureStorageEnumerationAdapterServiceV2.java:1120)
+<span class="ln"> 7</span>	at com.vmware.photon.controller.model.resources.util.PhotonModelUtils.lambda$runInExecutor$20(PhotonModelUtils.java:1043)
+<span class="ln"> 8</span>	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+<span class="ln"> 9</span>	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+<span class="ln">10</span>	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+<span class="ln">11</span>	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+<span class="ln">12</span>	at java.base/java.lang.Thread.run(Thread.java:834)
+<span class="ln">13</span>Caused by: javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+<span class="ln">14</span>	at java.base/sun.security.ssl.Alert.createSSLException(Alert.java:131)
+<span class="ln">15</span>	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:326)
+<span class="ln">16</span>	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:269)
+<span class="ln">17</span>	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:264)
+<span class="ln">18</span>	at java.base/sun.security.ssl.CertificateMessage$T12CertificateConsumer.checkServerCerts(CertificateMessage.java:645)
+<span class="ln">19</span>	at java.base/sun.security.ssl.CertificateMessage$T12CertificateConsumer.onCertificate(CertificateMessage.java:464)
+<span class="ln">20</span>	at java.base/sun.security.ssl.CertificateMessage$T12CertificateConsumer.consume(CertificateMessage.java:360)
+<span class="ln">21</span>	at java.base/sun.security.ssl.SSLHandshake.consume(SSLHandshake.java:392)
+<span class="ln">22</span>	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:444)
+<span class="ln">23</span>	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:422)
+<span class="ln">24</span>	at java.base/sun.security.ssl.TransportContext.dispatch(TransportContext.java:183)
+<span class="ln">25</span>	at java.base/sun.security.ssl.SSLTransport.decode(SSLTransport.java:168)
+<span class="ln">26</span>	at java.base/sun.security.ssl.SSLSocketImpl.decode(SSLSocketImpl.java:1148)
+<span class="ln">27</span>	at java.base/sun.security.ssl.SSLSocketImpl.readHandshakeRecord(SSLSocketImpl.java:1057)
+<span class="ln">28</span>	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:395)
+<span class="ln">29</span>	at java.base/sun.net.www.protocol.https.HttpsClient.afterConnect(HttpsClient.java:567)
+<span class="ln">30</span>	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:185)
+<span class="ln">31</span>	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1587)
+<span class="ln">32</span>	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1515)
+<span class="ln">33</span>	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:527)
+<span class="ln">34</span>	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:334)
+<span class="ln">35</span>	at com.microsoft.azure.storage.core.ExecutionEngine.executeWithRetry(ExecutionEngine.java:115)
+<span class="ln">36</span>	... 9 more
+<span class="ln">37</span>Caused by: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+<span class="ln">38</span>	at java.base/sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:439)
+<span class="ln">39</span>	at java.base/sun.security.validator.PKIXValidator.engineValidate(PKIXValidator.java:306)
+<span class="ln">40</span>	at java.base/sun.security.validator.Validator.validate(Validator.java:264)
+<span class="ln">41</span>	at java.base/sun.security.ssl.X509TrustManagerImpl.validate(X509TrustManagerImpl.java:313)
+<span class="ln">42</span>	at java.base/sun.security.ssl.X509TrustManagerImpl.checkTrusted(X509TrustManagerImpl.java:222)
+<span class="ln">43</span>	at java.base/sun.security.ssl.X509TrustManagerImpl.checkServerTrusted(X509TrustManagerImpl.java:129)
+<span class="ln">44</span>	at java.base/sun.security.ssl.CertificateMessage$T12CertificateConsumer.checkServerCerts(CertificateMessage.java:629)
+<span class="ln">45</span>	... 26 more
+<span class="ln">46</span>Caused by: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+<span class="ln">47</span>	at java.base/sun.security.provider.certpath.SunCertPathBuilder.build(SunCertPathBuilder.java:141)
+<span class="ln">48</span>	at java.base/sun.security.provider.certpath.SunCertPathBuilder.engineBuild(SunCertPathBuilder.java:126)
+<span class="ln">49</span>	at java.base/java.security.cert.CertPathBuilder.build(CertPathBuilder.java:297)
+<span class="ln">50</span>	at java.base/sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:434)
+<span class="ln">51</span>	... 32 more
+</code></pre></div><p>Looks like it has certificate issues. At our environment a transparent HTTPS proxy is installed, its certificate needs to be installed in vRA.</p>
+<p>Upload the certificate to the vRA appliance and check it:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>vracli certificate proxy --validate proxy.cer
+</code></pre></div><p>The output shows sha256 sum of the certificate:</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln">1</span>Certificate is signed by itself according to our internal policy
+<span class="ln">2</span>Certificate with sha256 sum: 50dfa6f5780f5d7341b2436b3253deb0812b29da28ef28446f8dfe34c558f cannot be validated as it is self-signed.
+<span class="ln">3</span>If you want to proceed with that certificate, please confirm the sha256 sum using parameter &#39;--sha256&#39; and the sha256 sum of the certificate.
+</code></pre></div><p>Import the certificate and redeploy vRA services:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>vracli certificate proxy --set proxy.cer --sha256 50dfa6f5780f5d7341b2436b3253deb0812b29da28ef28446f8dfe34c558f
+<span class="ln">2</span>/opt/scripts/deploy.sh
+</code></pre></div><div id="disqus_thread"></div>
 <script type="application/javascript">
     var disqus_config = function () {
     
@@ -284,7 +248,7 @@ Event is fired before deployment is provisioned for both cloud template and cata
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://kuklis.github.io/cma/post/vra8-azure-storage-exception/" class="nav-link" title="vRA8 Azure cloud account storage exception">vRA8 Azure cloud account storage exception</a>
+        <a href="https://kuklis.github.io/cma/post/vra8-servicenow-approval/" class="nav-link" title="vRA8 with ServiceNow External Approvals">vRA8 with ServiceNow External Approvals</a>
       </li>
     </ul>
     <div>

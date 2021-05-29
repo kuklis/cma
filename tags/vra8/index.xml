@@ -6,7 +6,85 @@
     <description>Recent content in vRA8 on CMA</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
-    <lastBuildDate>Sun, 25 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/tags/vra8/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 03 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/tags/vra8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>vRA8 Azure cloud account storage exception</title>
+      <link>https://kuklis.github.io/cma/post/vra8-azure-storage-exception/</link>
+      <pubDate>Mon, 03 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vra8-azure-storage-exception/</guid>
+      <description>
+        
+          &lt;p&gt;Transparent HTTPS proxy causing troubles.&lt;/p&gt;
+&lt;p&gt;An Azure cloud account is added in Cloud Assembly following &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Automation/8.3/Using-and-Managing-Cloud-Assembly/GUID-F7656A16-6E21-4D5E-8F3A-AF38D365555F.html&#34;&gt;Configure Microsoft Azure for use with vRealize Automation Cloud Assembly&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;It showed regions and storage accounts, could access flavors and images, but Compute resources had no Azure entries.&lt;/p&gt;
+&lt;p&gt;The account reported a warning and showed data collection error:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;java.lang.IllegalStateException: Azure enumeration adapter &amp;#39;/provisioning/azure/storage-enumeration-adapter-v2&amp;#39; for &amp;#39;/resources/endpoints/yyyyyyyyyyyyyyyyyyyy&amp;#39;: FAILED with com.microsoft.azure.storage.StorageException: 
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;	at com.microsoft.azure.storage.StorageException.translateException(StorageException.java:87)
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;	at com.microsoft.azure.storage.core.ExecutionEngine.executeWithRetry(ExecutionEngine.java:220)
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;	at com.microsoft.azure.storage.blob.CloudBlobClient.listContainersWithPrefixSegmented(CloudBlobClient.java:348)
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;	at com.microsoft.azure.storage.blob.CloudBlobClient.listContainersSegmented(CloudBlobClient.java:261)
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;	at com.vmware.photon.controller.model.adapters.azure.enumeration.AzureStorageEnumerationAdapterServiceV2.lambda$getStorageContainersAndDisks$37(AzureStorageEnumerationAdapterServiceV2.java:1120)
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;	at com.vmware.photon.controller.model.resources.util.PhotonModelUtils.lambda$runInExecutor$20(PhotonModelUtils.java:1043)
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;	at java.base/java.lang.Thread.run(Thread.java:834)
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;Caused by: javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;	at java.base/sun.security.ssl.Alert.createSSLException(Alert.java:131)
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:326)
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:269)
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:264)
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;	at java.base/sun.security.ssl.CertificateMessage$T12CertificateConsumer.checkServerCerts(CertificateMessage.java:645)
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;	at java.base/sun.security.ssl.CertificateMessage$T12CertificateConsumer.onCertificate(CertificateMessage.java:464)
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;	at java.base/sun.security.ssl.CertificateMessage$T12CertificateConsumer.consume(CertificateMessage.java:360)
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;	at java.base/sun.security.ssl.SSLHandshake.consume(SSLHandshake.java:392)
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:444)
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:422)
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;	at java.base/sun.security.ssl.TransportContext.dispatch(TransportContext.java:183)
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;	at java.base/sun.security.ssl.SSLTransport.decode(SSLTransport.java:168)
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;	at java.base/sun.security.ssl.SSLSocketImpl.decode(SSLSocketImpl.java:1148)
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;	at java.base/sun.security.ssl.SSLSocketImpl.readHandshakeRecord(SSLSocketImpl.java:1057)
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:395)
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;	at java.base/sun.net.www.protocol.https.HttpsClient.afterConnect(HttpsClient.java:567)
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:185)
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1587)
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1515)
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:527)
+&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:334)
+&lt;span class=&#34;ln&#34;&gt;35&lt;/span&gt;	at com.microsoft.azure.storage.core.ExecutionEngine.executeWithRetry(ExecutionEngine.java:115)
+&lt;span class=&#34;ln&#34;&gt;36&lt;/span&gt;	... 9 more
+&lt;span class=&#34;ln&#34;&gt;37&lt;/span&gt;Caused by: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+&lt;span class=&#34;ln&#34;&gt;38&lt;/span&gt;	at java.base/sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:439)
+&lt;span class=&#34;ln&#34;&gt;39&lt;/span&gt;	at java.base/sun.security.validator.PKIXValidator.engineValidate(PKIXValidator.java:306)
+&lt;span class=&#34;ln&#34;&gt;40&lt;/span&gt;	at java.base/sun.security.validator.Validator.validate(Validator.java:264)
+&lt;span class=&#34;ln&#34;&gt;41&lt;/span&gt;	at java.base/sun.security.ssl.X509TrustManagerImpl.validate(X509TrustManagerImpl.java:313)
+&lt;span class=&#34;ln&#34;&gt;42&lt;/span&gt;	at java.base/sun.security.ssl.X509TrustManagerImpl.checkTrusted(X509TrustManagerImpl.java:222)
+&lt;span class=&#34;ln&#34;&gt;43&lt;/span&gt;	at java.base/sun.security.ssl.X509TrustManagerImpl.checkServerTrusted(X509TrustManagerImpl.java:129)
+&lt;span class=&#34;ln&#34;&gt;44&lt;/span&gt;	at java.base/sun.security.ssl.CertificateMessage$T12CertificateConsumer.checkServerCerts(CertificateMessage.java:629)
+&lt;span class=&#34;ln&#34;&gt;45&lt;/span&gt;	... 26 more
+&lt;span class=&#34;ln&#34;&gt;46&lt;/span&gt;Caused by: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+&lt;span class=&#34;ln&#34;&gt;47&lt;/span&gt;	at java.base/sun.security.provider.certpath.SunCertPathBuilder.build(SunCertPathBuilder.java:141)
+&lt;span class=&#34;ln&#34;&gt;48&lt;/span&gt;	at java.base/sun.security.provider.certpath.SunCertPathBuilder.engineBuild(SunCertPathBuilder.java:126)
+&lt;span class=&#34;ln&#34;&gt;49&lt;/span&gt;	at java.base/java.security.cert.CertPathBuilder.build(CertPathBuilder.java:297)
+&lt;span class=&#34;ln&#34;&gt;50&lt;/span&gt;	at java.base/sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:434)
+&lt;span class=&#34;ln&#34;&gt;51&lt;/span&gt;	... 32 more
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Looks like it has certificate issues. At our environment a transparent HTTPS proxy is installed, its certificate needs to be installed in vRA.&lt;/p&gt;
+&lt;p&gt;Upload the certificate to the vRA appliance and check it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;vracli certificate proxy --validate proxy.cer
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The output shows sha256 sum of the certificate:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;Certificate is signed by itself according to our internal policy
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;Certificate with sha256 sum: 50dfa6f5780f5d7341b2436b3253deb0812b29da28ef28446f8dfe34c558f cannot be validated as it is self-signed.
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;If you want to proceed with that certificate, please confirm the sha256 sum using parameter &amp;#39;--sha256&amp;#39; and the sha256 sum of the certificate.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Import the certificate and redeploy vRA services:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;vracli certificate proxy --set proxy.cer --sha256 50dfa6f5780f5d7341b2436b3253deb0812b29da28ef28446f8dfe34c558f
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;/opt/scripts/deploy.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>vRA8 with ServiceNow External Approvals</title>
       <link>https://kuklis.github.io/cma/post/vra8-servicenow-approval/</link>
