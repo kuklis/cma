@@ -16,7 +16,7 @@
       <description>
         
           &lt;p&gt;A possible method how to run vRO actions requiring System Context&lt;/p&gt;
-&lt;p&gt;We have some vRO actions using &lt;code&gt;System.getContext()&lt;/code&gt; to collect current running parameters ie. tenant, request id etc. They are mostly used on vRA custom forms to provide context sensitive dropdowns. The following cases are some examples when context is not available and the actions fail to run corretly:&lt;/p&gt;
+&lt;p&gt;We have some vRO actions using &lt;code&gt;System.getContext()&lt;/code&gt; to collect current running parameters ie. tenant, request id etc. They are mostly used on vRA custom forms to provide context sensitive dropdowns. The following cases are some examples when context is not available and the actions fail to run correctly:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;XaaS forms&lt;/li&gt;
 &lt;li&gt;Running actions from vRO workflows directly, without vRA&lt;/li&gt;
