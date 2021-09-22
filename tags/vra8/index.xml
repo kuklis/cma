@@ -6,7 +6,28 @@
     <description>Recent content in vRA8 on CMA</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
-    <lastBuildDate>Wed, 14 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/tags/vra8/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 22 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/tags/vra8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Increase vRA8 session timeout</title>
+      <link>https://kuklis.github.io/cma/post/vra8-session-timeout/</link>
+      <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vra8-session-timeout/</guid>
+      <description>
+        
+          &lt;p&gt;How to change vRealize Automation 8 session timeout to make your users happier.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vRealize-Automation/8.5/rn/vmware-vrealize-automation-85-release-notes.html&#34;&gt;vRealize Automation 8.5 Release Notes&lt;/a&gt; mentions an IaaS API addition that allows us to configure user session timeout via &lt;br&gt;&lt;code&gt;/iaas/api/configuration-properties&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;After &lt;a href=&#34;https://code.vmware.com/docs/14025/vrealize-automation-8-5-api-programming-guide?h=vrealize%20automation/GUID-AC1E4407-6139-412A-B4AA-1F102942EA94.html&#34;&gt;acquiring the access token&lt;/a&gt; send the desired timeout value via the REST API, specifyint the new API version:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;curl -k -s -H &amp;#34;Content-Type: application/json&amp;#34; -H &amp;#34;Authorization: Bearer $access_token&amp;#34; \
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;https://vra8.corp.local/iaas/api/configuration-properties?apiVersion=2021-07-15 -X PATCH \
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;-d &amp;#39;{&amp;#34;key&amp;#34;:&amp;#34;SESSION_TIMEOUT_DURATION_MINUTES&amp;#34;, &amp;#34;value&amp;#34;:&amp;#34;480&amp;#34;}&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The output shows the property, 8 hours should do 😉&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;{&amp;#34;key&amp;#34;:&amp;#34;SESSION_TIMEOUT_DURATION_MINUTES&amp;#34;,&amp;#34;value&amp;#34;:&amp;#34;480&amp;#34;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Please note the change only applies to Service Broker and Cloud Assembly timeouts, but Orchestrator will still timeout after the hard-coded time.&lt;/p&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>vRA8 Azure integration with PowerShell</title>
       <link>https://kuklis.github.io/cma/post/vra8-azure-powershell/</link>
