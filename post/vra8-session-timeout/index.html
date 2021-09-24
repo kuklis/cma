@@ -149,10 +149,10 @@
     
     <p>How to change vRealize Automation 8 session timeout to make your users happier.</p>
 <p><a href="https://docs.vmware.com/en/VMware-vRealize-Automation/8.5/rn/vmware-vrealize-automation-85-release-notes.html">vRealize Automation 8.5 Release Notes</a> mentions an IaaS API addition that allows us to configure user session timeout via <br><code>/iaas/api/configuration-properties</code>.</p>
-<p>After <a href="https://code.vmware.com/docs/14025/vrealize-automation-8-5-api-programming-guide?h=vrealize%20automation/GUID-AC1E4407-6139-412A-B4AA-1F102942EA94.html">acquiring the access token</a> send the desired timeout value via the REST API, specifyint the new API version:</p>
-<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>curl -k -s -H &#34;Content-Type: application/json&#34; -H &#34;Authorization: Bearer $access_token&#34; \
-<span class="ln">2</span>https://vra8.corp.local/iaas/api/configuration-properties?apiVersion=2021-07-15 -X PATCH \
-<span class="ln">3</span>-d &#39;{&#34;key&#34;:&#34;SESSION_TIMEOUT_DURATION_MINUTES&#34;, &#34;value&#34;:&#34;480&#34;}&#39;
+<p>After <a href="https://code.vmware.com/docs/14025/vrealize-automation-8-5-api-programming-guide?h=vrealize%20automation/GUID-AC1E4407-6139-412A-B4AA-1F102942EA94.html">acquiring the access token</a> send the desired timeout value via the REST API, specifying the new API version:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>curl -k -s -H <span class="s2">&#34;Content-Type: application/json&#34;</span> -H <span class="s2">&#34;Authorization: Bearer </span><span class="nv">$access_token</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="ln">2</span><span class="se"></span>https://vra8.corp.local/iaas/api/configuration-properties?apiVersion<span class="o">=</span>2021-07-15 -X PATCH <span class="se">\
+</span><span class="ln">3</span><span class="se"></span>-d <span class="s1">&#39;{&#34;key&#34;:&#34;SESSION_TIMEOUT_DURATION_MINUTES&#34;, &#34;value&#34;:&#34;480&#34;}&#39;</span>
 </code></pre></div><p>The output shows the property, 8 hours should do 😉</p>
 <div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln">1</span>{&#34;key&#34;:&#34;SESSION_TIMEOUT_DURATION_MINUTES&#34;,&#34;value&#34;:&#34;480&#34;}
 </code></pre></div><p>Please note the change only applies to Service Broker and Cloud Assembly timeouts, but Orchestrator will still timeout after the hard-coded time.</p>
@@ -167,6 +167,9 @@
       </div>
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-azure-rename-nic/" class="nav-link" title="Rename Azure NIC in vRA8">Rename Azure NIC in vRA8</a>
+      </li>
       <li>
         <a href="https://kuklis.github.io/cma/post/vra8-azure-powershell/" class="nav-link" title="vRA8 Azure integration with PowerShell">vRA8 Azure integration with PowerShell</a>
       </li>
@@ -188,7 +191,7 @@
       <nav class="tags_nav">
         <a href='https://kuklis.github.io/cma/categories/gui/' class="post_tag button button_translucent" title="gui">
           GUI
-          <span class="button_tally">2</span>
+          <span class="button_tally">3</span>
         </a>
         
         <a href='https://kuklis.github.io/cma/categories/public-cloud/' class="post_tag button button_translucent" title="public-cloud">
@@ -214,17 +217,17 @@
       <nav class="tags_nav">
         <a href='https://kuklis.github.io/cma/tags/vra8/' class="post_tag button button_translucent" title="vra8">
           VRA8
-          <span class="button_tally">4</span>
+          <span class="button_tally">5</span>
         </a>
         
         <a href='https://kuklis.github.io/cma/tags/azure/' class="post_tag button button_translucent" title="azure">
           AZURE
-          <span class="button_tally">2</span>
+          <span class="button_tally">3</span>
         </a>
         
         <a href='https://kuklis.github.io/cma/tags/vro/' class="post_tag button button_translucent" title="vro">
           VRO
-          <span class="button_tally">2</span>
+          <span class="button_tally">3</span>
         </a>
         
         <a href='https://kuklis.github.io/cma/tags/approvals/' class="post_tag button button_translucent" title="approvals">

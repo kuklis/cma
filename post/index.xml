@@ -6,7 +6,118 @@
     <description>Recent content in Posts on CMA</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
-    <lastBuildDate>Wed, 22 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 24 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Rename Azure NIC in vRA8</title>
+      <link>https://kuklis.github.io/cma/post/vra8-azure-rename-nic/</link>
+      <pubDate>Fri, 24 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vra8-azure-rename-nic/</guid>
+      <description>
+        
+          &lt;p&gt;How to configure network interface name using event broker subscription&lt;/p&gt;
+&lt;div class=&#34;toc&#34;&gt;
+    &lt;H3&gt;Table of Contents&lt;/H3&gt;
+    &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#subject&#34;&gt;Subject&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#new-iaas-api&#34;&gt;New IaaS API&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#extensibility-vro-workflow&#34;&gt;Extensibility: vRO workflow&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#vra-event-broker-subscription&#34;&gt;vRA Event Broker Subscription&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#check-the-result&#34;&gt;Check the result&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+  &lt;/div&gt;
+&lt;h2 id=&#34;subject&#34;&gt;Subject&lt;/h2&gt;
+&lt;p&gt;vRA8 (up current version 8.5) does not support to set the name of network inteface in Azure, the default naming scheme apply (&lt;code&gt;subnetname-&amp;lt;suffix&amp;gt;&lt;/code&gt;). It is hard to see by name which NIC belongs to which virtual machine:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-azure-rename-nic/default-naming.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;new-iaas-api&#34;&gt;New IaaS API&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vRealize-Automation/8.5/rn/vmware-vrealize-automation-85-release-notes.html&#34;&gt;vRealize Automation 8.5 Release Notes&lt;/a&gt; mentions an IaaS API addition that allows us to change selected parameters via &lt;br&gt;&lt;code&gt;/iaas/api/machines/{id}/network-interfaces/{nicId}&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Changing the name is supported, but only before provisioning, we need to call the API in Compute provision (&lt;code&gt;compute.provision.pre&lt;/code&gt;) phase. We&#39;ll use an extensibility EBS to trigger a vRO workflow. This workflow calls the IaaS API to change the name attribute. Here is a sample payload available via &lt;code&gt;inputProperties&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;addresses&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;      &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;componentId&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;cloudvm[0]&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;endpointId&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;277a3feb-ec8e-4de3-82e7-60b7024ae9c7&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;externalIds&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;#34;cloudvm-34&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;blueprintId&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;43449016-b9a7-4640-bdb8-4520ce6a86e1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;tags&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{},&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;resourceNames&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;#34;cloudvm-34&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;customProperties&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;flavor&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;small&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;azureManagedDiskType&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Standard_LRS&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;image&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;az_rhel7&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;resourceGroupName&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;testRG&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;countIndex&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;count&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;project&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a0ca29a2-4594-4281-b473-a490a16b92f8&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;flavorMappingName&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;small&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;componentTypeId&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Cloud.Azure.Machine&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;requestId&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;fe924e4a-8cd8-4921-8790-4446045683e5&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;macAddresses&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;      &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;deploymentId&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;992dea79-d0e1-41bd-a716-4fa017b04496&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;35&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;zoneId&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;5e31fcab-e8d5-433c-8c6f-9a1816054600&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;36&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;projectId&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a0ca29a2-4594-4281-b473-a490a16b92f8&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;37&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;subnetIds&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;38&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;39&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;0f54c3f8-25ab-45bd-8dfb-6ce24eaacd4d&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;40&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;41&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;42&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;resourceIds&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;43&lt;/span&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;#34;f47b4051-f000-43de-963b-d9a5acbac495&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;44&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;45&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The resourceIds array contains the VM id. We need to identify the network interface id, the IaaS API can provide it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;curl -s -k -H &lt;span class=&#34;s1&#34;&gt;&amp;#39;Content-Type: application/json&amp;#39;&lt;/span&gt; -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Authorization: Bearer &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$access_token&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;https://vra8.corp.local/iaas/api/machines/f47b4051-f000-43de-963b-d9a5acbac495&amp;#39;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; jq &lt;span class=&#34;s1&#34;&gt;&amp;#39;._links[&amp;#34;network-interfaces&amp;#34;]&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the output we have the path of the NIC wee need to use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;hrefs&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;#34;/iaas/api/machines/f47b4051-f000-43de-963b-d9a5acbac495/network-interfaces/6ab905bc-7ff1-4639-981f-dbbec4a93949&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;extensibility-vro-workflow&#34;&gt;Extensibility: vRO workflow&lt;/h2&gt;
+&lt;p&gt;For vRA REST API we use the &lt;a href=&#34;https://marketplace.cloud.vmware.com/services/details/vmware-vrealize-orchestrator-plug-in-for-vrealize-automation-1?slug=true&#34;&gt;Orchestrator Plug-in for vRealize Automation&lt;/a&gt;:&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-azure-rename-nic/vra-endpoint.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The following sample workflow will modify the NIC name to &lt;code&gt;vmname-nic&lt;/code&gt;. The &lt;code&gt;inputProperties&lt;/code&gt; contains the EBS payload, and vraHost is the VRA:Host endpoint. We need to specify the new API version 2021-07-15 to enable this functionality.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;restClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;vraHost&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;createRestClient&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;request&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;restClient&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;createRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;GET&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/iaas/api/machines/&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;inputProperties&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resourceIds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;restClient&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;execute&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;GET statusCode: &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;statusCode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;content&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;JSON&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;parse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;contentAsString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;content&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;_links&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;network-interfaces&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;].&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;hrefs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;forEach&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;    &lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;nic_link&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;        &lt;span class=&#34;nx&#34;&gt;request&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;restClient&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;createRequest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;PATCH&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;nic_link&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;?apiVersion=2021-07-15&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; 
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;            &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;inputProperties&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;resourceNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;-nic&amp;#34;}&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;        &lt;span class=&#34;nx&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;restClient&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;execute&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;        &lt;span class=&#34;nx&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;PATCH statusCode: &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;statusCode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can download the &lt;em&gt;com.azure.utils&lt;/em&gt; package containing the workflow from GitHub: &lt;a href=&#34;https://github.com/kuklis/vro8-packages&#34;&gt;https://github.com/kuklis/vro8-packages&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;vra-event-broker-subscription&#34;&gt;vRA Event Broker Subscription&lt;/h2&gt;
+&lt;p&gt;Now we create an EBS for the workflow:
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-azure-rename-nic/ebs.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;It is important to make the EBS blocking so that vRA waits for the workflow run and the change made.&lt;/p&gt;
+&lt;h2 id=&#34;check-the-result&#34;&gt;Check the result&lt;/h2&gt;
+&lt;p&gt;After deploying a new Azure VM, the NIC name matches the VM name:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-azure-rename-nic/custom-naming.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>Increase vRA8 session timeout</title>
       <link>https://kuklis.github.io/cma/post/vra8-session-timeout/</link>
@@ -17,10 +128,10 @@
         
           &lt;p&gt;How to change vRealize Automation 8 session timeout to make your users happier.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://docs.vmware.com/en/VMware-vRealize-Automation/8.5/rn/vmware-vrealize-automation-85-release-notes.html&#34;&gt;vRealize Automation 8.5 Release Notes&lt;/a&gt; mentions an IaaS API addition that allows us to configure user session timeout via &lt;br&gt;&lt;code&gt;/iaas/api/configuration-properties&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;After &lt;a href=&#34;https://code.vmware.com/docs/14025/vrealize-automation-8-5-api-programming-guide?h=vrealize%20automation/GUID-AC1E4407-6139-412A-B4AA-1F102942EA94.html&#34;&gt;acquiring the access token&lt;/a&gt; send the desired timeout value via the REST API, specifyint the new API version:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;curl -k -s -H &amp;#34;Content-Type: application/json&amp;#34; -H &amp;#34;Authorization: Bearer $access_token&amp;#34; \
-&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;https://vra8.corp.local/iaas/api/configuration-properties?apiVersion=2021-07-15 -X PATCH \
-&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;-d &amp;#39;{&amp;#34;key&amp;#34;:&amp;#34;SESSION_TIMEOUT_DURATION_MINUTES&amp;#34;, &amp;#34;value&amp;#34;:&amp;#34;480&amp;#34;}&amp;#39;
+&lt;p&gt;After &lt;a href=&#34;https://code.vmware.com/docs/14025/vrealize-automation-8-5-api-programming-guide?h=vrealize%20automation/GUID-AC1E4407-6139-412A-B4AA-1F102942EA94.html&#34;&gt;acquiring the access token&lt;/a&gt; send the desired timeout value via the REST API, specifying the new API version:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;curl -k -s -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Authorization: Bearer &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$access_token&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;https://vra8.corp.local/iaas/api/configuration-properties?apiVersion&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;2021-07-15 -X PATCH &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;-d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;key&amp;#34;:&amp;#34;SESSION_TIMEOUT_DURATION_MINUTES&amp;#34;, &amp;#34;value&amp;#34;:&amp;#34;480&amp;#34;}&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The output shows the property, 8 hours should do 😉&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;{&amp;#34;key&amp;#34;:&amp;#34;SESSION_TIMEOUT_DURATION_MINUTES&amp;#34;,&amp;#34;value&amp;#34;:&amp;#34;480&amp;#34;}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Please note the change only applies to Service Broker and Cloud Assembly timeouts, but Orchestrator will still timeout after the hard-coded time.&lt;/p&gt;

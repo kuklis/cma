@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>vRA8 with ServiceNow External Approvals | CMA</title>
+<title>Rename Azure NIC in vRA8 | CMA</title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.81.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -18,14 +18,14 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Approving vRA8 Actions in ServiceNow">
+<meta name="description" content="vRealize Automation 8 - rename network interface">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="@kuklis_k">
-<meta name="twitter:title" content="vRA8 with ServiceNow External Approvals" />
-<meta property="og:url" content="https://kuklis.github.io/cma/post/vra8-servicenow-approval/" />
-<meta property="og:title" content="vRA8 with ServiceNow External Approvals" />
-<meta property="og:description" content="Approving vRA8 Actions in ServiceNow" />
-<meta property="og:image" content="https://kuklis.github.io/cma/images/snow.png" />
+<meta name="twitter:title" content="Rename Azure NIC in vRA8" />
+<meta property="og:url" content="https://kuklis.github.io/cma/post/vra8-azure-rename-nic/" />
+<meta property="og:title" content="Rename Azure NIC in vRA8" />
+<meta property="og:description" content="vRealize Automation 8 - rename network interface" />
+<meta property="og:image" content="https://kuklis.github.io/cma/images/azure-nic.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://kuklis.github.io/cma/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://kuklis.github.io/cma/icons/favicon-32x32.png'>
 <link rel="manifest" href='https://kuklis.github.io/cma/icons/site.webmanifest'>
@@ -33,7 +33,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-<link rel="canonical" href="https://kuklis.github.io/cma/post/vra8-servicenow-approval/">
+<link rel="canonical" href="https://kuklis.github.io/cma/post/vra8-azure-rename-nic/">
 
     
 
@@ -51,7 +51,7 @@
   
     
   
-  <body data-code="7" data-lines="false" id="documentTop">
+  <body data-code="50" data-lines="false" id="documentTop">
 
 <header class="nav_header" >
   <nav class="nav"><a href='https://kuklis.github.io/cma/' class="nav_brand nav_item" title="CMA">
@@ -110,30 +110,30 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">vRA8 with ServiceNow External Approvals</h1><div class="post_meta">
+    <h1 class="post_title">Rename Azure NIC in vRA8</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
-      Apr 25, 2021</span>
+      Sep 24, 2021</span>
+      <a href='https://kuklis.github.io/cma/tags/vro' title="vRO" class="post_tag button button_translucent">vRO
+      </a>
       <a href='https://kuklis.github.io/cma/tags/vra8' title="vRA8" class="post_tag button button_translucent">vRA8
       </a>
-      <a href='https://kuklis.github.io/cma/tags/servicenow' title="ServiceNow" class="post_tag button button_translucent">ServiceNow
-      </a>
-      <a href='https://kuklis.github.io/cma/tags/approvals' title="approvals" class="post_tag button button_translucent">approvals
+      <a href='https://kuklis.github.io/cma/tags/azure' title="Azure" class="post_tag button button_translucent">Azure
       </a>
 </div>
 
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=vRA8%20with%20ServiceNow%20External%20Approvals&url=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-servicenow-approval%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=Rename%20Azure%20NIC%20in%20vRA8&url=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-azure-rename-nic%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-servicenow-approval%2f&t=vRA8%20with%20ServiceNow%20External%20Approvals" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-azure-rename-nic%2f&t=Rename%20Azure%20NIC%20in%20vRA8" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -143,7 +143,7 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://kuklis.github.io/cma/post/vra8-servicenow-approval/" title="Copy Link" class="link link_yank">
+    <a href="https://kuklis.github.io/cma/post/vra8-azure-rename-nic/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -151,108 +151,105 @@
   </div>
 
     
-    <p>Let's use ServiceNow with vRealize Automation 8 as an external approval system.</p>
+    <p>How to configure network interface name using event broker subscription</p>
 <div class="toc">
     <H3>Table of Contents</H3>
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#history">History</a></li>
-    <li><a href="#vra8-approval-system">vRA8 approval system</a>
-      <ul>
-        <li><a href="#limitations">Limitations</a></li>
-        <li><a href="#workaround">Workaround</a></li>
-        <li><a href="#sequence">Sequence</a></li>
-        <li><a href="#policy">Policy</a></li>
-      </ul>
-    </li>
-    <li><a href="#servicenow">ServiceNow</a></li>
-    <li><a href="#vro">vRO</a>
-      <ul>
-        <li><a href="#workflows">Workflows</a></li>
-        <li><a href="#download">Download</a></li>
-      </ul>
-    </li>
-    <li><a href="#vra">vRA</a>
-      <ul>
-        <li><a href="#event-broker-subscription">Event Broker Subscription</a></li>
-        <li><a href="#test-catalog-request">Test Catalog Request</a></li>
-      </ul>
-    </li>
+    <li><a href="#subject">Subject</a></li>
+    <li><a href="#new-iaas-api">New IaaS API</a></li>
+    <li><a href="#extensibility-vro-workflow">Extensibility: vRO workflow</a></li>
+    <li><a href="#vra-event-broker-subscription">vRA Event Broker Subscription</a></li>
+    <li><a href="#check-the-result">Check the result</a></li>
   </ul>
 </nav>
   </div>
-<h2 id="history">History</h2>
-<p>vRA7 approval system supports easy <a href="https://docs.vmware.com/en/vRealize-Automation/7.6/com.vmware.vra.prepare.use.doc/GUID-67A61A9A-BF1D-4938-976C-A72DEED58163.html">integration with external systems</a> via event subscriptions. Event messages are created when approvals required and workflow subscriptions provide integration with external systems, such as ServiceNow or other service management platforms.<br>
-Based on the workflow output requests are approved / rejected.</p>
-<h2 id="vra8-approval-system">vRA8 approval system</h2>
-<h3 id="limitations">Limitations</h3>
-<p>vRA8 (up to 8.3) <a href="https://docs.vmware.com/en/vRealize-Automation/8.3/vrealize-automation-transition/GUID-BFCAEA52-C996-4C5A-A0A7-08A029143C66.html">does not support approvals via EBS</a>, only vRA users can approve. Event broker subscriptions can be used to start a vRO workflow right after the requests submitted but potentially long-running workflows do not give any feedback to the user why the deployment takes so long.</p>
-<h3 id="workaround">Workaround</h3>
-<p>To provide a better user experience we'll reuse the current approval policies. The idea is to set a service user as the approver, and approve the vRA request via REST API. We need a background process to wait for the external approval to happen and once the decision is made this process can let the vRA request go. This background process will be running on vRO as a scheduled workflow.</p>
-<p>We'll run this external system polling workflow recurrently. This helps to avoid long-running workflows: we check if the external approval has happened and go back sleeping if it has not.</p>
-<h3 id="sequence">Sequence</h3>
-<p>The following diagram shows the steps in case of a deployment request.<br>
-<img src="/cma/img/vra8-servicenow-approval/approval-sequence.png" alt=""></p>
-<h3 id="policy">Policy</h3>
-<p>Let's create an approval policy in Service Broker for Deployment Create action. Approver is a service user:<br>
-<img src="/cma/img/vra8-servicenow-approval/approval-policy.png" alt=""></p>
-<h2 id="servicenow">ServiceNow</h2>
-<p>You can register a developer ServiceNow instance at <a href="https://developer.servicenow.com/">https://developer.servicenow.com/</a> if needed.</p>
-<p>We need a catalog item that is not auto-approving. Ordering the catalog item results in a request that we'll wait to be approved. We will use a default demo catalog item for testing purposes: <em>VM Provisioning</em></p>
-<p>Also a service user must be created for REST API. This user needs access to the chosen catalog item.</p>
-<h2 id="vro">vRO</h2>
-<p>We need two REST endpoints. ServiceNow API uses Basic authentication, so we create a REST host providing the credentials as well:<br>
-<img src="/cma/img/vra8-servicenow-approval/snow-endpoint.png" alt=""></p>
+<h2 id="subject">Subject</h2>
+<p>vRA8 (up current version 8.5) does not support to set the name of network inteface in Azure, the default naming scheme apply (<code>subnetname-&lt;suffix&gt;</code>). It is hard to see by name which NIC belongs to which virtual machine:</p>
+<p><img src="/cma/img/vra8-azure-rename-nic/default-naming.png" alt=""></p>
+<h2 id="new-iaas-api">New IaaS API</h2>
+<p><a href="https://docs.vmware.com/en/VMware-vRealize-Automation/8.5/rn/vmware-vrealize-automation-85-release-notes.html">vRealize Automation 8.5 Release Notes</a> mentions an IaaS API addition that allows us to change selected parameters via <br><code>/iaas/api/machines/{id}/network-interfaces/{nicId}</code>.</p>
+<p>Changing the name is supported, but only before provisioning, we need to call the API in Compute provision (<code>compute.provision.pre</code>) phase. We'll use an extensibility EBS to trigger a vRO workflow. This workflow calls the IaaS API to change the name attribute. Here is a sample payload available via <code>inputProperties</code>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="ln"> 1</span><span class="p">{</span>
+<span class="ln"> 2</span>  <span class="nt">&#34;addresses&#34;</span><span class="p">:</span> <span class="p">[</span>
+<span class="ln"> 3</span>    <span class="p">[</span>
+<span class="ln"> 4</span>      <span class="kc">null</span>
+<span class="ln"> 5</span>    <span class="p">]</span>
+<span class="ln"> 6</span>  <span class="p">],</span>
+<span class="ln"> 7</span>  <span class="nt">&#34;componentId&#34;</span><span class="p">:</span> <span class="s2">&#34;cloudvm[0]&#34;</span><span class="p">,</span>
+<span class="ln"> 8</span>  <span class="nt">&#34;endpointId&#34;</span><span class="p">:</span> <span class="s2">&#34;277a3feb-ec8e-4de3-82e7-60b7024ae9c7&#34;</span><span class="p">,</span>
+<span class="ln"> 9</span>  <span class="nt">&#34;externalIds&#34;</span><span class="p">:</span> <span class="p">[</span>
+<span class="ln">10</span>    <span class="s2">&#34;cloudvm-34&#34;</span>
+<span class="ln">11</span>  <span class="p">],</span>
+<span class="ln">12</span>  <span class="nt">&#34;blueprintId&#34;</span><span class="p">:</span> <span class="s2">&#34;43449016-b9a7-4640-bdb8-4520ce6a86e1&#34;</span><span class="p">,</span>
+<span class="ln">13</span>  <span class="nt">&#34;tags&#34;</span><span class="p">:</span> <span class="p">{},</span>
+<span class="ln">14</span>  <span class="nt">&#34;resourceNames&#34;</span><span class="p">:</span> <span class="p">[</span>
+<span class="ln">15</span>    <span class="s2">&#34;cloudvm-34&#34;</span>
+<span class="ln">16</span>  <span class="p">],</span>
+<span class="ln">17</span>  <span class="nt">&#34;customProperties&#34;</span><span class="p">:</span> <span class="p">{</span>
+<span class="ln">18</span>    <span class="nt">&#34;flavor&#34;</span><span class="p">:</span> <span class="s2">&#34;small&#34;</span><span class="p">,</span>
+<span class="ln">19</span>    <span class="nt">&#34;azureManagedDiskType&#34;</span><span class="p">:</span> <span class="s2">&#34;Standard_LRS&#34;</span><span class="p">,</span>
+<span class="ln">20</span>    <span class="nt">&#34;image&#34;</span><span class="p">:</span> <span class="s2">&#34;az_rhel7&#34;</span><span class="p">,</span>
+<span class="ln">21</span>    <span class="nt">&#34;resourceGroupName&#34;</span><span class="p">:</span> <span class="s2">&#34;testRG&#34;</span><span class="p">,</span>
+<span class="ln">22</span>    <span class="nt">&#34;countIndex&#34;</span><span class="p">:</span> <span class="s2">&#34;0&#34;</span><span class="p">,</span>
+<span class="ln">23</span>    <span class="nt">&#34;count&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>
+<span class="ln">24</span>    <span class="nt">&#34;project&#34;</span><span class="p">:</span> <span class="s2">&#34;a0ca29a2-4594-4281-b473-a490a16b92f8&#34;</span><span class="p">,</span>
+<span class="ln">25</span>    <span class="nt">&#34;flavorMappingName&#34;</span><span class="p">:</span> <span class="s2">&#34;small&#34;</span>
+<span class="ln">26</span>  <span class="p">},</span>
+<span class="ln">27</span>  <span class="nt">&#34;componentTypeId&#34;</span><span class="p">:</span> <span class="s2">&#34;Cloud.Azure.Machine&#34;</span><span class="p">,</span>
+<span class="ln">28</span>  <span class="nt">&#34;requestId&#34;</span><span class="p">:</span> <span class="s2">&#34;fe924e4a-8cd8-4921-8790-4446045683e5&#34;</span><span class="p">,</span>
+<span class="ln">29</span>  <span class="nt">&#34;macAddresses&#34;</span><span class="p">:</span> <span class="p">[</span>
+<span class="ln">30</span>    <span class="p">[</span>
+<span class="ln">31</span>      <span class="kc">null</span>
+<span class="ln">32</span>    <span class="p">]</span>
+<span class="ln">33</span>  <span class="p">],</span>
+<span class="ln">34</span>  <span class="nt">&#34;deploymentId&#34;</span><span class="p">:</span> <span class="s2">&#34;992dea79-d0e1-41bd-a716-4fa017b04496&#34;</span><span class="p">,</span>
+<span class="ln">35</span>  <span class="nt">&#34;zoneId&#34;</span><span class="p">:</span> <span class="s2">&#34;5e31fcab-e8d5-433c-8c6f-9a1816054600&#34;</span><span class="p">,</span>
+<span class="ln">36</span>  <span class="nt">&#34;projectId&#34;</span><span class="p">:</span> <span class="s2">&#34;a0ca29a2-4594-4281-b473-a490a16b92f8&#34;</span><span class="p">,</span>
+<span class="ln">37</span>  <span class="nt">&#34;subnetIds&#34;</span><span class="p">:</span> <span class="p">[</span>
+<span class="ln">38</span>    <span class="p">[</span>
+<span class="ln">39</span>      <span class="s2">&#34;0f54c3f8-25ab-45bd-8dfb-6ce24eaacd4d&#34;</span>
+<span class="ln">40</span>    <span class="p">]</span>
+<span class="ln">41</span>  <span class="p">],</span>
+<span class="ln">42</span>  <span class="nt">&#34;resourceIds&#34;</span><span class="p">:</span> <span class="p">[</span>
+<span class="ln">43</span>    <span class="s2">&#34;f47b4051-f000-43de-963b-d9a5acbac495&#34;</span>
+<span class="ln">44</span>  <span class="p">]</span>
+<span class="ln">45</span><span class="p">}</span>
+</code></pre></div><p>The resourceIds array contains the VM id. We need to identify the network interface id, the IaaS API can provide it:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>curl -s -k -H <span class="s1">&#39;Content-Type: application/json&#39;</span> -H <span class="s2">&#34;Authorization: Bearer </span><span class="nv">$access_token</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="ln">2</span><span class="se"></span><span class="s1">&#39;https://vra8.corp.local/iaas/api/machines/f47b4051-f000-43de-963b-d9a5acbac495&#39;</span> <span class="p">|</span> jq <span class="s1">&#39;._links[&#34;network-interfaces&#34;]&#39;</span>
+</code></pre></div><p>In the output we have the path of the NIC wee need to use:</p>
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="ln">1</span><span class="p">{</span>
+<span class="ln">2</span>  <span class="nt">&#34;hrefs&#34;</span><span class="p">:</span> <span class="p">[</span>
+<span class="ln">3</span>    <span class="s2">&#34;/iaas/api/machines/f47b4051-f000-43de-963b-d9a5acbac495/network-interfaces/6ab905bc-7ff1-4639-981f-dbbec4a93949&#34;</span>
+<span class="ln">4</span>  <span class="p">]</span>
+<span class="ln">5</span><span class="p">}</span>
+</code></pre></div><h2 id="extensibility-vro-workflow">Extensibility: vRO workflow</h2>
 <p>For vRA REST API we use the <a href="https://marketplace.cloud.vmware.com/services/details/vmware-vrealize-orchestrator-plug-in-for-vrealize-automation-1?slug=true">Orchestrator Plug-in for vRealize Automation</a>:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-endpoint.png" alt=""></p>
-<h3 id="workflows">Workflows</h3>
-<p>Now import the integration package <em>com.servicenow.approval</em> that will provide the workflows:<br>
-<img src="/cma/img/vra8-servicenow-approval/vro-workflows.png" alt=""></p>
-<table>
-<thead>
-<tr>
-<th>Workflow Name</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Request Approval</td>
-<td>Open ServiceNow request and schedule polling workflow</td>
-</tr>
-<tr>
-<td>Catalog - VM Provisioning</td>
-<td>Request the catalog item (subflow)</td>
-</tr>
-<tr>
-<td>Poll SNOW and Approve vRA</td>
-<td>The scheduled workflow checking ServiceNow and approving in vRA</td>
-</tr>
-<tr>
-<td>Check Approval Status</td>
-<td>Fetches the approval status of the request opened (subflow)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="download">Download</h3>
-<p>Workflows and package can be downloaded: <a href="https://github.com/kuklis/vra8-servicenow-approval">https://github.com/kuklis/vra8-servicenow-approval</a></p>
-<h2 id="vra">vRA</h2>
-<h3 id="event-broker-subscription">Event Broker Subscription</h3>
-<p>Now we create the EBS that'll trigger the workflow <em>Request Approval</em>. Event topic is <em>Deployment Requested</em>:<br>
-Event is fired before deployment is provisioned for both cloud template and catalog requests<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-ebs.png" alt=""></p>
-<p>We filter the event by type to ensure only deployment create will trigger it:</p>
-<pre><code>event.data.eventType == &quot;CREATE_DEPLOYMENT&quot;
-</code></pre>
-<h3 id="test-catalog-request">Test Catalog Request</h3>
-<p>Let's try the solution out in Service Broker. After submitting the request, we can see an approval is needed:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-approval-pending.png" alt=""></p>
-<p>Request is opened and pending for approval:<br>
-<img src="/cma/img/vra8-servicenow-approval/snow-request.png" alt=""></p>
-<p>Once it is approved, the deployment completes:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-deployment-success.png" alt=""></p>
-<p>In case ServiceNow request is rejected, vRA deployment is also rejected:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-deployment-rejected.png" alt=""></p>
+<img src="/cma/img/vra8-azure-rename-nic/vra-endpoint.png" alt=""></p>
+<p>The following sample workflow will modify the NIC name to <code>vmname-nic</code>. The <code>inputProperties</code> contains the EBS payload, and vraHost is the VRA:Host endpoint. We need to specify the new API version 2021-07-15 to enable this functionality.</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln"> 1</span><span class="kd">var</span> <span class="nx">restClient</span> <span class="o">=</span> <span class="nx">vraHost</span><span class="p">.</span><span class="nx">createRestClient</span><span class="p">();</span>
+<span class="ln"> 2</span><span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">restClient</span><span class="p">.</span><span class="nx">createRequest</span><span class="p">(</span><span class="s2">&#34;GET&#34;</span><span class="p">,</span> <span class="s2">&#34;/iaas/api/machines/&#34;</span> <span class="o">+</span> <span class="nx">inputProperties</span><span class="p">.</span><span class="nx">resourceIds</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="ln"> 3</span><span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">restClient</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
+<span class="ln"> 4</span><span class="nx">System</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;GET statusCode: &#34;</span> <span class="o">+</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">);</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span><span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">contentAsString</span><span class="p">);</span>
+<span class="ln"> 7</span><span class="nx">content</span><span class="p">.</span><span class="nx">_links</span><span class="p">[</span><span class="s2">&#34;network-interfaces&#34;</span><span class="p">].</span><span class="nx">hrefs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span>
+<span class="ln"> 8</span>    <span class="kd">function</span> <span class="p">(</span><span class="nx">nic_link</span><span class="p">)</span> <span class="p">{</span>
+<span class="ln"> 9</span>        <span class="nx">request</span> <span class="o">=</span> <span class="nx">restClient</span><span class="p">.</span><span class="nx">createRequest</span><span class="p">(</span><span class="s2">&#34;PATCH&#34;</span><span class="p">,</span> <span class="nx">nic_link</span> <span class="o">+</span> <span class="s2">&#34;?apiVersion=2021-07-15&#34;</span><span class="p">,</span> 
+<span class="ln">10</span>            <span class="s1">&#39;{&#34;name&#34;:&#34;&#39;</span> <span class="o">+</span> <span class="nx">inputProperties</span><span class="p">.</span><span class="nx">resourceNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-nic&#34;}&#39;</span><span class="p">);</span>
+<span class="ln">11</span>        <span class="nx">response</span> <span class="o">=</span> <span class="nx">restClient</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
+<span class="ln">12</span>        <span class="nx">System</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;PATCH statusCode: &#34;</span> <span class="o">+</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">);</span>
+<span class="ln">13</span>    <span class="p">}</span>
+<span class="ln">14</span><span class="p">)</span>
+</code></pre></div><p>You can download the <em>com.azure.utils</em> package containing the workflow from GitHub: <a href="https://github.com/kuklis/vro8-packages">https://github.com/kuklis/vro8-packages</a></p>
+<h2 id="vra-event-broker-subscription">vRA Event Broker Subscription</h2>
+<p>Now we create an EBS for the workflow:
+<img src="/cma/img/vra8-azure-rename-nic/ebs.png" alt=""></p>
+<p>It is important to make the EBS blocking so that vRA waits for the workflow run and the change made.</p>
+<h2 id="check-the-result">Check the result</h2>
+<p>After deploying a new Azure VM, the NIC name matches the VM name:</p>
+<p><img src="/cma/img/vra8-azure-rename-nic/custom-naming.png" alt=""></p>
 
   </article>
 <aside class="sidebar">
@@ -264,9 +261,6 @@ Event is fired before deployment is provisioned for both cloud template and cata
       </div>
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
-      <li>
-        <a href="https://kuklis.github.io/cma/post/vra8-azure-rename-nic/" class="nav-link" title="Rename Azure NIC in vRA8">Rename Azure NIC in vRA8</a>
-      </li>
       <li>
         <a href="https://kuklis.github.io/cma/post/vra8-session-timeout/" class="nav-link" title="Increase vRA8 session timeout">Increase vRA8 session timeout</a>
       </li>
@@ -281,6 +275,9 @@ Event is fired before deployment is provisioned for both cloud template and cata
       </li>
       <li>
         <a href="https://kuklis.github.io/cma/post/vra8-azure-storage-exception/" class="nav-link" title="vRA8 Azure cloud account storage exception">vRA8 Azure cloud account storage exception</a>
+      </li>
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-servicenow-approval/" class="nav-link" title="vRA8 with ServiceNow External Approvals">vRA8 with ServiceNow External Approvals</a>
       </li>
     </ul>
     <div>

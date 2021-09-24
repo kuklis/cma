@@ -3,28 +3,34 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://kuklis.github.io/cma/</loc>
-    <lastmod>2021-09-22T00:00:00+00:00</lastmod>
+    <lastmod>2021-09-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/azure/</loc>
+    <lastmod>2021-09-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/</loc>
-    <lastmod>2021-09-22T00:00:00+00:00</lastmod>
+    <lastmod>2021-09-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/gui/</loc>
-    <lastmod>2021-09-22T00:00:00+00:00</lastmod>
+    <lastmod>2021-09-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/post/</loc>
+    <lastmod>2021-09-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/post/vra8-azure-rename-nic/</loc>
+    <lastmod>2021-09-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/</loc>
+    <lastmod>2021-09-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
+    <lastmod>2021-09-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
+    <lastmod>2021-09-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vra8-session-timeout/</loc>
     <lastmod>2021-09-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/post/</loc>
-    <lastmod>2021-09-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/</loc>
-    <lastmod>2021-09-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
-    <lastmod>2021-09-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/azure/</loc>
-    <lastmod>2021-07-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/powershell/</loc>
     <lastmod>2021-07-14T00:00:00+00:00</lastmod>
@@ -39,9 +45,6 @@
     <lastmod>2021-06-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/custom-form-dropdown-external-source/</loc>
-    <lastmod>2021-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
     <lastmod>2021-06-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/development/</loc>
