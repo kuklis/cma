@@ -154,7 +154,7 @@
 </span><span class="ln">2</span><span class="se"></span>https://vra8.corp.local/iaas/api/configuration-properties?apiVersion<span class="o">=</span>2021-07-15 -X PATCH <span class="se">\
 </span><span class="ln">3</span><span class="se"></span>-d <span class="s1">&#39;{&#34;key&#34;:&#34;SESSION_TIMEOUT_DURATION_MINUTES&#34;, &#34;value&#34;:&#34;480&#34;}&#39;</span>
 </code></pre></div><p>The output shows the property, 8 hours should do 😉</p>
-<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln">1</span>{&#34;key&#34;:&#34;SESSION_TIMEOUT_DURATION_MINUTES&#34;,&#34;value&#34;:&#34;480&#34;}
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="ln">1</span><span class="p">{</span><span class="nt">&#34;key&#34;</span><span class="p">:</span><span class="s2">&#34;SESSION_TIMEOUT_DURATION_MINUTES&#34;</span><span class="p">,</span><span class="nt">&#34;value&#34;</span><span class="p">:</span><span class="s2">&#34;480&#34;</span><span class="p">}</span>
 </code></pre></div><p>Please note the change only applies to Service Broker and Cloud Assembly timeouts, but Orchestrator will still timeout after the hard-coded time.</p>
 
   </article>
@@ -167,6 +167,9 @@
       </div>
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-external-inputs-and-input-property-groups/" class="nav-link" title="vRA8 External Inputs and Input Property Groups">vRA8 External Inputs and Input Property Groups</a>
+      </li>
       <li>
         <a href="https://kuklis.github.io/cma/post/vra8-azure-rename-nic/" class="nav-link" title="Rename Azure NIC in vRA8">Rename Azure NIC in vRA8</a>
       </li>
@@ -191,7 +194,7 @@
       <nav class="tags_nav">
         <a href='https://kuklis.github.io/cma/categories/gui/' class="post_tag button button_translucent" title="gui">
           GUI
-          <span class="button_tally">3</span>
+          <span class="button_tally">4</span>
         </a>
         
         <a href='https://kuklis.github.io/cma/categories/public-cloud/' class="post_tag button button_translucent" title="public-cloud">
@@ -217,16 +220,16 @@
       <nav class="tags_nav">
         <a href='https://kuklis.github.io/cma/tags/vra8/' class="post_tag button button_translucent" title="vra8">
           VRA8
-          <span class="button_tally">5</span>
-        </a>
-        
-        <a href='https://kuklis.github.io/cma/tags/azure/' class="post_tag button button_translucent" title="azure">
-          AZURE
-          <span class="button_tally">3</span>
+          <span class="button_tally">6</span>
         </a>
         
         <a href='https://kuklis.github.io/cma/tags/vro/' class="post_tag button button_translucent" title="vro">
           VRO
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/tags/azure/' class="post_tag button button_translucent" title="azure">
+          AZURE
           <span class="button_tally">3</span>
         </a>
         

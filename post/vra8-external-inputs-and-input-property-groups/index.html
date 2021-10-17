@@ -1,0 +1,583 @@
+
+<!DOCTYPE html>
+<html lang="en" data-figures="" class="page">
+  <head>
+<title>vRA8 External Inputs and Input Property Groups | CMA</title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.81.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TW72DHK7SC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-TW72DHK7SC');
+</script>
+  
+<meta property="og:locale" content="en" />
+
+<meta property="og:type" content="article">
+<meta name="description" content="Dynamic dropdowns with Cloud Templates">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="@kuklis_k">
+<meta name="twitter:title" content="vRA8 External Inputs and Input Property Groups" />
+<meta property="og:url" content="https://kuklis.github.io/cma/post/vra8-external-inputs-and-input-property-groups/" />
+<meta property="og:title" content="vRA8 External Inputs and Input Property Groups" />
+<meta property="og:description" content="Dynamic dropdowns with Cloud Templates" />
+<meta property="og:image" content="https://kuklis.github.io/cma/images/propertygroup.png" />
+<link rel="apple-touch-icon" sizes="180x180" href='https://kuklis.github.io/cma/icons/apple-touch-icon.png'>
+<link rel="icon" type="image/png" sizes="32x32" href='https://kuklis.github.io/cma/icons/favicon-32x32.png'>
+<link rel="manifest" href='https://kuklis.github.io/cma/icons/site.webmanifest'>
+<link rel="mask-icon" href='https://kuklis.github.io/cma/safari-pinned-tab.svg' color="#002538">
+<meta name="msapplication-TileColor" content="#002538">
+<meta name="theme-color" content="#002538">
+
+<link rel="canonical" href="https://kuklis.github.io/cma/post/vra8-external-inputs-and-input-property-groups/">
+
+    
+
+    
+    
+    <link rel="preload" href="https://kuklis.github.io/cma/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="https://kuklis.github.io/cma/js/bundle.min.a6ea2fbec2fc7f5120cfe00b7aa62ddf71b53cd34bead611b8b05b1288a4d42ac0c36886f45e7e38579dd115c11ac6ba2c2793847ddcd9323202009ad731070a.js" as="script" integrity=
+    "sha512-puovvsL8f1Egz&#43;ALeqYt33G1PNNL6tYRuLBbEoik1CrAw2iG9F5&#43;OFed0RXBGsa6LCeThH3c2TIyAgCa1zEHCg==" crossorigin="anonymous">
+
+    
+    <link rel="stylesheet" type="text/css" href="https://kuklis.github.io/cma/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
+    
+  </head>
+  
+  
+    
+  
+  <body data-code="7" data-lines="false" id="documentTop">
+
+<header class="nav_header" >
+  <nav class="nav"><a href='https://kuklis.github.io/cma/' class="nav_brand nav_item" title="CMA">
+  <img src="https://kuklis.github.io/cma/logos/cma.png" class="logo" alt="CMA">
+  <div class="nav_close">
+    <div><svg class="icon">
+  <use xlink:href="#open-menu"></use>
+</svg><svg class="icon">
+  <use xlink:href="#closeme"></use>
+</svg></div>
+  </div>
+</a>
+    <div class='nav_body nav_body_left'>
+      
+      
+      
+        
+
+  <div class="nav_parent">
+    <a href="https://kuklis.github.io/cma/" class="nav_item" title="Home">Home </a>
+  </div>
+      
+<div class='follow'>
+  <a href="https://github.com/kuklis">
+    <svg class="icon">
+  <use xlink:href="#github"></use>
+</svg>
+  </a>
+  <a href="https://twitter.com/kuklis_k">
+    <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+  </a>
+  <a href="https://www.linkedin.com/in/kuklisk">
+    <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+  </a>
+    
+  <a href="https://kuklis.github.io/cma/index.xml">
+    <svg class="icon">
+  <use xlink:href="#rss"></use>
+</svg>
+  </a>
+<div class="color_mode">
+  <input type="checkbox" class="color_choice" id="mode">
+</div>
+
+</div>
+
+    </div>
+  </nav>
+</header>
+
+    <main>
+  
+<div class="grid-inverse wrap content">
+  <article class="post_content">
+    <h1 class="post_title">vRA8 External Inputs and Input Property Groups</h1><div class="post_meta">
+  
+    <svg class="icon">
+  <use xlink:href="#calendar"></use>
+</svg>
+    <span class="post_date">
+      Oct 17, 2021</span>
+      <a href='https://kuklis.github.io/cma/tags/vra8' title="vRA8" class="post_tag button button_translucent">vRA8
+      </a>
+      <a href='https://kuklis.github.io/cma/tags/vro' title="vRO" class="post_tag button button_translucent">vRO
+      </a>
+</div>
+
+    
+  <div class="post_share">
+    Share on:
+    <a href="https://twitter.com/intent/tweet?text=vRA8%20External%20Inputs%20and%20Input%20Property%20Groups&url=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-external-inputs-and-input-property-groups%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+    </a>
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-external-inputs-and-input-property-groups%2f&t=vRA8%20External%20Inputs%20and%20Input%20Property%20Groups" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#facebook"></use>
+</svg>
+    </a>
+    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+    </a>
+    <a href="https://kuklis.github.io/cma/post/vra8-external-inputs-and-input-property-groups/" title="Copy Link" class="link link_yank">
+      <svg class="icon">
+  <use xlink:href="#copy"></use>
+</svg>
+    </a>
+  </div>
+
+    
+    <p>Hiccups and possible solutions using dynamic input dropdowns</p>
+<div class="toc">
+    <H3>Table of Contents</H3>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#cloud-templates-with-dynamic-vro-selection-inputs">Cloud Templates with dynamic vRO selection inputs</a>
+      <ul>
+        <li><a href="#a-very-simple-cloud-template">A (very) simple Cloud Template</a></li>
+        <li><a href="#vro-action-returning-properties">vRO action returning Properties</a></li>
+        <li><a href="#vro-action-returning-array-of-properties">vRO action returning Array of Properties</a></li>
+        <li><a href="#workaround">Workaround</a></li>
+      </ul>
+    </li>
+    <li><a href="#vro-actions-in-an-input-property-group">vRO actions in an Input Property Group</a>
+      <ul>
+        <li><a href="#a-cloud-template-with-input-property-group">A Cloud Template with Input Property Group</a></li>
+        <li><a href="#adjusting-the-custom-form">Adjusting the Custom Form</a></li>
+        <li><a href="#bonus-reordering-the-property-group-list">Bonus: Reordering the Property Group list</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+  </div>
+<h2 id="introduction">Introduction</h2>
+<p>vRA <a href="https://docs.vmware.com/en/vRealize-Automation/8.4.2/rn/vRealize-Automation-842-releasenotes.html#new-vrealize-automation-82-patch-1-1">8.4.2 added support</a> to <a href="https://docs.vmware.com/en/vRealize-Automation/8.4/Using-and-Managing-Cloud-Assembly/GUID-C96E54B4-2366-45AB-9E2C-8884A8945FF0.html">use vRO actions for dynamic external values</a> to define properties in property groups, and <a href="https://docs.vmware.com/en/vRealize-Automation/8.5.1/rn/vmware-vrealize-automation-851-release-notes/index.html#whats-new">8.5.1 added support</a> to define <a href="https://docs.vmware.com/en/vRealize-Automation/8.5/Using-and-Managing-Cloud-Assembly/GUID-5E57E22B-725E-4B1D-A6CC-3BAE54498C19.html">Cloud Templates with dynamic vRO inputs</a>.</p>
+<p>In my previous post I've discussed <a href="/cma/post/custom-form-dropdown-external-source">dynamic dropdowns with Custom Forms</a>, now let's take a look on how we can adapt the approach to Cloud Templates and Property Groups. Although the support of Property Groups were introduced earlier, I'll start with the latter.</p>
+<h2 id="cloud-templates-with-dynamic-vro-selection-inputs">Cloud Templates with dynamic vRO selection inputs</h2>
+<p>We can use vRO actions to define the default value and a selection list with possible values to select from.</p>
+<p>If the list action returns an Array of String, the dropdown just works fine: the user selected label will be passed to the input variable as value.</p>
+<p>For a different label of the values passed within Custom Forms, we could use two return types: Properties and Array of Properties. The main difference was that Properties represent a hashmap that is unsorted, while the Array is always sorted. The latter is useful if we want to display a long list and some ordering is needed for the user to locate the desired item quickly. This has been presented in the <a href="/cma/post/custom-form-dropdown-external-source">previous blog entry</a> already.</p>
+<h3 id="a-very-simple-cloud-template">A (very) simple Cloud Template</h3>
+<p>Our sample Cloud Template has only a single input: a string. The provided name is the owner of the VM provisioned, and we assign the tag <tt>owner:username</tt> to the VM:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">formatVersion</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="ln"> 2</span><span class="w"></span><span class="nt">inputs</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 3</span><span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
+</span><span class="ln"> 5</span><span class="w"></span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 6</span><span class="w">  </span><span class="nt">photon</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 7</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">Cloud.vSphere.Machine</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">    </span><span class="nt">properties</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">photon</span><span class="w">
+</span><span class="ln">10</span><span class="w">      </span><span class="nt">cpuCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="ln">11</span><span class="w">      </span><span class="nt">totalMemoryMB</span><span class="p">:</span><span class="w"> </span><span class="m">1024</span><span class="w">
+</span><span class="ln">12</span><span class="w">      </span><span class="nt">folderName</span><span class="p">:</span><span class="w"> </span><span class="l">vra8</span><span class="w">
+</span><span class="ln">13</span><span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w">
+</span><span class="ln">14</span><span class="w">        </span>- <span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l">owner</span><span class="w">
+</span><span class="ln">15</span><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;${input.owner}&#39;</span><span class="w">
+</span></code></pre></div><p>To make the input value dynamic, we have to create a vRO action with a return value. The <a href="https://docs.vmware.com/en/vRealize-Automation/8.5/Using-and-Managing-Cloud-Assembly/GUID-5E57E22B-725E-4B1D-A6CC-3BAE54498C19.html">Cloud Assembly template example</a> documentation describes only the (single) Properties option, let's take a look at both approaches to provide enumerated input selections.</p>
+<h3 id="vro-action-returning-properties">vRO action returning Properties</h3>
+<p>For demonstration purposes we'll use the <a href="http://jsonplaceholder.typicode.com/">JSONPlaceholder</a> service to get some sample data. For key we use the <em>username</em> field, and for value (label) the <em>name</em> field. The name of the  action is <tt>getUsersUnsorted</tt>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln"> 1</span><span class="kd">var</span> <span class="nx">restHost</span> <span class="o">=</span> <span class="nx">RESTHostManager</span><span class="p">.</span><span class="nx">createTransientHostFrom</span><span class="p">(</span>
+<span class="ln"> 2</span>    <span class="nx">RESTHostManager</span><span class="p">.</span><span class="nx">createHost</span><span class="p">(</span><span class="s2">&#34;dynamicRequest&#34;</span><span class="p">));</span>
+<span class="ln"> 3</span><span class="nx">restHost</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="s2">&#34;http://jsonplaceholder.typicode.com&#34;</span><span class="p">;</span>
+<span class="ln"> 4</span><span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">restHost</span><span class="p">.</span><span class="nx">createRequest</span><span class="p">(</span><span class="s2">&#34;GET&#34;</span><span class="p">,</span> <span class="s2">&#34;/users&#34;</span><span class="p">);</span>
+<span class="ln"> 5</span><span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
+<span class="ln"> 6</span><span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">contentAsString</span><span class="p">);</span>
+<span class="ln"> 7</span>
+<span class="ln"> 8</span><span class="nx">users</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Properties</span><span class="p">();</span>
+<span class="ln"> 9</span><span class="nx">content</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span>
+<span class="ln">10</span>    <span class="kd">function</span> <span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+<span class="ln">11</span>        <span class="nx">users</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">username</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+<span class="ln">12</span>  <span class="p">}</span>
+<span class="ln">13</span><span class="p">);</span>
+<span class="ln">14</span>
+<span class="ln">15</span><span class="k">return</span> <span class="nx">users</span><span class="p">;</span>
+</code></pre></div><p>In Cloud Assembly, select in Cloud Template editor the <em>Inputs</em> tab, and click on the input named <em>owner</em>. Now within <em>More Options</em> we can assign the action by selecting <em>External source</em> and choosing <tt>getUsersUnsorted</tt>:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/select_input_action.png" alt=""></p>
+<p>The Cloud Template code will include the action now highlighted:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">formatVersion</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="ln"> 2</span><span class="w"></span><span class="nt">inputs</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 3</span><span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
+</span><span class="hl"><span class="ln"> 5</span><span class="w">    </span><span class="nt">$dynamicEnum</span><span class="p">:</span><span class="w"> </span><span class="l">/data/vro-actions/com.vra.dropdown/getUsersUnsorted</span><span class="w">
+</span></span><span class="ln"> 6</span><span class="w"></span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 7</span><span class="w">  </span><span class="nt">photon</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">Cloud.vSphere.Machine</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">    </span><span class="nt">properties</span><span class="p">:</span><span class="w">
+</span><span class="ln">10</span><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">photon</span><span class="w">
+</span><span class="ln">11</span><span class="w">      </span><span class="nt">cpuCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="ln">12</span><span class="w">      </span><span class="nt">totalMemoryMB</span><span class="p">:</span><span class="w"> </span><span class="m">1024</span><span class="w">
+</span><span class="ln">13</span><span class="w">      </span><span class="nt">folderName</span><span class="p">:</span><span class="w"> </span><span class="l">vra8</span><span class="w">
+</span><span class="ln">14</span><span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w">
+</span><span class="ln">15</span><span class="w">        </span>- <span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l">owner</span><span class="w">
+</span><span class="ln">16</span><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;${input.owner}&#39;</span></code></pre></div>
+<p>Let's try out our dropdown in Service Broker:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/service_broker_test_unsorted.png" alt=""></p>
+<p>This list appears, but unsorted. The tag is assigned correctly:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/vm_tagged1.png" alt=""></p>
+<h3 id="vro-action-returning-array-of-properties">vRO action returning Array of Properties</h3>
+<p>Now we return an ordered list to make our dropdown prettier. The name of the  action is <tt>getUsersSorted</tt>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln"> 1</span><span class="kd">var</span> <span class="nx">restHost</span> <span class="o">=</span> <span class="nx">RESTHostManager</span><span class="p">.</span><span class="nx">createTransientHostFrom</span><span class="p">(</span>
+<span class="ln"> 2</span>    <span class="nx">RESTHostManager</span><span class="p">.</span><span class="nx">createHost</span><span class="p">(</span><span class="s2">&#34;dynamicRequest&#34;</span><span class="p">));</span>
+<span class="ln"> 3</span><span class="nx">restHost</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="s2">&#34;http://jsonplaceholder.typicode.com&#34;</span><span class="p">;</span>
+<span class="ln"> 4</span><span class="kd">var</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">restHost</span><span class="p">.</span><span class="nx">createRequest</span><span class="p">(</span><span class="s2">&#34;GET&#34;</span><span class="p">,</span> <span class="s2">&#34;/users&#34;</span><span class="p">);</span>
+<span class="ln"> 5</span><span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
+<span class="ln"> 6</span><span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">contentAsString</span><span class="p">);</span>
+<span class="ln"> 7</span>
+<span class="ln"> 8</span><span class="nx">users</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="ln"> 9</span><span class="nx">content</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span>
+<span class="ln">10</span>  <span class="kd">function</span> <span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+<span class="ln">11</span>    <span class="nx">users</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Properties</span><span class="p">({</span><span class="nx">value</span><span class="o">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">username</span><span class="p">,</span> <span class="nx">label</span><span class="o">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">}));</span>
+<span class="ln">12</span>  <span class="p">}</span>
+<span class="ln">13</span><span class="p">);</span>
+<span class="ln">14</span>
+<span class="ln">15</span><span class="nx">users</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span>
+<span class="ln">16</span>  <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+<span class="ln">17</span>    <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">label</span> <span class="o">&gt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">label</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">label</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">label</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+<span class="ln">18</span>  <span class="p">}</span>
+<span class="ln">19</span><span class="p">);</span>
+<span class="ln">20</span>
+<span class="ln">21</span><span class="k">return</span> <span class="nx">users</span><span class="p">;</span>
+</code></pre></div><p>In the Cloud Template Inputs tab choose <tt>getUsersSorted</tt> as <em>External source</em>, or modify the template code:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="nt">formatVersion</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="ln">2</span><span class="w"></span><span class="nt">inputs</span><span class="p">:</span><span class="w">
+</span><span class="ln">3</span><span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w">
+</span><span class="ln">4</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
+</span><span class="ln">5</span><span class="w">    </span><span class="nt">$dynamicEnum</span><span class="p">:</span><span class="w"> </span><span class="l">/data/vro-actions/com.vra.dropdown/getUsersSorted</span><span class="w">
+</span><span class="ln">6</span><span class="w"></span><span class="nn">...</span><span class="w">
+</span></code></pre></div><p>We can quicly test the result in Cloud Assembly too (without releasing the new version to Service Broker), with the <em>Test</em> button:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/testing_photon.png" alt=""></p>
+<p>Looks good so far, the names are sorted alphabetically. But after submitting the test value, the following error message displayed:</p>
+<blockquote>
+<p><span style="color:red"> Value 'Delphine' is not in list of valid values [&quot;label&quot;, &quot;value&quot;, &quot;label&quot;, &quot;value&quot;, &quot;label&quot;, &quot;value&quot;, &quot;label&quot;, &quot;value&quot;, &quot;label&quot;, &quot;value&quot;, &quot;label&quot;, &quot;value&quot;, &quot;label&quot;, &quot;value&quot;, &quot;label&quot;, &quot;value&quot;, &quot;label&quot;, &quot;value&quot;, &quot;label&quot;, &quot;value&quot;]</span></p>
+</blockquote>
+<p>Altough we've selected an item from the dropdown, it is not accepted as a valid input! The same happens in Service Broker. Looks like the validation logic cannot use our second action, despite the fact it was correctly displayed.</p>
+<h3 id="workaround">Workaround</h3>
+<p>Let's revert our changes to the Cloud Template by selecting the <tt>getUsersUnsorted</tt> again as <em>External source</em>. This will fix the validation issue, and we can levereage Custom Forms to improve the user experience by sorting the dropdown.</p>
+<p>After creating the default Custom Form, we can see the Value options are copied from the Cloud Template:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/custom_form.png" alt=""></p>
+<p>By <ins>re-selecting the action</ins> <tt>getUsersSorted</tt> in the Custom Form, we can override the action providing an unsorted list. After enabling the Custom Form on the catalog item, the user list is sorted and the chosen value is accepted:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/service_broker_test_sorted.png" alt=""></p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/service_broker_inprogress.png" alt=""></p>
+<h2 id="vro-actions-in-an-input-property-group">vRO actions in an Input Property Group</h2>
+<p>I found the same limitation applies to properties within an Input Property Group: altough actions returing Array of Properties can be selected as external source of values, and the labels are displayed correctly on the form, the selected value cannot be submitted.</p>
+<p>So we create the Property Group with the <tt>owner</tt> property and external values action <tt>getUsersUnsorted</tt> returning a (single) Properties object. The user interface is very similar to the <a href="#vro-action-returning-properties">Cloud Template Input definition</a> form. Let's define one more property in the group:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/properties.png" alt=""></p>
+<h3 id="a-cloud-template-with-input-property-group">A Cloud Template with Input Property Group</h3>
+<p>We remove the <tt>owner</tt> input from the Cloud Template and assign the Input Property Group:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/input_property_group.png" alt=""></p>
+<p>The resulting Cloud Template (the referenced Property Group and properties are hightlighted):</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="nt">formatVersion</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="ln"> 2</span><span class="w"></span><span class="nt">inputs</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 3</span><span class="w">  </span><span class="nt">photonpg</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">object</span><span class="w">
+</span><span class="hl"><span class="ln"> 5</span><span class="w">    </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="l">/ref/property-groups/photonInputs</span><span class="w">
+</span></span><span class="ln"> 6</span><span class="w"></span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 7</span><span class="w">  </span><span class="nt">photon</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">Cloud.vSphere.Machine</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">    </span><span class="nt">properties</span><span class="p">:</span><span class="w">
+</span><span class="ln">10</span><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">photon</span><span class="w">
+</span><span class="ln">11</span><span class="w">      </span><span class="nt">cpuCount</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="ln">12</span><span class="w">      </span><span class="nt">totalMemoryMB</span><span class="p">:</span><span class="w"> </span><span class="m">1024</span><span class="w">
+</span><span class="ln">13</span><span class="w">      </span><span class="nt">folderName</span><span class="p">:</span><span class="w"> </span><span class="l">vra8</span><span class="w">
+</span><span class="ln">14</span><span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w">
+</span><span class="ln">15</span><span class="w">        </span>- <span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l">owner</span><span class="w">
+</span><span class="hl"><span class="ln">16</span><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;${input.photonpg.owner}&#39;</span><span class="w">
+</span></span><span class="ln">17</span><span class="w">        </span>- <span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l">department</span><span class="w">
+</span><span class="hl"><span class="ln">18</span><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;${input.photonpg.department}&#39;</span></span></code></pre></div>
+<h3 id="adjusting-the-custom-form">Adjusting the Custom Form</h3>
+<p>Let's delete the previous Custom Request Form to start from scratch. By customizing the custom form again, the Schema Elements (our Input Property Group) is added to the canvas. If we click on the Property Group, on the <em>Values</em> tab we can see the individual property names and labels, but we cannot override the input selection options:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/property_group_values.png" alt=""></p>
+<p>As a workaround we export the form as YAML and edit it manually. Within the <tt>schema</tt> section we replace the default action (copied from the Cloud Template) with the action <tt>getUsersSorted</tt>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="w">  </span><span class="nt">photonpg</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 2</span><span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">Photonpg</span><span class="w">
+</span><span class="ln"> 3</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">      </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l">complex</span><span class="w">
+</span><span class="ln"> 5</span><span class="w">      </span><span class="nt">fields</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 6</span><span class="w">        </span>- <span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">owner</span><span class="w">
+</span><span class="ln"> 7</span><span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">            </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">            </span><span class="nt">isMultiple</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="ln">10</span><span class="w">          </span><span class="nt">valueList</span><span class="p">:</span><span class="w">
+</span><span class="hl"><span class="ln">11</span><span class="w">            </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">com.vra.dropdown/getUsersSorted</span><span class="w">
+</span></span><span class="ln">12</span><span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">scriptAction</span><span class="w">
+</span><span class="ln">13</span><span class="w">            </span><span class="nt">parameters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="ln">14</span><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">owner</span><span class="w">
+</span><span class="ln">15</span><span class="w">        </span>- <span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">department</span><span class="w">
+</span><span class="ln">16</span><span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w">
+</span><span class="ln">17</span><span class="w">            </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
+</span><span class="ln">18</span><span class="w">            </span><span class="nt">isMultiple</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="ln">19</span><span class="w">          </span><span class="nt">valueList</span><span class="p">:</span><span class="w">
+</span><span class="ln">20</span><span class="w">            </span>- <span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">acc</span><span class="w">
+</span><span class="ln">21</span><span class="w">              </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">Accounting</span><span class="w">
+</span><span class="ln">22</span><span class="w">            </span>- <span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">dev</span><span class="w">
+</span><span class="ln">23</span><span class="w">              </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">Developers</span><span class="w">
+</span><span class="ln">24</span><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">department</span><span class="w">
+</span><span class="ln">25</span><span class="w">      </span><span class="nt">isMultiple</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></code></pre></div>
+<p>Our form with the nice, ordered list:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/service_broker_test_property_group.png" alt=""></p>
+<p>and the deployment inputs are accepted:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/service_broker_inprogress_pg.png" alt=""></p>
+<h3 id="bonus-reordering-the-property-group-list">Bonus: Reordering the Property Group list</h3>
+<p>The GUI does not provide a way to reorder the inputs within an Input Property Group on the Custom Form. You could delete and re-add the fields but the action assignments are lost then. However, we can export the Custom Form as YAML and manually reorder the display order of the properties. Just cut'n'paste them in YAML <tt>schema</tt> section:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln"> 1</span><span class="w">  </span><span class="nt">photonpg</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 2</span><span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">Photonpg</span><span class="w">
+</span><span class="ln"> 3</span><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 4</span><span class="w">      </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l">complex</span><span class="w">
+</span><span class="hl"><span class="ln"> 5</span><span class="w">      </span><span class="nt">fields</span><span class="p">:</span><span class="w">
+</span></span><span class="hl"><span class="ln"> 6</span><span class="w">        </span>- <span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">department</span><span class="w">
+</span></span><span class="ln"> 7</span><span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w">
+</span><span class="ln"> 8</span><span class="w">            </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
+</span><span class="ln"> 9</span><span class="w">            </span><span class="nt">isMultiple</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="ln">10</span><span class="w">          </span><span class="nt">valueList</span><span class="p">:</span><span class="w">
+</span><span class="ln">11</span><span class="w">            </span>- <span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">acc</span><span class="w">
+</span><span class="ln">12</span><span class="w">              </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">Accounting</span><span class="w">
+</span><span class="ln">13</span><span class="w">            </span>- <span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">dev</span><span class="w">
+</span><span class="ln">14</span><span class="w">              </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">Developers</span><span class="w">
+</span><span class="ln">15</span><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">department</span><span class="w">
+</span><span class="hl"><span class="ln">16</span><span class="w">        </span>- <span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l">owner</span><span class="w">
+</span></span><span class="ln">17</span><span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w">
+</span><span class="ln">18</span><span class="w">            </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l">string</span><span class="w">
+</span><span class="ln">19</span><span class="w">            </span><span class="nt">isMultiple</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="ln">20</span><span class="w">          </span><span class="nt">valueList</span><span class="p">:</span><span class="w">
+</span><span class="ln">21</span><span class="w">            </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">com.vra.dropdown/getUsersSorted</span><span class="w">
+</span><span class="ln">22</span><span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">scriptAction</span><span class="w">
+</span><span class="ln">23</span><span class="w">            </span><span class="nt">parameters</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="ln">24</span><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">owner</span></code></pre></div>
+<p>After importing the modified file, the inputs are displayed in the rearranged order:</p>
+<p><img src="/cma/img/vra8-external-inputs-and-input-property-groups/service_broker_reordered.png" alt=""></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>You may ask why to bother with the dynamic actions on the Cloud Template Inputs (either directly or via Property Groups), why not just use them on the Custom Forms as before? The answer is validation: in case the user submits a request via REST API (where Custom Form is not in use), vRA can still check if the input valid.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>curl -s -k -H <span class="s1">&#39;Content-Type: application/json&#39;</span> -H <span class="s2">&#34;Authorization: Bearer </span><span class="nv">$access_token</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="ln">2</span><span class="se"></span><span class="s1">&#39;https://vra8.corp.local/catalog/api/items/3dd31701-d9c1-3f3d-8656-0d87acb6258e/request&#39;</span> <span class="se">\
+</span><span class="ln">3</span><span class="se"></span>-d <span class="s1">&#39;{&#34;deploymentName&#34;:&#34;test5&#34;,&#34;inputs&#34;:{&#34;photonpg&#34;:{&#34;department&#34;:&#34;dev&#34;,&#34;owner&#34;:&#34;NoSuchUser&#34;}},&#34;projectId&#34;:&#34;22a712bc-5c9e-4784-a55c-0b3719134190&#34;,&#34;bulkRequestCount&#34;:1,&#34;reason&#34;:null}&#39;</span> <span class="p">|</span> jq .
+</code></pre></div><p>vRA will refuse the request by validating the inputs against the vRO actions:</p>
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="ln">1</span><span class="p">{</span>
+<span class="ln">2</span>  <span class="nt">&#34;message&#34;</span><span class="p">:</span> <span class="s2">&#34;Validation failed with: $.inputs.photonpg.owner: Value &#39;NoSuchUser&#39; is not in list of valid values [\&#34;Bret\&#34;, \&#34;Moriah.Stanton\&#34;, \&#34;Kamren\&#34;, \&#34;Elwyn.Skiles\&#34;, \&#34;Karianne\&#34;, \&#34;Leopoldo_Corkery\&#34;, \&#34;Delphine\&#34;, \&#34;Maxime_Nienow\&#34;, \&#34;Samantha\&#34;, \&#34;Antonette\&#34;]&#34;</span><span class="p">,</span>
+<span class="ln">3</span>  <span class="nt">&#34;statusCode&#34;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span>
+<span class="ln">4</span>  <span class="nt">&#34;errorCode&#34;</span><span class="p">:</span> <span class="mi">24002</span>
+<span class="ln">5</span><span class="p">}</span>
+</code></pre></div>
+
+  </article>
+<aside class="sidebar">
+  <section class="sidebar_inner">
+    
+      <h2>Krisztian Kuklis</h2>
+      <div class="sidebar_description">
+        IT Architect
+      </div>
+    <h2 class="mt-4">Recent Posts</h2>
+    <ul class="flex-column">
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-azure-rename-nic/" class="nav-link" title="Rename Azure NIC in vRA8">Rename Azure NIC in vRA8</a>
+      </li>
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-session-timeout/" class="nav-link" title="Increase vRA8 session timeout">Increase vRA8 session timeout</a>
+      </li>
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-azure-powershell/" class="nav-link" title="vRA8 Azure integration with PowerShell">vRA8 Azure integration with PowerShell</a>
+      </li>
+      <li>
+        <a href="https://kuklis.github.io/cma/post/custom-form-dropdown-external-source/" class="nav-link" title="vRA Custom Form Dropdowns with External Source">vRA Custom Form Dropdowns with External Source</a>
+      </li>
+      <li>
+        <a href="https://kuklis.github.io/cma/post/fake-context-wrapper/" class="nav-link" title="Fake Context Wrapper for vRO actions">Fake Context Wrapper for vRO actions</a>
+      </li>
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-azure-storage-exception/" class="nav-link" title="vRA8 Azure cloud account storage exception">vRA8 Azure cloud account storage exception</a>
+      </li>
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-servicenow-approval/" class="nav-link" title="vRA8 with ServiceNow External Approvals">vRA8 with ServiceNow External Approvals</a>
+      </li>
+    </ul>
+    <div>
+      <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
+      <nav class="tags_nav">
+        <a href='https://kuklis.github.io/cma/categories/gui/' class="post_tag button button_translucent" title="gui">
+          GUI
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/categories/public-cloud/' class="post_tag button button_translucent" title="public-cloud">
+          PUBLIC-CLOUD
+          <span class="button_tally">2</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/categories/api/' class="post_tag button button_translucent" title="api">
+          API
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/categories/development/' class="post_tag button button_translucent" title="development">
+          DEVELOPMENT
+          <span class="button_tally">1</span>
+        </a>
+        
+        
+      </nav>
+    </div>
+    <div>
+      <h2 class="mt-4 taxonomy" id="tags-section">Tags</h2>
+      <nav class="tags_nav">
+        <a href='https://kuklis.github.io/cma/tags/vra8/' class="post_tag button button_translucent" title="vra8">
+          VRA8
+          <span class="button_tally">6</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/tags/vro/' class="post_tag button button_translucent" title="vro">
+          VRO
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/tags/azure/' class="post_tag button button_translucent" title="azure">
+          AZURE
+          <span class="button_tally">3</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/tags/approvals/' class="post_tag button button_translucent" title="approvals">
+          APPROVALS
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/tags/index/' class="post_tag button button_translucent" title="index">
+          INDEX
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/tags/javascript/' class="post_tag button button_translucent" title="javascript">
+          JAVASCRIPT
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/tags/powershell/' class="post_tag button button_translucent" title="powershell">
+          POWERSHELL
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/tags/proxy/' class="post_tag button button_translucent" title="proxy">
+          PROXY
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/tags/servicenow/' class="post_tag button button_translucent" title="servicenow">
+          SERVICENOW
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://kuklis.github.io/cma/tags/vra/' class="post_tag button button_translucent" title="vra">
+          VRA
+          <span class="button_tally">1</span>
+        </a>
+        
+        
+      </nav>
+    </div>
+  </section>
+</aside>
+
+  
+</div>
+    </main><svg width="0" height="0" class="hidden">
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
+    <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.001 18.001" id="twitter">
+    <path d="M15.891 4.013c.808-.496 1.343-1.173 1.605-2.034a8.68 8.68 0 0 1-2.351.861c-.703-.756-1.593-1.14-2.66-1.14-1.043 0-1.924.366-2.643 1.078a3.56 3.56 0 0 0-1.076 2.605c0 .309.039.585.117.819-3.076-.105-5.622-1.381-7.628-3.837-.34.601-.51 1.213-.51 1.846 0 1.301.549 2.332 1.645 3.089-.625-.053-1.176-.211-1.645-.47 0 .929.273 1.705.82 2.388a3.623 3.623 0 0 0 2.115 1.291c-.312.08-.641.118-.979.118-.312 0-.533-.026-.664-.083.23.757.664 1.371 1.291 1.841a3.652 3.652 0 0 0 2.152.743C4.148 14.173 2.625 14.69.902 14.69c-.422 0-.721-.006-.902-.038 1.697 1.102 3.586 1.649 5.676 1.649 2.139 0 4.029-.542 5.674-1.626 1.645-1.078 2.859-2.408 3.639-3.974a10.77 10.77 0 0 0 1.172-4.892v-.468a7.788 7.788 0 0 0 1.84-1.921 8.142 8.142 0 0 1-2.11.593z"
+      ></path>
+  </symbol>
+  <symbol aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="mail">
+    <path  d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="calendar">
+    <path d="M452 40h-24V0h-40v40H124V0H84v40H60C26.916 40 0 66.916 0 100v352c0 33.084 26.916 60 60 60h392c33.084 0 60-26.916 60-60V100c0-33.084-26.916-60-60-60zm20 412c0 11.028-8.972 20-20 20H60c-11.028 0-20-8.972-20-20V188h432v264zm0-304H40v-48c0-11.028 8.972-20 20-20h24v40h40V80h264v40h40V80h24c11.028 0 20 8.972 20 20v48z"></path>
+    <path d="M76 230h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zM76 310h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zM76 390h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zm80-80h40v40h-40z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="github">
+    <path d="M255.968 5.329C114.624 5.329 0 120.401 0 262.353c0 113.536 73.344 209.856 175.104 243.872 12.8 2.368 17.472-5.568 17.472-12.384 0-6.112-.224-22.272-.352-43.712-71.2 15.52-86.24-34.464-86.24-34.464-11.616-29.696-28.416-37.6-28.416-37.6-23.264-15.936 1.728-15.616 1.728-15.616 25.696 1.824 39.2 26.496 39.2 26.496 22.848 39.264 59.936 27.936 74.528 21.344 2.304-16.608 8.928-27.936 16.256-34.368-56.832-6.496-116.608-28.544-116.608-127.008 0-28.064 9.984-51.008 26.368-68.992-2.656-6.496-11.424-32.64 2.496-68 0 0 21.504-6.912 70.4 26.336 20.416-5.696 42.304-8.544 64.096-8.64 21.728.128 43.648 2.944 64.096 8.672 48.864-33.248 70.336-26.336 70.336-26.336 13.952 35.392 5.184 61.504 2.56 68 16.416 17.984 26.304 40.928 26.304 68.992 0 98.72-59.84 120.448-116.864 126.816 9.184 7.936 17.376 23.616 17.376 47.584 0 34.368-.32 62.08-.32 70.496 0 6.88 4.608 14.88 17.6 12.352C438.72 472.145 512 375.857 512 262.353 512 120.401 397.376 5.329 255.968 5.329z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212 212" id="gitlab">
+    <path d="M12.3 74.7h54L43.3 3c-1-3.6-6.4-3.6-7.6 0L12.3 74.8z" />
+    <path d="M12.3 74.7L.5 111c-1 3.2 0 6.8 3 8.8l101.6 74-92.5-119z"/>
+    <path d="M105 193.7l-38.6-119h-54l92.7 119z"/>
+    <path d="M105 193.7l38.7-119H66.4l38.7 119z"/>
+    <path d="M105 193.7l38.7-119H198l-93 119z"/>
+    <path d="M198 74.7l11.6 36.2c1 3 0 6.6-3 8.6l-101.5 74 93-119z"/>
+    <path d="M198 74.7h-54.3L167 3c1.2-3.6 6.4-3.6 7.6 0L198 74.8z"/> 
+  </symbol>
+  <symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="rss">
+    <circle cx="3.429" cy="20.571" r="3.429"></circle>
+    <path d="M11.429 24h4.57C15.999 15.179 8.821 8.001 0 8v4.572c6.302.001 11.429 5.126 11.429 11.428z"></path>
+    <path d="M24 24C24 10.766 13.234 0 0 0v4.571c10.714 0 19.43 8.714 19.43 19.429z"></path>
+  </symbol>
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="linkedin">
+    <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h362c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zM181 406h-60V196h60zm0-240h-60v-60h60zm210 240h-60V286c0-16.54-13.46-30-30-30s-30 13.46-30 30v120h-60V196h60v11.309C286.719 202.422 296.93 196 316 196c40.691.043 75 36.547 75 79.688zm0 0"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 612" id="arrow">
+    <path d="M604.501 440.509L325.398 134.956c-5.331-5.357-12.423-7.627-19.386-7.27-6.989-.357-14.056 1.913-19.387 7.27L7.499 440.509c-9.999 10.024-9.999 26.298 0 36.323s26.223 10.024 36.222 0l262.293-287.164L568.28 476.832c9.999 10.024 26.222 10.024 36.221 0 9.999-10.023 9.999-26.298 0-36.323z"></path>
+  </symbol>
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="carly">
+    <path d="M504.971 239.029L448 182.059V84c0-46.317-37.682-84-84-84h-44c-13.255 0-24 10.745-24 24s10.745 24 24 24h44c19.851 0 36 16.149 36 36v108c0 6.365 2.529 12.47 7.029 16.971L454.059 256l-47.029 47.029A24.002 24.002 0 0 0 400 320v108c0 19.851-16.149 36-36 36h-44c-13.255 0-24 10.745-24 24s10.745 24 24 24h44c46.318 0 84-37.683 84-84v-98.059l56.971-56.971c9.372-9.372 9.372-24.568 0-33.941zM112 192V84c0-19.851 16.149-36 36-36h44c13.255 0 24-10.745 24-24S205.255 0 192 0h-44c-46.318 0-84 37.683-84 84v98.059l-56.971 56.97c-9.373 9.373-9.373 24.568 0 33.941L64 329.941V428c0 46.317 37.682 84 84 84h44c13.255 0 24-10.745 24-24s-10.745-24-24-24h-44c-19.851 0-36-16.149-36-36V320c0-6.365-2.529-12.47-7.029-16.971L57.941 256l47.029-47.029A24.002 24.002 0 0 0 112 192z"></path>
+  </symbol>
+  <symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="copy">
+    <path d="M23 2.75A2.75 2.75 0 0 0 20.25 0H8.75A2.75 2.75 0 0 0 6 2.75v13.5A2.75 2.75 0 0 0 8.75 19h11.5A2.75 2.75 0 0 0 23 16.25zM18.25 14.5h-7.5a.75.75 0 0 1 0-1.5h7.5a.75.75 0 0 1 0 1.5zm0-3h-7.5a.75.75 0 0 1 0-1.5h7.5a.75.75 0 0 1 0 1.5zm0-3h-7.5a.75.75 0 0 1 0-1.5h7.5a.75.75 0 0 1 0 1.5z"></path>
+    <path d="M8.75 20.5a4.255 4.255 0 0 1-4.25-4.25V2.75c0-.086.02-.166.025-.25H3.75A2.752 2.752 0 0 0 1 5.25v16A2.752 2.752 0 0 0 3.75 24h12a2.752 2.752 0 0 0 2.75-2.75v-.75z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.001 512.001" id="closeme">
+    <path d="M284.286 256.002L506.143 34.144c7.811-7.811 7.811-20.475 0-28.285-7.811-7.81-20.475-7.811-28.285 0L256 227.717 34.143 5.859c-7.811-7.811-20.475-7.811-28.285 0-7.81 7.811-7.811 20.475 0 28.285l221.857 221.857L5.858 477.859c-7.811 7.811-7.811 20.475 0 28.285a19.938 19.938 0 0 0 14.143 5.857 19.94 19.94 0 0 0 14.143-5.857L256 284.287l221.857 221.857c3.905 3.905 9.024 5.857 14.143 5.857s10.237-1.952 14.143-5.857c7.811-7.811 7.811-20.475 0-28.285L284.286 256.002z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="open-menu">
+    <path d="M492 236H20c-11.046 0-20 8.954-20 20s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20zm0-160H20C8.954 76 0 84.954 0 96s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20zm0 320H20c-11.046 0-20 8.954-20 20s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="instagram">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id=youtube>
+    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="stackoverflow">
+    <path d="M21 27v-8h3v11H0V19h3v8h18z"></path><path d="M17.1.2L15 1.8l7.9 10.6 2.1-1.6L17.1.2zm3.7 14.7L10.6 6.4l1.7-2 10.2 8.5-1.7 2zM7.2 12.3l12 5.6 1.1-2.4-12-5.6-1.1 2.4zm-1.8 6.8l13.56 1.96.17-2.38-13.26-2.55-.47 2.97zM19 25H5v-3h14v3z"></path>
+  </symbol>
+</svg>
+
+
+<footer class="footer">
+  <div class="footer_inner wrap pale">
+    <img src='https://kuklis.github.io/cma/icons/apple-touch-icon.png' class="icon icon_2 transparent" alt="CMA">
+    <p>Copyright&nbsp;<span class="year"></span>&nbsp;CMA. All Rights Reserved</p><a class="to_top" href="#documentTop">
+  <svg class="icon">
+  <use xlink:href="#arrow"></use>
+</svg>
+</a>
+
+  </div>
+</footer>
+
+    <script type="text/javascript" src="https://kuklis.github.io/cma/js/bundle.min.a6ea2fbec2fc7f5120cfe00b7aa62ddf71b53cd34bead611b8b05b1288a4d42ac0c36886f45e7e38579dd115c11ac6ba2c2793847ddcd9323202009ad731070a.js" integrity="sha512-puovvsL8f1Egz&#43;ALeqYt33G1PNNL6tYRuLBbEoik1CrAw2iG9F5&#43;OFed0RXBGsa6LCeThH3c2TIyAgCa1zEHCg==" crossorigin="anonymous"></script>
+    
+  </body>
+</html>
