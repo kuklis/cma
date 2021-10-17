@@ -247,7 +247,7 @@
 &lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;statusCode&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;400&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;errorCode&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;24002&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can download the &lt;em&gt;com.vra.dropdown&lt;/em&gt; package containing the sample actions from GitHub: &lt;a href=&#34;https://github.com/kuklis/vro8-packages&#34;&gt;https://github.com/kuklis/vro8-packages&lt;/a&gt;&lt;/p&gt;
         
       </description>
     </item>
