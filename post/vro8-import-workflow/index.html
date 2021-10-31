@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>vRA8 with ServiceNow External Approvals | CMA</title>
+<title>vRO8 Import Workflow | CMA</title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.81.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -18,14 +18,14 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Approving vRA8 Actions in ServiceNow">
+<meta name="description" content="How to import legacy workflow files into vRO8">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="@kuklis_k">
-<meta name="twitter:title" content="vRA8 with ServiceNow External Approvals" />
-<meta property="og:url" content="https://kuklis.github.io/cma/post/vra8-servicenow-approval/" />
-<meta property="og:title" content="vRA8 with ServiceNow External Approvals" />
-<meta property="og:description" content="Approving vRA8 Actions in ServiceNow" />
-<meta property="og:image" content="https://kuklis.github.io/cma/images/snow.png" />
+<meta name="twitter:title" content="vRO8 Import Workflow" />
+<meta property="og:url" content="https://kuklis.github.io/cma/post/vro8-import-workflow/" />
+<meta property="og:title" content="vRO8 Import Workflow" />
+<meta property="og:description" content="How to import legacy workflow files into vRO8" />
+<meta property="og:image" content="https://kuklis.github.io/cma/images/workflow.png" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://kuklis.github.io/cma/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://kuklis.github.io/cma/icons/favicon-32x32.png'>
 <link rel="manifest" href='https://kuklis.github.io/cma/icons/site.webmanifest'>
@@ -33,7 +33,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-<link rel="canonical" href="https://kuklis.github.io/cma/post/vra8-servicenow-approval/">
+<link rel="canonical" href="https://kuklis.github.io/cma/post/vro8-import-workflow/">
 
     
 
@@ -51,7 +51,7 @@
   
     
   
-  <body data-code="7" data-lines="false" id="documentTop">
+  <body data-code="50" data-lines="false" id="documentTop">
 
 <header class="nav_header" >
   <nav class="nav"><a href='https://kuklis.github.io/cma/' class="nav_brand nav_item" title="CMA">
@@ -110,30 +110,26 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">vRA8 with ServiceNow External Approvals</h1><div class="post_meta">
+    <h1 class="post_title">vRO8 Import Workflow</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
-      Apr 25, 2021</span>
-      <a href='https://kuklis.github.io/cma/tags/vra8' title="vRA8" class="post_tag button button_translucent">vRA8
-      </a>
-      <a href='https://kuklis.github.io/cma/tags/servicenow' title="ServiceNow" class="post_tag button button_translucent">ServiceNow
-      </a>
-      <a href='https://kuklis.github.io/cma/tags/approvals' title="approvals" class="post_tag button button_translucent">approvals
+      Oct 31, 2021</span>
+      <a href='https://kuklis.github.io/cma/tags/vro' title="vRO" class="post_tag button button_translucent">vRO
       </a>
 </div>
 
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=vRA8%20with%20ServiceNow%20External%20Approvals&url=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-servicenow-approval%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=vRO8%20Import%20Workflow&url=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvro8-import-workflow%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-servicenow-approval%2f&t=vRA8%20with%20ServiceNow%20External%20Approvals" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvro8-import-workflow%2f&t=vRO8%20Import%20Workflow" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -143,7 +139,7 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://kuklis.github.io/cma/post/vra8-servicenow-approval/" title="Copy Link" class="link link_yank">
+    <a href="https://kuklis.github.io/cma/post/vro8-import-workflow/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -151,108 +147,153 @@
   </div>
 
     
-    <p>Let's use ServiceNow with vRealize Automation 8 as an external approval system.</p>
+    <p>How to import legacy workflow files into vRO8</p>
 <div class="toc">
     <H3>Table of Contents</H3>
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#history">History</a></li>
-    <li><a href="#vra8-approval-system">vRA8 approval system</a>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#api-definition">API definition</a></li>
+    <li><a href="#import-using-cli">Import using CLI</a>
       <ul>
-        <li><a href="#limitations">Limitations</a></li>
-        <li><a href="#workaround">Workaround</a></li>
-        <li><a href="#sequence">Sequence</a></li>
-        <li><a href="#policy">Policy</a></li>
+        <li><a href="#multipart-content-type">Multipart Content-type</a></li>
       </ul>
     </li>
-    <li><a href="#servicenow">ServiceNow</a></li>
-    <li><a href="#vro">vRO</a>
+    <li><a href="#import-using-vro">Import using vRO</a>
       <ul>
-        <li><a href="#workflows">Workflows</a></li>
-        <li><a href="#download">Download</a></li>
+        <li><a href="#the-inputs">The inputs</a></li>
+        <li><a href="#mimeattachment-issues">MimeAttachment issues</a></li>
+        <li><a href="#sending-the-file-to-vro-rest-api-using-python">Sending the file to vRO REST API using Python</a></li>
       </ul>
     </li>
-    <li><a href="#vra">vRA</a>
-      <ul>
-        <li><a href="#event-broker-subscription">Event Broker Subscription</a></li>
-        <li><a href="#test-catalog-request">Test Catalog Request</a></li>
-      </ul>
-    </li>
+    <li><a href="#wrap-up">Wrap-up</a></li>
   </ul>
 </nav>
   </div>
-<h2 id="history">History</h2>
-<p>vRA7 approval system supports easy <a href="https://docs.vmware.com/en/vRealize-Automation/7.6/com.vmware.vra.prepare.use.doc/GUID-67A61A9A-BF1D-4938-976C-A72DEED58163.html">integration with external systems</a> via event subscriptions. Event messages are created when approvals required and workflow subscriptions provide integration with external systems, such as ServiceNow or other service management platforms.<br>
-Based on the workflow output requests are approved / rejected.</p>
-<h2 id="vra8-approval-system">vRA8 approval system</h2>
-<h3 id="limitations">Limitations</h3>
-<p>vRA8 (up to 8.3) <a href="https://docs.vmware.com/en/vRealize-Automation/8.3/vrealize-automation-transition/GUID-BFCAEA52-C996-4C5A-A0A7-08A029143C66.html">does not support approvals via EBS</a>, only vRA users can approve. Event broker subscriptions can be used to start a vRO workflow right after the requests submitted but potentially long-running workflows do not give any feedback to the user why the deployment takes so long.</p>
-<h3 id="workaround">Workaround</h3>
-<p>To provide a better user experience we'll reuse the current approval policies. The idea is to set a service user as the approver, and approve the vRA request via REST API. We need a background process to wait for the external approval to happen and once the decision is made this process can let the vRA request go. This background process will be running on vRO as a scheduled workflow.</p>
-<p>We'll run this external system polling workflow recurrently. This helps to avoid long-running workflows: we check if the external approval has happened and go back sleeping if it has not.</p>
-<h3 id="sequence">Sequence</h3>
-<p>The following diagram shows the steps in case of a deployment request.<br>
-<img src="/cma/img/vra8-servicenow-approval/approval-sequence.png" alt=""></p>
-<h3 id="policy">Policy</h3>
-<p>Let's create an approval policy in Service Broker for Deployment Create action. Approver is a service user:<br>
-<img src="/cma/img/vra8-servicenow-approval/approval-policy.png" alt=""></p>
-<h2 id="servicenow">ServiceNow</h2>
-<p>You can register a developer ServiceNow instance at <a href="https://developer.servicenow.com/">https://developer.servicenow.com/</a> if needed.</p>
-<p>We need a catalog item that is not auto-approving. Ordering the catalog item results in a request that we'll wait to be approved. We will use a default demo catalog item for testing purposes: <em>VM Provisioning</em></p>
-<p>Also a service user must be created for REST API. This user needs access to the chosen catalog item.</p>
-<h2 id="vro">vRO</h2>
-<p>We need two REST endpoints. ServiceNow API uses Basic authentication, so we create a REST host providing the credentials as well:<br>
-<img src="/cma/img/vra8-servicenow-approval/snow-endpoint.png" alt=""></p>
-<p>For vRA REST API we use the <a href="https://marketplace.cloud.vmware.com/services/details/vmware-vrealize-orchestrator-plug-in-for-vrealize-automation-1?slug=true">Orchestrator Plug-in for vRealize Automation</a>:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-endpoint.png" alt=""></p>
-<h3 id="workflows">Workflows</h3>
-<p>Now import the integration package <em>com.servicenow.approval</em> that will provide the workflows:<br>
-<img src="/cma/img/vra8-servicenow-approval/vro-workflows.png" alt=""></p>
-<table>
-<thead>
-<tr>
-<th>Workflow Name</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Request Approval</td>
-<td>Open ServiceNow request and schedule polling workflow</td>
-</tr>
-<tr>
-<td>Catalog - VM Provisioning</td>
-<td>Request the catalog item (subflow)</td>
-</tr>
-<tr>
-<td>Poll SNOW and Approve vRA</td>
-<td>The scheduled workflow checking ServiceNow and approving in vRA</td>
-</tr>
-<tr>
-<td>Check Approval Status</td>
-<td>Fetches the approval status of the request opened (subflow)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="download">Download</h3>
-<p>Workflows and package can be downloaded: <a href="https://github.com/kuklis/vra8-servicenow-approval">https://github.com/kuklis/vra8-servicenow-approval</a></p>
-<h2 id="vra">vRA</h2>
-<h3 id="event-broker-subscription">Event Broker Subscription</h3>
-<p>Now we create the EBS that'll trigger the workflow <em>Request Approval</em>. Event topic is <em>Deployment Requested</em>:<br>
-Event is fired before deployment is provisioned for both cloud template and catalog requests<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-ebs.png" alt=""></p>
-<p>We filter the event by type to ensure only deployment create will trigger it:</p>
-<pre><code>event.data.eventType == &quot;CREATE_DEPLOYMENT&quot;
-</code></pre>
-<h3 id="test-catalog-request">Test Catalog Request</h3>
-<p>Let's try the solution out in Service Broker. After submitting the request, we can see an approval is needed:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-approval-pending.png" alt=""></p>
-<p>Request is opened and pending for approval:<br>
-<img src="/cma/img/vra8-servicenow-approval/snow-request.png" alt=""></p>
-<p>Once it is approved, the deployment completes:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-deployment-success.png" alt=""></p>
-<p>In case ServiceNow request is rejected, vRA deployment is also rejected:<br>
-<img src="/cma/img/vra8-servicenow-approval/vra-deployment-rejected.png" alt=""></p><script src="https://utteranc.es/client.js"
+<h2 id="introduction">Introduction</h2>
+<p>vRealize Orchestrator version 8 does not provide a way to export or import individual workflows via the GUI. If you have some legacy workflows on your hard disk and would like to import them into your shiny new vRO8 instance, you need to create a package on a legacy vRO7 system, export it and import the package into vRO8. Let's see if we can do it easier.</p>
+<h2 id="api-definition">API definition</h2>
+<p>The <a href="https://developer.vmware.com/apis/1174">vRealize Orchestrator API</a> provides a REST API to interact with vRO. The <a href="https://developer.vmware.com/apis/1174#/Content%20Service">Content Service</a> allows us to import a workflow. According to the specification the workflow is sent to <tt>/content/workflows/{categoryId}</tt> as a Multipart Content-type. <a href="https://datatracker.ietf.org/doc/html/rfc2387">RFC 2387</a> describes the details of this Content-type.</p>
+<p>We need to know the Id of the folder (WorkflowCategory). The following Javascript code will print it:</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln">1</span><span class="kd">var</span> <span class="nx">folder</span> <span class="o">=</span> <span class="nx">Server</span><span class="p">.</span><span class="nx">getWorkflowCategoryWithPath</span><span class="p">(</span><span class="s2">&#34;test/import&#34;</span><span class="p">);</span>
+<span class="ln">2</span><span class="nx">System</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">System</span><span class="p">.</span><span class="nx">getObjectId</span><span class="p">(</span><span class="nx">folder</span><span class="p">));</span>
+</code></pre></div><p>There it is:
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln">1</span>2021-10-31 21:02:06.118 +01:00 INFO __item_stack:/item1
+<span class="hl"><span class="ln">2</span>2021-10-31 21:02:06.122 +01:00 INFO 8a7480e57c8e421d017cd78e673619f1
+</span><span class="ln">3</span>2021-10-31 21:02:06.126 +01:00 INFO __item_stack:/item0</code></pre></div></p>
+<h2 id="import-using-cli">Import using CLI</h2>
+<p>The Spring sample in the API documentation gives some hints how to format the Multipart data to post: the part representing the workflow should be called <tt>&quot;file&quot;</tt>.</p>
+<p>Using <tt>curl</tt> we can upload a workflow to vRO with the following command, knowing the Workflow Category Id (target folder). In case a workflow with the same workflow Id exists, we overwrite it. The name of the object within the multipart data is specified by <tt>file=</tt>. The actual file content is loaded by using the @ symbol.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>curl -k -u <span class="s1">&#39;cfgadmin:VMware123!&#39;</span> -H <span class="s1">&#39;Content-Type: multipart/form-data&#39;</span> <span class="se">\
+</span><span class="ln">2</span><span class="se"></span><span class="s2">&#34;https://vra8.corp.local/vco/api/content/workflows/8a7480e57c8e421d017cd78e673619f1?overwrite=true&#34;</span> <span class="se">\
+</span><span class="ln">3</span><span class="se"></span>-F <span class="s1">&#39;file=@HelloWorld.workflow&#39;</span>
+</code></pre></div><p>The result:
+<img src="/cma/img/vro8-import-workflow/helloworld.png" alt=""></p>
+<h3 id="multipart-content-type">Multipart Content-type</h3>
+<p>Let's check what data did <tt>curl</tt> send to upload the file:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>curl -k -u <span class="s1">&#39;cfgadmin:VMware123!&#39;</span> -H <span class="s1">&#39;Content-Type: multipart/form-data&#39;</span> <span class="se">\
+</span><span class="ln">2</span><span class="se"></span><span class="s2">&#34;https://vra8.corp.local/vco/api/content/workflows/8a7480e57c8e421d017cd78e673619f1?overwrite=true&#34;</span> <span class="se">\
+</span><span class="ln">3</span><span class="se"></span>-F <span class="s1">&#39;file=@HelloWorld.workflow&#39;</span> --trace-ascii -
+</code></pre></div><p>Highlighted are: the Content-type, boundary value and the Content-Disposition Headers:</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln"> 1</span>...
+<span class="ln"> 2</span>0000: POST /vco/api/content/workflows/8a7480e57c8e421d017cd78e673619f1
+<span class="ln"> 3</span>0040: ?overwrite=true HTTP/2
+<span class="ln"> 4</span>0058: Host: vra8.corp.local
+<span class="ln"> 5</span>0070: authorization: Basic Y2ZnYWRtaW46Vk13YXJlMTIzIQ==
+<span class="ln"> 6</span>00a3: user-agent: curl/7.68.0
+<span class="ln"> 7</span>00bc: accept: */*
+<span class="ln"> 8</span>00c9: content-length: 1202
+<span class="hl"><span class="ln"> 9</span>00df: content-type: multipart/form-data; boundary=--------------------
+</span><span class="hl"><span class="ln">10</span>011f: ----4a56c5c66e96749e
+</span><span class="ln">11</span>0135:
+<span class="ln">12</span>&lt;= Recv SSL data, 5 bytes (0x5)
+<span class="ln">13</span>0000: ....9
+<span class="ln">14</span>== Info: Connection state changed (MAX_CONCURRENT_STREAMS == 250)!
+<span class="ln">15</span>=&gt; Send SSL data, 5 bytes (0x5)
+<span class="ln">16</span>0000: ....!
+<span class="ln">17</span>=&gt; Send SSL data, 5 bytes (0x5)
+<span class="ln">18</span>0000: .....
+<span class="ln">19</span>=&gt; Send data, 1202 bytes (0x4b2)
+<span class="hl"><span class="ln">20</span>0000: --------------------------4a56c5c66e96749e
+</span><span class="hl"><span class="ln">21</span>002c: Content-Disposition: form-data; name=&#34;file&#34;; filename=&#34;HelloWorl
+</span><span class="hl"><span class="ln">22</span>006c: d.workflow&#34;
+</span><span class="hl"><span class="ln">23</span>0079: Content-Type: application/octet-stream
+</span><span class="ln">24</span>00a1:
+<span class="ln">25</span>00a3: PK........V._S................workflow-info.....0......!......pS
+<span class="ln">26</span>00e3: .....%=iQrrI&lt;|{...C.n-.k.n.\.C........&gt;....J.i..p..t.....s.%3.K.
+<span class="ln">27</span>0123: \|Z.Z..,LU.#....D.......l.)....PK......t...z...PK........V._S...
+<span class="ln">28</span>0163: .............workflow-content.U.n.@.=.~...H..8..J..Tu....$...Nj.
+<span class="ln">29</span>01a3: .+N....s.&#39;.c;UJ.h..}...3..p..&lt; E.....@..s....t.....f.1.!.3LU{.k
+<span class="ln">30</span>01e3: ...{.O0...V.Y..&amp;D...2.3...-....p9..[!.G.H...TVn....6.Zrm..t8.&gt;..
+<span class="ln">31</span>0223: 1...J&lt;V..+.q.+F.e...m.*&#39;F.uF&amp;....,-/.7.{Y..Kj.^...KMb..OO.=.*...
+<span class="ln">32</span>0263: ..f...&#34;.9.D*....?.....]=....*+.31=.&#39;fL....G..w\.....G.&#34;+.:_y..~.
+<span class="ln">33</span>02a3: U.&lt;B..3..P.P.ie...tL..{.k.u....3}.../..T.G....Nk;...|..K(..&lt;.Q.n
+<span class="ln">34</span>02e3: q.....EB..J.F....&gt;.3NyVN.&gt;.&lt;.^.;...;...O .ce..u..:-.IF.J...*o#+.
+<span class="ln">35</span>0323: ..%j}...?.V..q.....0!.......~=]G..8......T..%.....6.NY...a}z.v..
+<span class="ln">36</span>0363: f...9c.;...]....R...9TD.;M.m.|..{dN..^..&#34;..f..z..FG3...mK~.!.j..
+<span class="ln">37</span>03a3: C.^.C%.j....]l....I....i.T}.{...K../...eO.......N.O...g..K{..a..
+<span class="ln">38</span>03e3: PK....++c.......PK..........V._S....t...z.....................wo
+<span class="ln">39</span>0423: rkflow-infoPK..........V._S..++c.........................workflo
+<span class="ln">40</span>0463: w-contentPK..........y...P.....
+<span class="hl"><span class="ln">41</span>0484: --------------------------4a56c5c66e96749e--
+</span><span class="ln">42</span>...</code></pre></div>
+<p>The actual file data is a ZIP file.</p>
+<h2 id="import-using-vro">Import using vRO</h2>
+<h3 id="the-inputs">The inputs</h3>
+<p>To automate the workflow import with vRO, we need to load a the file and send its content via vRO REST API, using the Multipart Content-type format examined above.</p>
+<p>The <tt>MimeAttachment</tt> type allows us to upload files to vRO. We also want to select the folder to import the workflow into, we can use the <tt>WorkflowCategory</tt> type for that input:</p>
+<p><img src="/cma/img/vro8-import-workflow/import_inputs.png" alt=""></p>
+<p>On the Input Form designer let's change the display type of the WorkflowCategory type to Tree Picker to get a nice tree browser.</p>
+<p><img src="/cma/img/vro8-import-workflow/import_form.png" alt=""></p>
+<p>This will result in the following form:</p>
+<p><img src="/cma/img/vro8-import-workflow/import_run.png" alt=""></p>
+<p><img src="/cma/img/vro8-import-workflow/select_category.png" alt=""></p>
+<h3 id="mimeattachment-issues">MimeAttachment issues</h3>
+<p>The <a href="https://kb.vmware.com/s/article/59725">Cumulative Update for vRealize Orchestrator 7.5</a> ResolvedList describes a problem with binary data represented by MimeAttachment:</p>
+<blockquote>
+<p>Previously instances of MimeAttachment provided only a property &quot;content&quot; which returns/accepts a string. This causes issues with non-textual data as the bytes are interpreted as String and the content is malformed. A new JavaScript type is exposed to the scripting api - ByteBuffer. It can be initialised from a base64 string or from an existing ByteBuffer. Instances of MimeAttachment now have a new get/set propety &quot;buffer&quot; which returns/accepts a ByteBuffer.</p>
+</blockquote>
+<p>Unfortunately I could not find any examples on how to use this new <tt>buffer</tt> property of <tt>ByteBuffer</tt> type (and the <tt>content</tt> property gives an HTTP 500 error on the API). If you know how to use it, please leave a comment at the bottom!</p>
+<h3 id="sending-the-file-to-vro-rest-api-using-python">Sending the file to vRO REST API using Python</h3>
+<p>vRO8 with vRA/vRealize Suite Advanced/vCloud Suite Advanced or Enterprise license is capable of running Python, NodeJS and PowerShell scripts as well. Let's try Python!</p>
+<p>If we print the MimeAttachment object in Python, we'll see the following output:</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln">1</span>2021-10-31 23:54:57.647 +01:00 INFO [HelloWorld.workflow,application/octet-stream,991]
+<span class="ln">2</span>2021-10-31 23:54:57.648 +01:00 INFO UEsDBBQACAgIAFaxX1MAAAAAAAAAAAAAAAANAAAAd29ya2Z...
+</code></pre></div><p>The first line contains the filename and Content-type, the second line contains the base64 encoded file content. We'll use this information to extract the information from the object.</p>
+<p>I reused Doug Hellmann's implementation of Multipart Content type available at <a href="https://pymotw.com/3/urllib.request/">Python 3 Module of the Week</a>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ln"> 1</span><span class="kn">import</span> <span class="nn">io</span>
+<span class="ln"> 2</span><span class="kn">import</span> <span class="nn">mimetypes</span>
+<span class="ln"> 3</span><span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="ln"> 4</span><span class="kn">import</span> <span class="nn">uuid</span>
+<span class="ln"> 5</span><span class="kn">import</span> <span class="nn">ssl</span>
+<span class="ln"> 6</span><span class="kn">import</span> <span class="nn">base64</span>
+<span class="ln"> 7</span>
+<span class="ln"> 8</span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+<span class="ln"> 9</span>
+<span class="ln">10</span>    <span class="c1"># Create the form with simple fields</span>
+<span class="ln">11</span>    <span class="n">form</span> <span class="o">=</span> <span class="n">MultiPartForm</span><span class="p">()</span>
+<span class="ln">12</span>
+<span class="ln">13</span>    <span class="c1"># Add the file</span>
+<span class="ln">14</span>    <span class="n">form</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span>
+<span class="ln">15</span>        <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&#34;file&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:],</span>       <span class="c1"># &#39;HelloWorld.workflow&#39;,</span>
+<span class="ln">16</span>        <span class="n">fileHandle</span><span class="o">=</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s2">&#34;file&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])))</span>
+<span class="ln">17</span>    <span class="c1"># Build the request, including the byte-string</span>
+<span class="ln">18</span>    <span class="c1"># for the data to be posted.</span>
+<span class="ln">19</span>    <span class="n">data</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+<span class="ln">20</span>    <span class="n">r</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s2">&#34;vcoUrl&#34;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/api/content/workflows/&#34;</span> <span class="o">+</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&#34;categoryId&#34;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;?overwrite=true&#34;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="ln">21</span>    <span class="n">r</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s1">&#39;Content-type&#39;</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">get_content_type</span><span class="p">())</span>
+<span class="ln">22</span>    <span class="n">r</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s1">&#39;Authorization&#39;</span><span class="p">,</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">context</span><span class="p">[</span><span class="s2">&#34;getToken&#34;</span><span class="p">]())</span>
+<span class="ln">23</span>
+<span class="ln">24</span>    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;SERVER RESPONSE:&#39;</span><span class="p">)</span>
+<span class="ln">25</span>    <span class="c1"># disable SSL verification</span>
+<span class="ln">26</span>    <span class="k">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">ssl</span><span class="o">.</span><span class="n">SSLContext</span><span class="p">())</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="ln">27</span>
+<span class="ln">28</span>    <span class="k">class</span> <span class="nc">MultiPartForm</span><span class="p">:</span>
+<span class="ln">29</span>    <span class="o">...</span>
+</code></pre></div><p><tt>context[&quot;vcoUrl&quot;]</tt> provides the internal vRO REST API URL <tt>http://localhost:8280/vco</tt>, and the <tt>getToken()</tt> function will acquire a valid token against the API.</p>
+<h2 id="wrap-up">Wrap-up</h2>
+<p><tt>MimeAttachment</tt> is a useful vRO type, when we need to process a file. Python can be used to communicate back to vRO using the loopback URL (<tt>context[&quot;vcoUrl&quot;]</tt>) and a token provided by the <tt>getToken()</tt> function.</p>
+<p>You can download the <em>com.test.python</em> package containing the workflow from GitHub: <a href="https://github.com/kuklis/vro8-packages">https://github.com/kuklis/vro8-packages</a></p><script src="https://utteranc.es/client.js"
   repo="kuklis/cma"
   issue-term="title"
   label="Comment"
@@ -273,9 +314,6 @@ Event is fired before deployment is provisioned for both cloud template and cata
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://kuklis.github.io/cma/post/vro8-import-workflow/" class="nav-link" title="vRO8 Import Workflow">vRO8 Import Workflow</a>
-      </li>
-      <li>
         <a href="https://kuklis.github.io/cma/post/vra8-external-inputs-and-input-property-groups/" class="nav-link" title="vRA8 External Inputs and Input Property Groups">vRA8 External Inputs and Input Property Groups</a>
       </li>
       <li>
@@ -295,6 +333,9 @@ Event is fired before deployment is provisioned for both cloud template and cata
       </li>
       <li>
         <a href="https://kuklis.github.io/cma/post/vra8-azure-storage-exception/" class="nav-link" title="vRA8 Azure cloud account storage exception">vRA8 Azure cloud account storage exception</a>
+      </li>
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-servicenow-approval/" class="nav-link" title="vRA8 with ServiceNow External Approvals">vRA8 with ServiceNow External Approvals</a>
       </li>
     </ul>
     <div>

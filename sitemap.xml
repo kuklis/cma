@@ -3,27 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://kuklis.github.io/cma/</loc>
-    <lastmod>2021-10-17T00:00:00+00:00</lastmod>
+    <lastmod>2021-10-31T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/api/</loc>
+    <lastmod>2021-10-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/</loc>
-    <lastmod>2021-10-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/categories/gui/</loc>
-    <lastmod>2021-10-17T00:00:00+00:00</lastmod>
+    <lastmod>2021-10-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/</loc>
-    <lastmod>2021-10-17T00:00:00+00:00</lastmod>
+    <lastmod>2021-10-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/</loc>
+    <lastmod>2021-10-31T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
+    <lastmod>2021-10-31T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/post/vro8-import-workflow/</loc>
+    <lastmod>2021-10-31T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/gui/</loc>
     <lastmod>2021-10-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
     <lastmod>2021-10-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vra8-external-inputs-and-input-property-groups/</loc>
-    <lastmod>2021-10-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
     <lastmod>2021-10-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/azure/</loc>
@@ -64,9 +70,6 @@
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vra8-azure-storage-exception/</loc>
     <lastmod>2021-05-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/categories/api/</loc>
-    <lastmod>2021-04-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/approvals/</loc>
     <lastmod>2021-04-25T00:00:00+00:00</lastmod>
