@@ -1,8 +1,8 @@
 
 <!DOCTYPE html>
-<html lang="en" data-figures="">
+<html lang="en" data-figures="" class="page">
   <head>
-<title>index | CMA</title>
+<title>vRA8 logs &amp; troubleshooting | CMA</title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.81.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -14,17 +14,18 @@
   gtag('js', new Date());
   gtag('config', 'G-TW72DHK7SC');
 </script>
+  
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="">
+<meta name="description" content="Where to find log files and increase log level">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="@kuklis_k">
-<meta name="twitter:title" content="index" />
-<meta property="og:url" content="https://kuklis.github.io/cma/tags/index/" />
-<meta property="og:title" content="index" />
-<meta property="og:description" content="" />
-<meta property="og:image" content="https://kuklis.github.io/cma/images/thumbnail.png" />
+<meta name="twitter:title" content="vRA8 logs &amp; troubleshooting" />
+<meta property="og:url" content="https://kuklis.github.io/cma/post/vra8-logs-troubleshooting/" />
+<meta property="og:title" content="vRA8 logs &amp; troubleshooting" />
+<meta property="og:description" content="Where to find log files and increase log level" />
+<meta property="og:image" content="https://kuklis.github.io/cma/images/magnifier.png" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://kuklis.github.io/cma/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://kuklis.github.io/cma/icons/favicon-32x32.png'>
 <link rel="manifest" href='https://kuklis.github.io/cma/icons/site.webmanifest'>
@@ -32,8 +33,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-<link rel="canonical" href="https://kuklis.github.io/cma/tags/index/">
-<link rel="alternate" type="application/rss+xml" href="https://kuklis.github.io/cma/tags/index/index.xml" title="CMA" />
+<link rel="canonical" href="https://kuklis.github.io/cma/post/vra8-logs-troubleshooting/">
 
     
 
@@ -51,7 +51,7 @@
   
     
   
-  <body data-code="7" data-lines="false" id="documentTop">
+  <body data-code="50" data-lines="false" id="documentTop">
 
 <header class="nav_header" >
   <nav class="nav"><a href='https://kuklis.github.io/cma/' class="nav_brand nav_item" title="CMA">
@@ -107,43 +107,146 @@
 </header>
 
     <main>
-
+  
 <div class="grid-inverse wrap content">
-  <ul class="posts" id="posts">
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://kuklis.github.io/cma/post/" title="Posts">Posts</a>
-      </h3>
-      <div class="post_meta">
+  <article class="post_content">
+    <h1 class="post_title">vRA8 logs &amp; troubleshooting</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
       Feb 23, 2022</span>
-      <a href='https://kuklis.github.io/cma/tags/index' title="index" class="post_tag button button_translucent">index
+      <a href='https://kuklis.github.io/cma/tags/vra8' title="vRA8" class="post_tag button button_translucent">vRA8
+      </a>
+      <a href='https://kuklis.github.io/cma/tags/logging' title="logging" class="post_tag button button_translucent">logging
       </a>
 </div>
 
-    </div>
-      <div class="excerpt_footer">
-        <div>
-          <p class="pale">
-            
-          </p>
-          <a href="https://kuklis.github.io/cma/post/" title="Read More" class="excerpt_more button">Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
+    
+  <div class="post_share">
+    Share on:
+    <a href="https://twitter.com/intent/tweet?text=vRA8%20logs%20%26%20troubleshooting&url=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-logs-troubleshooting%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+    </a>
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvra8-logs-troubleshooting%2f&t=vRA8%20logs%20%26%20troubleshooting" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#facebook"></use>
+</svg>
+    </a>
+    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+    </a>
+    <a href="https://kuklis.github.io/cma/post/vra8-logs-troubleshooting/" title="Copy Link" class="link link_yank">
+      <svg class="icon">
+  <use xlink:href="#copy"></use>
+</svg>
+    </a>
+  </div>
 
-    <li>
-
-
+    
+    <p>Where to find log files, searching tips and how to make logging more verbose</p>
+<div class="toc">
+    <H3>Table of Contents</H3>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#where-are-the-logs">Where are the logs</a>
+      <ul>
+        <li><a href="#container-console-logs">Container console logs</a></li>
+        <li><a href="#container-log-files">Container log files</a></li>
+        <li><a href="#vro-scripting-log">vRO scripting log</a></li>
+      </ul>
     </li>
+    <li><a href="#troubleshooting-cases">Troubleshooting cases</a>
+      <ul>
+        <li><a href="#securityexception---cannot-execute-request">SecurityException: : : Cannot execute request</a></li>
+        <li><a href="#iaas-api-empty-result">IaaS API empty result</a></li>
+      </ul>
+    </li>
+    <li><a href="#but-i-want-more-logs-trace">But I want more logs! (TRACE)</a></li>
+    <li><a href="#summary">Summary</a></li>
   </ul>
+</nav>
+  </div>
+<h2 id="where-are-the-logs">Where are the logs</h2>
+<h3 id="container-console-logs">Container console logs</h3>
+<p>vRA8 appliance runs application components within containers using Kubernetes as an orchestrator. We are interested in namespace called <tt>prelude</tt>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln"> 1</span>root@vra8 <span class="o">[</span> ~ <span class="o">]</span><span class="c1"># kubectl get namespaces</span>
+<span class="ln"> 2</span>NAME              STATUS   AGE
+<span class="ln"> 3</span>default           Active   20d
+<span class="ln"> 4</span>ingress           Active   4d1h
+<span class="ln"> 5</span>kube-node-lease   Active   20d
+<span class="ln"> 6</span>kube-public       Active   20d
+<span class="ln"> 7</span>kube-system       Active   20d
+<span class="ln"> 8</span>openfaas          Active   4d1h
+<span class="ln"> 9</span>openfaas-fn       Active   4d1h
+<span class="ln">10</span>openfaas-ip       Active   4d1h
+<span class="hl"><span class="ln">11</span>prelude           Active   4d1h</span></code></pre></div>
+<p>Console logs are not very useful:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>root@vra8 <span class="o">[</span> ~ <span class="o">]</span><span class="c1"># kubectl -n prelude logs pod/provisioning-service-app-67b8fd5d48-5wv5c --since=1m --all-containers=true -f</span>
+<span class="ln">2</span><span class="o">[</span>2022-02-23T22:22:53.271+0000<span class="o">][</span>info<span class="o">][</span>gc,start       <span class="o">]</span> GC<span class="o">(</span>758<span class="o">)</span> Pause Young <span class="o">(</span>Allocation Failure<span class="o">)</span>
+<span class="ln">3</span><span class="o">[</span>2022-02-23T22:22:53.278+0000<span class="o">][</span>info<span class="o">][</span>gc,heap        <span class="o">]</span> GC<span class="o">(</span>758<span class="o">)</span> PSYoungGen: 521568K-&gt;480K<span class="o">(</span>522752K<span class="o">)</span>
+<span class="ln">4</span><span class="o">[</span>2022-02-23T22:22:53.278+0000<span class="o">][</span>info<span class="o">][</span>gc,heap        <span class="o">]</span> GC<span class="o">(</span>758<span class="o">)</span> ParOldGen: 550433K-&gt;550657K<span class="o">(</span>1933312K<span class="o">)</span>...
+</code></pre></div><h3 id="container-log-files">Container log files</h3>
+<p>vRA8 container log file directories are mounted from the filesystem of the appliance to allow easy access. The directory is <tt>/var/log/services-logs/</tt> and that is symlinked to <tt>/services-logs/</tt> to save some typing. The directory structure is created according to the Kubernetes hierarchy of the deployments: <tt>/services-logs/prelude</tt> contains logs related to the <tt>prelude</tt> namespace:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>root@vra8 <span class="o">[</span> ~ <span class="o">]</span><span class="c1"># find /services-logs/prelude/provisioning-service-app/ -name &#39;*.log&#39;</span>
+<span class="ln">2</span>/services-logs/prelude/provisioning-service-app/console-logs/provisioning-service-app.log
+<span class="ln">3</span>/services-logs/prelude/provisioning-service-app/console-logs/provisioning-service-dependencies.log
+<span class="ln">4</span>/services-logs/prelude/provisioning-service-app/file-logs/provisioning-service-app.log
+</code></pre></div><p>We can view/search these files if we know which component logs we are interested in. Otherwise a brute-force search helps to find the relevant log files:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>root@vra8 <span class="o">[</span> ~ <span class="o">]</span><span class="c1"># find /services-logs/prelude -name &#39;*.log&#39; | xargs grep -l &#34;No subnet found with subnet ranges that have available IP addresses for NIC with compute network&#34;</span>
+<span class="ln">2</span>/services-logs/prelude/tango-blueprint-service-app/file-logs/tango-blueprint-service-app.log
+<span class="ln">3</span>/services-logs/prelude/provisioning-service-app/file-logs/provisioning-service-app.log
+</code></pre></div><h3 id="vro-scripting-log">vRO scripting log</h3>
+<p>JavaScript logs are located at <tt>/data/vco/usr/lib/vco/app-server/logs/scripting.log</tt></p>
+<h2 id="troubleshooting-cases">Troubleshooting cases</h2>
+<p>Here are some recent problems I encountered and could solve with the help of these log files.</p>
+<h3 id="securityexception---cannot-execute-request">SecurityException: : : Cannot execute request</h3>
+<p>After upgrading a vRA 8.2 appliance to 8.5 we got a very short error message of failing IaaS deployments:</p>
+<p><img src="/cma/img/vra8-logs-troubleshooting/securityexception.png" alt=""></p>
+<p>A quick search revealed which log file to take a look at:</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>root@vra8 [ ~ ]# find /services-logs/prelude/ -name &#39;*.log&#39; | xargs grep -l &#39;SecurityException&#39;
+<span class="ln">2</span>/services-logs/prelude/provisioning-service-app/file-logs/provisioning-service-app.log
+</code></pre></div><p>Checking the log file gave further insight into the problem:</p>
+<tt>
+Caused by: java.lang.RuntimeException: https://nsx-t.corp.local/policy/api/v1/infra/realized-state/enforcement-points/default/virtual-machines?sort_ascending=true&query=vm233 invocation failed with "javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target"</tt>
+<p>We had to re-trust the certificate of NSX-T Cloud Account and the issue is gone.</p>
+<h3 id="iaas-api-empty-result">IaaS API empty result</h3>
+<p>We use the IaaS API call <tt><a href="https://vra8.corp.local/iaas/api/images">https://vra8.corp.local/iaas/api/images</a></tt> to fetch available image mappings. All of a sudden the result became empty altough we had quite a few images made available. No error messages, just an empty response with status code 200. Let's search for the API call:</p>
+<div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>root@vra8 [ ~ ]# find /services-logs/prelude -name &#39;*.log&#39; | xargs grep -l &#39;/iaas/api/images&#39;
+<span class="ln">2</span>/services-logs/prelude/provisioning-service-app/file-logs/provisioning-service-app.log
+</code></pre></div><p>It's the provisioning service app log again! After investigating the log file the following error message was found:</p>
+<p><tt>ERROR provisioning [host='provisioning-service-app-c874966b6-scw8h' thread='xn-index-queries-10' user='apiuser' org='5f70a3eb-2f49-4ba8-997c-6567d2970968' trace='9c595930-1dd2-4987-a73b-bd9c6d35bef5' parent='' span='fabcd061-f900-4c63-8fae-478e6f30b0c8'] c.vmware.admiral.host.ProvisioningHost.log:453 - Exception while converting resource /provisioning/resources/image-profiles/5f70a3eb-2f49-4ba8-997c-6567d2970968-03690a96-e630-42d2-8af2-fa9e5d829680 of type: [class com.vmware.iaas.api.model.multicloud.ImageMapping]: java.util.concurrent.CompletionException: com.vmware.xenon.common.WrappedDeferredResultException: com.vmware.xenon.common.ServiceHost$ServiceNotFoundException: Service not found: http://10.244.0.33:8282/resources/images/d3f4a777ce1f267c0c03b4d98aedf9352f5e756c</tt></p>
+<p>After checking the image mappings we found that one of the template was missing from vSphere and caused the an exception resulting in an empty result. When the mapping was restored, the API call result went back to normal.</p>
+<h2 id="but-i-want-more-logs-trace">But I want more logs! (TRACE)</h2>
+<p>vRA8 is a Spring Boot Java application. We can increase the log level (mostly defaulting to DEBUG) by adjusting JVM options. For that we have to modify the deployment YAML (this is unsupported, DO AT YOUR OWN RISK):</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>root@vra8 <span class="o">[</span> ~ <span class="o">]</span><span class="c1"># kubectl -n prelude edit deployment provisioning-service-app</span>
+</code></pre></div><p>Under <tt>JAVA_OPTS</tt> add the a new line with <tt>TRACE</tt> logging level:
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="ln">1</span><span class="w">        </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">JAVA_OPTS</span><span class="w">
+</span><span class="ln">2</span><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p">|-</span><span class="sd">
+</span><span class="hl"><span class="ln">3</span><span class="sd">            -Dlogging.level.root=TRACE
+</span></span><span class="ln">4</span><span class="sd">            -Dhttps.proxyHost=$(JAVA_PROXY_HOST)</span><span class="w">            </span></code></pre></div></p>
+<p>Save and exit, then wait for the pod to restart:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>root@vra8 <span class="o">[</span> ~ <span class="o">]</span><span class="c1"># watch kubectl -n prelude get pods</span>
+</code></pre></div><p>Now you'll get a <strong>lot</strong> of entries in file logs, i.e.</p>
+<p><tt>2022-02-23T23:51:16.055Z TRACE provisioning [host='provisioning-service-app-67b8fd5d48-5wv5c' thread='xn-index-queries-16' user='' org='' trace='b1ffea52-ffd4-467b-9e85-c0a603c5a52f' parent='' span='a0192eaf-3de9-467e-bbdb-1c1b7eb3e07f'] c.v.x.s.rdbms.PostgresQueryConverter.convert:144 - Convert: SELECT * FROM change_owner_task_state WHERE ((task_info -&gt;&gt; 'stage' = ANY(ARRAY['CREATED','STARTED'])) AND (owner_node_id IS NOT NULL AND NOT COALESCE(owner_node_id = '830cd592-cda8-4aab-a171-10dd9fb072e9', FALSE)))</tt></p>
+<p>Make sure to remove extra logging once you're done with invenstigation as it can impact performance and disk usage.</p>
+<h2 id="summary">Summary</h2>
+<p>I hope I could give some ideas and motivation to check vRA log files for troubleshooting purposes: you may be able to fix your problem without contacting support.</p><script src="https://utteranc.es/client.js"
+  repo="kuklis/cma"
+  issue-term="title"
+  label="Comment"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+  </article>
 <aside class="sidebar">
   <section class="sidebar_inner">
     
@@ -153,9 +256,6 @@
       </div>
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
-      <li>
-        <a href="https://kuklis.github.io/cma/post/vra8-logs-troubleshooting/" class="nav-link" title="vRA8 logs &amp; troubleshooting">vRA8 logs &amp; troubleshooting</a>
-      </li>
       <li>
         <a href="https://kuklis.github.io/cma/post/vro8-import-workflow/" class="nav-link" title="vRO8 Import Workflow">vRO8 Import Workflow</a>
       </li>
@@ -176,6 +276,9 @@
       </li>
       <li>
         <a href="https://kuklis.github.io/cma/post/fake-context-wrapper/" class="nav-link" title="Fake Context Wrapper for vRO actions">Fake Context Wrapper for vRO actions</a>
+      </li>
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-azure-storage-exception/" class="nav-link" title="vRA8 Azure cloud account storage exception">vRA8 Azure cloud account storage exception</a>
       </li>
     </ul>
     <div>
@@ -273,9 +376,8 @@
   </section>
 </aside>
 
+  
 </div>
-
-
     </main><svg width="0" height="0" class="hidden">
   <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
     <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>

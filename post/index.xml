@@ -6,7 +6,107 @@
     <description>Recent content in Posts on CMA</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
-    <lastBuildDate>Sun, 31 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 23 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>vRA8 logs &amp; troubleshooting</title>
+      <link>https://kuklis.github.io/cma/post/vra8-logs-troubleshooting/</link>
+      <pubDate>Wed, 23 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vra8-logs-troubleshooting/</guid>
+      <description>
+        
+          &lt;p&gt;Where to find log files, searching tips and how to make logging more verbose&lt;/p&gt;
+&lt;div class=&#34;toc&#34;&gt;
+    &lt;H3&gt;Table of Contents&lt;/H3&gt;
+    &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#where-are-the-logs&#34;&gt;Where are the logs&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#container-console-logs&#34;&gt;Container console logs&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#container-log-files&#34;&gt;Container log files&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#vro-scripting-log&#34;&gt;vRO scripting log&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#troubleshooting-cases&#34;&gt;Troubleshooting cases&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#securityexception---cannot-execute-request&#34;&gt;SecurityException: : : Cannot execute request&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#iaas-api-empty-result&#34;&gt;IaaS API empty result&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#but-i-want-more-logs-trace&#34;&gt;But I want more logs! (TRACE)&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#summary&#34;&gt;Summary&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+  &lt;/div&gt;
+&lt;h2 id=&#34;where-are-the-logs&#34;&gt;Where are the logs&lt;/h2&gt;
+&lt;h3 id=&#34;container-console-logs&#34;&gt;Container console logs&lt;/h3&gt;
+&lt;p&gt;vRA8 appliance runs application components within containers using Kubernetes as an orchestrator. We are interested in namespace called &lt;tt&gt;prelude&lt;/tt&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;root@vra8 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# kubectl get namespaces&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;NAME              STATUS   AGE
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;default           Active   20d
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;ingress           Active   4d1h
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;kube-node-lease   Active   20d
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;kube-public       Active   20d
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;kube-system       Active   20d
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;openfaas          Active   4d1h
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;openfaas-fn       Active   4d1h
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;openfaas-ip       Active   4d1h
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;prelude           Active   4d1h&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Console logs are not very useful:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vra8 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# kubectl -n prelude logs pod/provisioning-service-app-67b8fd5d48-5wv5c --since=1m --all-containers=true -f&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2022-02-23T22:22:53.271+0000&lt;span class=&#34;o&#34;&gt;][&lt;/span&gt;info&lt;span class=&#34;o&#34;&gt;][&lt;/span&gt;gc,start       &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; GC&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;758&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; Pause Young &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Allocation Failure&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2022-02-23T22:22:53.278+0000&lt;span class=&#34;o&#34;&gt;][&lt;/span&gt;info&lt;span class=&#34;o&#34;&gt;][&lt;/span&gt;gc,heap        &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; GC&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;758&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; PSYoungGen: 521568K-&amp;gt;480K&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;522752K&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2022-02-23T22:22:53.278+0000&lt;span class=&#34;o&#34;&gt;][&lt;/span&gt;info&lt;span class=&#34;o&#34;&gt;][&lt;/span&gt;gc,heap        &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; GC&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;758&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; ParOldGen: 550433K-&amp;gt;550657K&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;1933312K&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;container-log-files&#34;&gt;Container log files&lt;/h3&gt;
+&lt;p&gt;vRA8 container log file directories are mounted from the filesystem of the appliance to allow easy access. The directory is &lt;tt&gt;/var/log/services-logs/&lt;/tt&gt; and that is symlinked to &lt;tt&gt;/services-logs/&lt;/tt&gt; to save some typing. The directory structure is created according to the Kubernetes hierarchy of the deployments: &lt;tt&gt;/services-logs/prelude&lt;/tt&gt; contains logs related to the &lt;tt&gt;prelude&lt;/tt&gt; namespace:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vra8 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# find /services-logs/prelude/provisioning-service-app/ -name &amp;#39;*.log&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;/services-logs/prelude/provisioning-service-app/console-logs/provisioning-service-app.log
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;/services-logs/prelude/provisioning-service-app/console-logs/provisioning-service-dependencies.log
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;/services-logs/prelude/provisioning-service-app/file-logs/provisioning-service-app.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can view/search these files if we know which component logs we are interested in. Otherwise a brute-force search helps to find the relevant log files:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vra8 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# find /services-logs/prelude -name &amp;#39;*.log&amp;#39; | xargs grep -l &amp;#34;No subnet found with subnet ranges that have available IP addresses for NIC with compute network&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;/services-logs/prelude/tango-blueprint-service-app/file-logs/tango-blueprint-service-app.log
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;/services-logs/prelude/provisioning-service-app/file-logs/provisioning-service-app.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;vro-scripting-log&#34;&gt;vRO scripting log&lt;/h3&gt;
+&lt;p&gt;JavaScript logs are located at &lt;tt&gt;/data/vco/usr/lib/vco/app-server/logs/scripting.log&lt;/tt&gt;&lt;/p&gt;
+&lt;h2 id=&#34;troubleshooting-cases&#34;&gt;Troubleshooting cases&lt;/h2&gt;
+&lt;p&gt;Here are some recent problems I encountered and could solve with the help of these log files.&lt;/p&gt;
+&lt;h3 id=&#34;securityexception---cannot-execute-request&#34;&gt;SecurityException: : : Cannot execute request&lt;/h3&gt;
+&lt;p&gt;After upgrading a vRA 8.2 appliance to 8.5 we got a very short error message of failing IaaS deployments:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-logs-troubleshooting/securityexception.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;A quick search revealed which log file to take a look at:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vra8 [ ~ ]# find /services-logs/prelude/ -name &amp;#39;*.log&amp;#39; | xargs grep -l &amp;#39;SecurityException&amp;#39;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;/services-logs/prelude/provisioning-service-app/file-logs/provisioning-service-app.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Checking the log file gave further insight into the problem:&lt;/p&gt;
+&lt;tt&gt;
+Caused by: java.lang.RuntimeException: https://nsx-t.corp.local/policy/api/v1/infra/realized-state/enforcement-points/default/virtual-machines?sort_ascending=true&amp;query=vm233 invocation failed with &#34;javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target&#34;&lt;/tt&gt;
+&lt;p&gt;We had to re-trust the certificate of NSX-T Cloud Account and the issue is gone.&lt;/p&gt;
+&lt;h3 id=&#34;iaas-api-empty-result&#34;&gt;IaaS API empty result&lt;/h3&gt;
+&lt;p&gt;We use the IaaS API call &lt;tt&gt;&lt;a href=&#34;https://vra8.corp.local/iaas/api/images&#34;&gt;https://vra8.corp.local/iaas/api/images&lt;/a&gt;&lt;/tt&gt; to fetch available image mappings. All of a sudden the result became empty altough we had quite a few images made available. No error messages, just an empty response with status code 200. Let&#39;s search for the API call:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vra8 [ ~ ]# find /services-logs/prelude -name &amp;#39;*.log&amp;#39; | xargs grep -l &amp;#39;/iaas/api/images&amp;#39;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;/services-logs/prelude/provisioning-service-app/file-logs/provisioning-service-app.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It&#39;s the provisioning service app log again! After investigating the log file the following error message was found:&lt;/p&gt;
+&lt;p&gt;&lt;tt&gt;ERROR provisioning [host=&#39;provisioning-service-app-c874966b6-scw8h&#39; thread=&#39;xn-index-queries-10&#39; user=&#39;apiuser&#39; org=&#39;5f70a3eb-2f49-4ba8-997c-6567d2970968&#39; trace=&#39;9c595930-1dd2-4987-a73b-bd9c6d35bef5&#39; parent=&#39;&#39; span=&#39;fabcd061-f900-4c63-8fae-478e6f30b0c8&#39;] c.vmware.admiral.host.ProvisioningHost.log:453 - Exception while converting resource /provisioning/resources/image-profiles/5f70a3eb-2f49-4ba8-997c-6567d2970968-03690a96-e630-42d2-8af2-fa9e5d829680 of type: [class com.vmware.iaas.api.model.multicloud.ImageMapping]: java.util.concurrent.CompletionException: com.vmware.xenon.common.WrappedDeferredResultException: com.vmware.xenon.common.ServiceHost$ServiceNotFoundException: Service not found: http://10.244.0.33:8282/resources/images/d3f4a777ce1f267c0c03b4d98aedf9352f5e756c&lt;/tt&gt;&lt;/p&gt;
+&lt;p&gt;After checking the image mappings we found that one of the template was missing from vSphere and caused the an exception resulting in an empty result. When the mapping was restored, the API call result went back to normal.&lt;/p&gt;
+&lt;h2 id=&#34;but-i-want-more-logs-trace&#34;&gt;But I want more logs! (TRACE)&lt;/h2&gt;
+&lt;p&gt;vRA8 is a Spring Boot Java application. We can increase the log level (mostly defaulting to DEBUG) by adjusting JVM options. For that we have to modify the deployment YAML (this is unsupported, DO AT YOUR OWN RISK):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vra8 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# kubectl -n prelude edit deployment provisioning-service-app&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Under &lt;tt&gt;JAVA_OPTS&lt;/tt&gt; add the a new line with &lt;tt&gt;TRACE&lt;/tt&gt; logging level:
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;JAVA_OPTS&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|-&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;            -Dlogging.level.root=TRACE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;            -Dhttps.proxyHost=$(JAVA_PROXY_HOST)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/p&gt;
+&lt;p&gt;Save and exit, then wait for the pod to restart:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vra8 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# watch kubectl -n prelude get pods&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now you&#39;ll get a &lt;strong&gt;lot&lt;/strong&gt; of entries in file logs, i.e.&lt;/p&gt;
+&lt;p&gt;&lt;tt&gt;2022-02-23T23:51:16.055Z TRACE provisioning [host=&#39;provisioning-service-app-67b8fd5d48-5wv5c&#39; thread=&#39;xn-index-queries-16&#39; user=&#39;&#39; org=&#39;&#39; trace=&#39;b1ffea52-ffd4-467b-9e85-c0a603c5a52f&#39; parent=&#39;&#39; span=&#39;a0192eaf-3de9-467e-bbdb-1c1b7eb3e07f&#39;] c.v.x.s.rdbms.PostgresQueryConverter.convert:144 - Convert: SELECT * FROM change_owner_task_state WHERE ((task_info -&amp;gt;&amp;gt; &#39;stage&#39; = ANY(ARRAY[&#39;CREATED&#39;,&#39;STARTED&#39;])) AND (owner_node_id IS NOT NULL AND NOT COALESCE(owner_node_id = &#39;830cd592-cda8-4aab-a171-10dd9fb072e9&#39;, FALSE)))&lt;/tt&gt;&lt;/p&gt;
+&lt;p&gt;Make sure to remove extra logging once you&#39;re done with invenstigation as it can impact performance and disk usage.&lt;/p&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;I hope I could give some ideas and motivation to check vRA log files for troubleshooting purposes: you may be able to fix your problem without contacting support.&lt;/p&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>vRO8 Import Workflow</title>
       <link>https://kuklis.github.io/cma/post/vro8-import-workflow/</link>
