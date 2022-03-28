@@ -291,8 +291,8 @@
 <span class="ln">24</span><span class="p">);</span>
 <span class="ln">25</span><span class="nx">System</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">datastores</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">));</span>
 <span class="ln">26</span><span class="kd">var</span> <span class="nx">tag</span> <span class="o">=</span> <span class="nx">datastores</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">tags</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span>
-<span class="ln">27</span>    <span class="kd">function</span> <span class="p">(</span><span class="nx">tag</span><span class="p">)</span> <span class="p">{</span>
-<span class="ln">28</span>        <span class="k">return</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">key</span> <span class="o">==</span> <span class="nx">tagKey</span><span class="p">;</span>
+<span class="ln">27</span>    <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+<span class="ln">28</span>        <span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">key</span> <span class="o">==</span> <span class="nx">tagKey</span><span class="p">;</span>
 <span class="ln">29</span>    <span class="p">}</span>
 <span class="ln">30</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
 <span class="ln">31</span><span class="nx">System</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">tag</span><span class="p">));</span>
@@ -332,7 +332,7 @@
 <span class="ln">30</span>    ]
 <span class="ln">31</span>  }
 <span class="ln">32</span>]
-<span class="ln">33</span>2022-03-28 23:42:29.426 +02:00INFO(com.test.storage/getStorageTag) {&#34;key&#34;:&#34;ds&#34;,&#34;value&#34;:&#34;ds1&#34;}
+<span class="ln">33</span>2022-03-28 13:42:29.426 +02:00INFO(com.test.storage/getStorageTag) {&#34;key&#34;:&#34;ds&#34;,&#34;value&#34;:&#34;ds1&#34;}
 </code></pre></div><p>The last line shows the chosen tag (key/value pair).</p>
 <h2 id="vra-cloud-template">vRA Cloud Template</h2>
 <p>Let's create our cloud template to use the action:</p>
@@ -404,8 +404,8 @@
 <span class="ln">28</span><span class="nx">datastores</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span>
 <span class="ln">29</span>    <span class="kd">function</span> <span class="p">(</span><span class="nx">ds</span><span class="p">)</span> <span class="p">{</span>
 <span class="ln">30</span>        <span class="kd">var</span> <span class="nx">tag</span> <span class="o">=</span> <span class="nx">ds</span><span class="p">.</span><span class="nx">tags</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span>
-<span class="ln">31</span>            <span class="kd">function</span> <span class="p">(</span><span class="nx">tag</span><span class="p">)</span> <span class="p">{</span>
-<span class="ln">32</span>                <span class="k">return</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">key</span> <span class="o">==</span> <span class="nx">tagKey</span><span class="p">;</span>
+<span class="ln">31</span>            <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+<span class="ln">32</span>                <span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">key</span> <span class="o">==</span> <span class="nx">tagKey</span><span class="p">;</span>
 <span class="ln">33</span>            <span class="p">}</span>
 <span class="ln">34</span>        <span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
 <span class="ln">35</span>        <span class="nx">dropdown</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">ds</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&#34; (&#34;</span> <span class="o">+</span> <span class="nx">ds</span><span class="p">.</span><span class="nx">freeSizeGB</span> <span class="o">+</span> <span class="s2">&#34; GB)&#34;</span><span class="p">)</span>
