@@ -3,27 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://kuklis.github.io/cma/</loc>
-    <lastmod>2022-03-28T00:00:00+00:00</lastmod>
+    <lastmod>2022-05-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/</loc>
-    <lastmod>2022-03-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/placement/</loc>
-    <lastmod>2022-03-28T00:00:00+00:00</lastmod>
+    <lastmod>2022-05-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/</loc>
+    <lastmod>2022-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/</loc>
+    <lastmod>2022-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
+    <lastmod>2022-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/post/vra8-xaas-custom-destroy-workflow/</loc>
+    <lastmod>2022-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
+    <lastmod>2022-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/xaas/</loc>
+    <lastmod>2022-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/placement/</loc>
     <lastmod>2022-03-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/storage/</loc>
     <lastmod>2022-03-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/storage/</loc>
-    <lastmod>2022-03-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/</loc>
-    <lastmod>2022-03-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
     <lastmod>2022-03-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vra8-datastore-custom-placement/</loc>
@@ -42,9 +51,6 @@
     <lastmod>2022-02-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/api/</loc>
-    <lastmod>2021-10-31T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
     <lastmod>2021-10-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vro8-import-workflow/</loc>
