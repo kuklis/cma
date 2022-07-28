@@ -18,13 +18,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="How to get and filter workflow logs">
+<meta name="description" content="How to get and filter workflow logs via API">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="@kuklis_k">
 <meta name="twitter:title" content="vRO8 Dump Workflow Logs" />
 <meta property="og:url" content="https://kuklis.github.io/cma/post/vro8-dump-workflow-logs/" />
 <meta property="og:title" content="vRO8 Dump Workflow Logs" />
-<meta property="og:description" content="How to get and filter workflow logs" />
+<meta property="og:description" content="How to get and filter workflow logs via API" />
 <meta property="og:image" content="https://kuklis.github.io/cma/images/workflow.png" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://kuklis.github.io/cma/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://kuklis.github.io/cma/icons/favicon-32x32.png'>
@@ -116,7 +116,7 @@
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
-      Jul 29, 2022</span>
+      Jul 28, 2022</span>
       <a href='https://kuklis.github.io/cma/tags/vro' title="vRO" class="post_tag button button_translucent">vRO
       </a>
 </div>
@@ -147,154 +147,114 @@
   </div>
 
     
-    <p>How to get and filter workflow logs from vRO8</p>
+    <p>How to get and filter workflow logs from vRO8 via API</p>
 <div class="toc">
     <H3>Table of Contents</H3>
     <nav id="TableOfContents">
   <ul>
     <li><a href="#introduction">Introduction</a></li>
-    <li><a href="#api-definition">API definition</a></li>
-    <li><a href="#import-using-cli">Import using CLI</a>
-      <ul>
-        <li><a href="#multipart-content-type">Multipart Content-type</a></li>
-      </ul>
-    </li>
-    <li><a href="#import-using-vro">Import using vRO</a>
-      <ul>
-        <li><a href="#the-inputs">The inputs</a></li>
-        <li><a href="#mimeattachment-issues">MimeAttachment issues</a></li>
-        <li><a href="#sending-the-file-to-vro-rest-api-using-python">Sending the file to vRO REST API using Python</a></li>
-      </ul>
-    </li>
-    <li><a href="#wrap-up">Wrap-up</a></li>
+    <li><a href="#vro-api">vRO API</a></li>
+    <li><a href="#the-code">The Code</a></li>
+    <li><a href="#running-it-standalone">Running it standalone</a></li>
   </ul>
 </nav>
   </div>
 <h2 id="introduction">Introduction</h2>
 <p>vRealize Orchestrator version 8 logs include workflow item names a separate log entries. Let's compare the output of the same workflow with the legacy version 7 client:</p>
 <p><img src="/cma/img/vro8-dump-workflow-logs/vro8vro7compared.png" alt=""></p>
-<h2 id="api-definition">API definition</h2>
-<p>The <a href="https://developer.vmware.com/apis/1174">vRealize Orchestrator API</a> provides a REST API to interact with vRO. The <a href="https://developer.vmware.com/apis/1174#/Content%20Service">Content Service</a> allows us to import a workflow. According to the specification the workflow is sent to <tt>/content/workflows/{categoryId}</tt> as a Multipart Content-type. <a href="https://datatracker.ietf.org/doc/html/rfc2387">RFC 2387</a> describes the details of this Content-type.</p>
-<p>We need to know the Id of the folder (WorkflowCategory). The following Javascript code will print it:</p>
-<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln">1</span><span class="kd">var</span> <span class="nx">folder</span> <span class="o">=</span> <span class="nx">Server</span><span class="p">.</span><span class="nx">getWorkflowCategoryWithPath</span><span class="p">(</span><span class="s2">&#34;test/import&#34;</span><span class="p">);</span>
-<span class="ln">2</span><span class="nx">System</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">System</span><span class="p">.</span><span class="nx">getObjectId</span><span class="p">(</span><span class="nx">folder</span><span class="p">));</span>
-</code></pre></div><p>There it is:
-<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln">1</span>2021-10-31 21:02:06.118 +01:00 INFO __item_stack:/item1
-<span class="hl"><span class="ln">2</span>2021-10-31 21:02:06.122 +01:00 INFO 8a7480e57c8e421d017cd78e673619f1
-</span><span class="ln">3</span>2021-10-31 21:02:06.126 +01:00 INFO __item_stack:/item0</code></pre></div></p>
-<h2 id="import-using-cli">Import using CLI</h2>
-<p>The Spring sample in the API documentation gives some hints how to format the Multipart data to post: the part representing the workflow should be called <tt>&quot;file&quot;</tt>.</p>
-<p>Using <tt>curl</tt> we can upload a workflow to vRO with the following command, knowing the Workflow Category Id (target folder). In case a workflow with the same workflow Id exists, we overwrite it. The name of the object within the multipart data is specified by <tt>file=</tt>. The actual file content is loaded by using the @ symbol.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>curl -k -u <span class="s1">&#39;cfgadmin:VMware123!&#39;</span> -H <span class="s1">&#39;Content-Type: multipart/form-data&#39;</span> <span class="se">\
-</span><span class="ln">2</span><span class="se"></span><span class="s2">&#34;https://vra8.corp.local/vco/api/content/workflows/8a7480e57c8e421d017cd78e673619f1?overwrite=true&#34;</span> <span class="se">\
-</span><span class="ln">3</span><span class="se"></span>-F <span class="s1">&#39;file=@HelloWorld.workflow&#39;</span>
-</code></pre></div><p>The result:
-<img src="/cma/img/vro8-import-workflow/helloworld.png" alt=""></p>
-<h3 id="multipart-content-type">Multipart Content-type</h3>
-<p>Let's check what data did <tt>curl</tt> send to upload the file:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>curl -k -u <span class="s1">&#39;cfgadmin:VMware123!&#39;</span> -H <span class="s1">&#39;Content-Type: multipart/form-data&#39;</span> <span class="se">\
-</span><span class="ln">2</span><span class="se"></span><span class="s2">&#34;https://vra8.corp.local/vco/api/content/workflows/8a7480e57c8e421d017cd78e673619f1?overwrite=true&#34;</span> <span class="se">\
-</span><span class="ln">3</span><span class="se"></span>-F <span class="s1">&#39;file=@HelloWorld.workflow&#39;</span> --trace-ascii -
-</code></pre></div><p>Highlighted are: the Content-type, boundary value and the Content-Disposition Headers:</p>
-<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln"> 1</span>...
-<span class="ln"> 2</span>0000: POST /vco/api/content/workflows/8a7480e57c8e421d017cd78e673619f1
-<span class="ln"> 3</span>0040: ?overwrite=true HTTP/2
-<span class="ln"> 4</span>0058: Host: vra8.corp.local
-<span class="ln"> 5</span>0070: authorization: Basic Y2ZnYWRtaW46Vk13YXJlMTIzIQ==
-<span class="ln"> 6</span>00a3: user-agent: curl/7.68.0
-<span class="ln"> 7</span>00bc: accept: */*
-<span class="ln"> 8</span>00c9: content-length: 1202
-<span class="hl"><span class="ln"> 9</span>00df: content-type: multipart/form-data; boundary=--------------------
-</span><span class="hl"><span class="ln">10</span>011f: ----4a56c5c66e96749e
-</span><span class="ln">11</span>0135:
-<span class="ln">12</span>&lt;= Recv SSL data, 5 bytes (0x5)
-<span class="ln">13</span>0000: ....9
-<span class="ln">14</span>== Info: Connection state changed (MAX_CONCURRENT_STREAMS == 250)!
-<span class="ln">15</span>=&gt; Send SSL data, 5 bytes (0x5)
-<span class="ln">16</span>0000: ....!
-<span class="ln">17</span>=&gt; Send SSL data, 5 bytes (0x5)
-<span class="ln">18</span>0000: .....
-<span class="ln">19</span>=&gt; Send data, 1202 bytes (0x4b2)
-<span class="hl"><span class="ln">20</span>0000: --------------------------4a56c5c66e96749e
-</span><span class="hl"><span class="ln">21</span>002c: Content-Disposition: form-data; name=&#34;file&#34;; filename=&#34;HelloWorl
-</span><span class="hl"><span class="ln">22</span>006c: d.workflow&#34;
-</span><span class="hl"><span class="ln">23</span>0079: Content-Type: application/octet-stream
-</span><span class="ln">24</span>00a1:
-<span class="ln">25</span>00a3: PK........V._S................workflow-info.....0......!......pS
-<span class="ln">26</span>00e3: .....%=iQrrI&lt;|{...C.n-.k.n.\.C........&gt;....J.i..p..t.....s.%3.K.
-<span class="ln">27</span>0123: \|Z.Z..,LU.#....D.......l.)....PK......t...z...PK........V._S...
-<span class="ln">28</span>0163: .............workflow-content.U.n.@.=.~...H..8..J..Tu....$...Nj.
-<span class="ln">29</span>01a3: .+N....s.&#39;.c;UJ.h..}...3..p..&lt; E.....@..s....t.....f.1.!.3LU{.k
-<span class="ln">30</span>01e3: ...{.O0...V.Y..&amp;D...2.3...-....p9..[!.G.H...TVn....6.Zrm..t8.&gt;..
-<span class="ln">31</span>0223: 1...J&lt;V..+.q.+F.e...m.*&#39;F.uF&amp;....,-/.7.{Y..Kj.^...KMb..OO.=.*...
-<span class="ln">32</span>0263: ..f...&#34;.9.D*....?.....]=....*+.31=.&#39;fL....G..w\.....G.&#34;+.:_y..~.
-<span class="ln">33</span>02a3: U.&lt;B..3..P.P.ie...tL..{.k.u....3}.../..T.G....Nk;...|..K(..&lt;.Q.n
-<span class="ln">34</span>02e3: q.....EB..J.F....&gt;.3NyVN.&gt;.&lt;.^.;...;...O .ce..u..:-.IF.J...*o#+.
-<span class="ln">35</span>0323: ..%j}...?.V..q.....0!.......~=]G..8......T..%.....6.NY...a}z.v..
-<span class="ln">36</span>0363: f...9c.;...]....R...9TD.;M.m.|..{dN..^..&#34;..f..z..FG3...mK~.!.j..
-<span class="ln">37</span>03a3: C.^.C%.j....]l....I....i.T}.{...K../...eO.......N.O...g..K{..a..
-<span class="ln">38</span>03e3: PK....++c.......PK..........V._S....t...z.....................wo
-<span class="ln">39</span>0423: rkflow-infoPK..........V._S..++c.........................workflo
-<span class="ln">40</span>0463: w-contentPK..........y...P.....
-<span class="hl"><span class="ln">41</span>0484: --------------------------4a56c5c66e96749e--
-</span><span class="ln">42</span>...</code></pre></div>
-<p>The actual file data is a ZIP file.</p>
-<h2 id="import-using-vro">Import using vRO</h2>
-<h3 id="the-inputs">The inputs</h3>
-<p>To automate the workflow import with vRO, we need to load a the file and send its content via vRO REST API, using the Multipart Content-type format examined above.</p>
-<p>The <tt>MimeAttachment</tt> type allows us to upload files to vRO. We also want to select the folder to import the workflow into, we can use the <tt>WorkflowCategory</tt> type for that input:</p>
-<p><img src="/cma/img/vro8-import-workflow/import_inputs.png" alt=""></p>
-<p>On the Input Form designer let's change the display type of the WorkflowCategory type to Tree Picker to get a nice tree browser.</p>
-<p><img src="/cma/img/vro8-import-workflow/import_form.png" alt=""></p>
-<p>This will result in the following form:</p>
-<p><img src="/cma/img/vro8-import-workflow/import_run.png" alt=""></p>
-<p><img src="/cma/img/vro8-import-workflow/select_category.png" alt=""></p>
-<h3 id="mimeattachment-issues">MimeAttachment issues</h3>
-<p>The <a href="https://kb.vmware.com/s/article/59725">Cumulative Update for vRealize Orchestrator 7.5</a> ResolvedList describes a problem with binary data represented by MimeAttachment:</p>
-<blockquote>
-<p>Previously instances of MimeAttachment provided only a property &quot;content&quot; which returns/accepts a string. This causes issues with non-textual data as the bytes are interpreted as String and the content is malformed. A new JavaScript type is exposed to the scripting api - ByteBuffer. It can be initialised from a base64 string or from an existing ByteBuffer. Instances of MimeAttachment now have a new get/set propety &quot;buffer&quot; which returns/accepts a ByteBuffer.</p>
-</blockquote>
-<p>Unfortunately I could not find any examples on how to use this new <tt>buffer</tt> property of <tt>ByteBuffer</tt> type (and the <tt>content</tt> property gives an HTTP 500 error on the API). If you know how to use it, please leave a comment at the bottom!</p>
-<h3 id="sending-the-file-to-vro-rest-api-using-python">Sending the file to vRO REST API using Python</h3>
-<p>vRO8 with vRA/vRealize Suite Advanced/vCloud Suite Advanced or Enterprise license is capable of running Python, NodeJS and PowerShell scripts as well. Let's try Python!</p>
-<p>If we print the MimeAttachment object in Python, we'll see the following output:</p>
-<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln">1</span>2021-10-31 23:54:57.647 +01:00 INFO [HelloWorld.workflow,application/octet-stream,991]
-<span class="ln">2</span>2021-10-31 23:54:57.648 +01:00 INFO UEsDBBQACAgIAFaxX1MAAAAAAAAAAAAAAAANAAAAd29ya2Z...
-</code></pre></div><p>The first line contains the filename and Content-type, the second line contains the base64 encoded file content. We'll use this information to extract the information from the object.</p>
-<p>I reused Doug Hellmann's implementation of Multipart Content type available at <a href="https://pymotw.com/3/urllib.request/">Python 3 Module of the Week</a>:</p>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ln"> 1</span><span class="kn">import</span> <span class="nn">io</span>
-<span class="ln"> 2</span><span class="kn">import</span> <span class="nn">mimetypes</span>
-<span class="ln"> 3</span><span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">request</span>
-<span class="ln"> 4</span><span class="kn">import</span> <span class="nn">uuid</span>
-<span class="ln"> 5</span><span class="kn">import</span> <span class="nn">ssl</span>
-<span class="ln"> 6</span><span class="kn">import</span> <span class="nn">base64</span>
-<span class="ln"> 7</span>
-<span class="ln"> 8</span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
-<span class="ln"> 9</span>
-<span class="ln">10</span>    <span class="c1"># Create the form with simple fields</span>
-<span class="ln">11</span>    <span class="n">form</span> <span class="o">=</span> <span class="n">MultiPartForm</span><span class="p">()</span>
-<span class="ln">12</span>
-<span class="ln">13</span>    <span class="c1"># Add the file</span>
-<span class="ln">14</span>    <span class="n">form</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span>
-<span class="ln">15</span>        <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&#34;file&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:],</span>       <span class="c1"># &#39;HelloWorld.workflow&#39;,</span>
-<span class="ln">16</span>        <span class="n">fileHandle</span><span class="o">=</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s2">&#34;file&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])))</span>
-<span class="ln">17</span>    <span class="c1"># Build the request, including the byte-string</span>
-<span class="ln">18</span>    <span class="c1"># for the data to be posted.</span>
-<span class="ln">19</span>    <span class="n">data</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-<span class="ln">20</span>    <span class="n">r</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s2">&#34;vcoUrl&#34;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/api/content/workflows/&#34;</span> <span class="o">+</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&#34;categoryId&#34;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;?overwrite=true&#34;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-<span class="ln">21</span>    <span class="n">r</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s1">&#39;Content-type&#39;</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">get_content_type</span><span class="p">())</span>
-<span class="ln">22</span>    <span class="n">r</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s1">&#39;Authorization&#39;</span><span class="p">,</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">context</span><span class="p">[</span><span class="s2">&#34;getToken&#34;</span><span class="p">]())</span>
-<span class="ln">23</span>
-<span class="ln">24</span>    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;SERVER RESPONSE:&#39;</span><span class="p">)</span>
-<span class="ln">25</span>    <span class="c1"># disable SSL verification</span>
-<span class="ln">26</span>    <span class="k">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">ssl</span><span class="o">.</span><span class="n">SSLContext</span><span class="p">())</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
-<span class="ln">27</span>
-<span class="ln">28</span>    <span class="k">class</span> <span class="nc">MultiPartForm</span><span class="p">:</span>
-<span class="ln">29</span>    <span class="o">...</span>
-</code></pre></div><p><tt>context[&quot;vcoUrl&quot;]</tt> provides the internal vRO REST API URL <tt>http://localhost:8280/vco</tt>, and the <tt>getToken()</tt> function will acquire a valid token against the API.</p>
-<h2 id="wrap-up">Wrap-up</h2>
-<p><tt>MimeAttachment</tt> is a useful vRO type, when we need to process a file. Python can be used to communicate back to vRO using the loopback URL (<tt>context[&quot;vcoUrl&quot;]</tt>) and a token provided by the <tt>getToken()</tt> function.</p>
-<p>You can download the <em>com.test.python</em> package containing the workflow from GitHub: <a href="https://github.com/kuklis/vro8-packages">https://github.com/kuklis/vro8-packages</a></p><script src="https://utteranc.es/client.js"
+<p>While this extra information is useful when debugging to find the exact location of code running, it makes reading the log harder. You may or may not like the new interface.</p>
+<h2 id="vro-api">vRO API</h2>
+<p>The <a href="https://developer.vmware.com/apis/1174">vRealize Orchestrator API</a> provides a REST API to interact with vRO. The <a href="https://developer.vmware.com/apis/1174#/Workflow%20Run%20Service">Workflow Run Service</a> allows us to get workflow logs.</p>
+<p>We need to know the Id of the workflow (workflowId) and the executionId to get the logs. Below is a sample output of<br><tt>curl -sSk -H 'Content-Type: application/json' -H &quot;Authorization: Bearer $access_token&quot; 'https://vra8.corp.local/vco/api/workflows/a64af743-a5c5-4420-96d3-5dbf83a27b71/executions/6333c049-9abc-4ea1-955b-8ac942a127f0/syslogs' | jq .</tt></p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text"><span class="ln"> 1</span>{
+<span class="ln"> 2</span>  &#34;logs&#34;: [
+<span class="ln"> 3</span>    {
+<span class="ln"> 4</span>      &#34;entry&#34;: {
+<span class="ln"> 5</span>        &#34;origin&#34;: &#34;system&#34;,
+<span class="hl"><span class="ln"> 6</span>        &#34;short-description&#34;: &#34;__item_stack:/item1&#34;,
+</span><span class="ln"> 7</span>        &#34;time-stamp&#34;: &#34;2022-07-28T08:33:50.319+00:00&#34;,
+<span class="ln"> 8</span>        &#34;time-stamp-val&#34;: 1658997230319,
+<span class="hl"><span class="ln"> 9</span>        &#34;severity&#34;: &#34;info&#34;
+</span><span class="ln">10</span>      }
+<span class="ln">11</span>    },
+<span class="ln">12</span>    {
+<span class="ln">13</span>      &#34;entry&#34;: {
+<span class="ln">14</span>        &#34;origin&#34;: &#34;system&#34;,
+<span class="hl"><span class="ln">15</span>        &#34;short-description&#34;: &#34;0&#34;,
+</span><span class="ln">16</span>        &#34;time-stamp&#34;: &#34;2022-07-28T08:33:50.321+00:00&#34;,
+<span class="ln">17</span>        &#34;time-stamp-val&#34;: 1658997230321,
+<span class="hl"><span class="ln">18</span>        &#34;severity&#34;: &#34;info&#34;
+</span><span class="ln">19</span>      }
+<span class="ln">20</span>    },
+<span class="ln">21</span>    {
+<span class="ln">22</span>      &#34;entry&#34;: {
+<span class="ln">23</span>        &#34;origin&#34;: &#34;system&#34;,
+<span class="hl"><span class="ln">24</span>        &#34;short-description&#34;: &#34;__item_stack:/item3&#34;,
+</span><span class="ln">25</span>        &#34;time-stamp&#34;: &#34;2022-07-28T08:33:52.326+00:00&#34;,
+<span class="ln">26</span>        &#34;time-stamp-val&#34;: 1658997232326,
+<span class="hl"><span class="ln">27</span>        &#34;severity&#34;: &#34;info&#34;
+</span><span class="ln">28</span>      }
+<span class="ln">29</span>    },
+<span class="ln">30</span>    {
+<span class="ln">31</span>      &#34;entry&#34;: {
+<span class="ln">32</span>        &#34;origin&#34;: &#34;system&#34;,
+<span class="hl"><span class="ln">33</span>        &#34;short-description&#34;: &#34;__item_stack:/item1&#34;,
+</span><span class="ln">34</span>        &#34;time-stamp&#34;: &#34;2022-07-28T08:33:52.331+00:00&#34;,
+<span class="ln">35</span>        &#34;time-stamp-val&#34;: 1658997232331,
+<span class="hl"><span class="ln">36</span>        &#34;severity&#34;: &#34;info&#34;
+</span><span class="ln">37</span>      }
+<span class="ln">38</span>    },
+<span class="ln">39</span>    ...
+<span class="ln">40</span>        {
+<span class="ln">41</span>      &#34;entry&#34;: {
+<span class="ln">42</span>        &#34;origin&#34;: &#34;system&#34;,
+<span class="hl"><span class="ln">43</span>        &#34;short-description&#34;: &#34;Completed.&#34;,
+</span><span class="ln">44</span>        &#34;time-stamp&#34;: &#34;2022-07-28T08:34:10.448+00:00&#34;,
+<span class="ln">45</span>        &#34;time-stamp-val&#34;: 1658997250448,
+<span class="hl"><span class="ln">46</span>        &#34;severity&#34;: &#34;warning&#34;
+</span><span class="ln">47</span>      }
+<span class="ln">48</span>    },</code></pre></div>
+<p>There are options to fine-tune this query with contitions. We'll use two conditions, one will filter by severity the other by timestamp:<br>
+<tt>conditions=severity=info</tt> will get all logs above info level (info, warning, error)<br>
+<tt>conditions=timestamp&gt;1658997232331</tt> will get all logs after 2022-07-28T08:33:52.331+00:00</p>
+<p>We'll also limit the number of logs fetched with a single request to avoid API overloading:<br>
+<tt>maxResult=100</tt></p>
+<h2 id="the-code">The Code</h2>
+<p>I chose Python as I plan to run the same code from vRO and standalone. The inputs are vRO hostname, username, password, workflowname (full path), severity and executionId. Severity is info by default, and executionId is the last execution if omitted.</p>
+<p><tt>urllib</tt> is used as it is available in vRO Python by default, no additional package installation required.</p>
+<p>First we search for the workflow by name, and check (later) the containing folder to make sure we query the correct one.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ln">1</span><span class="n">wfLinks</span> <span class="o">=</span> <span class="n">doReq</span><span class="p">(</span><span class="s2">&#34;GET&#34;</span><span class="p">,</span> <span class="s2">&#34;/vco/api/catalog/System/Workflow?conditions=name=&#34;</span> <span class="o">+</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">workflowname</span><span class="p">))[</span><span class="s2">&#34;link&#34;</span><span class="p">]</span>
+</code></pre></div><p>If no executionId provided, we search for the latest one:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ln">1</span><span class="n">executionLinks</span> <span class="o">=</span> <span class="n">doReq</span><span class="p">(</span><span class="s2">&#34;GET&#34;</span><span class="p">,</span> <span class="s2">&#34;/vco/api/catalog/System/WorkflowExecution/?maxResult=1&amp;sortOrders=-startDate&amp;conditions=workflowId=&#34;</span> <span class="o">+</span> <span class="n">workflow</span><span class="p">[</span><span class="s2">&#34;id&#34;</span><span class="p">])[</span><span class="s2">&#34;link&#34;</span><span class="p">]</span>
+</code></pre></div><p>The main loop will check if the workflow is still running (this will allow to follow the logs ) and if there are any logs to print left. It will poll the running workflow every second for new log entries. Not running (completed, cancelled) workflow logs are fetched and printed (by 100 entries).</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ln">1</span><span class="k">while</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&#34;running&#34;</span> <span class="ow">or</span> <span class="n">timestamp</span> <span class="o">!=</span> <span class="n">lasttimestamp</span><span class="p">:</span>
+<span class="ln">2</span>    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">lasttimestamp</span>
+<span class="ln">3</span>    <span class="n">lasttimestamp</span> <span class="o">=</span> <span class="n">getLogs</span><span class="p">(</span><span class="n">workflow</span><span class="p">[</span><span class="s2">&#34;id&#34;</span><span class="p">],</span> <span class="n">executionId</span><span class="p">,</span> <span class="n">severity</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+<span class="ln">4</span>    <span class="n">state</span> <span class="o">=</span> <span class="n">doReq</span><span class="p">(</span><span class="s2">&#34;GET&#34;</span><span class="p">,</span> <span class="s2">&#34;/vco/api/workflows/&#34;</span> <span class="o">+</span> <span class="n">workflow</span><span class="p">[</span><span class="s2">&#34;id&#34;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/executions/&#34;</span> <span class="o">+</span> <span class="n">executionId</span><span class="p">)[</span><span class="s2">&#34;state&#34;</span><span class="p">]</span>
+<span class="ln">5</span>    <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&#34;running&#34;</span> <span class="ow">and</span> <span class="n">timestamp</span> <span class="o">==</span> <span class="n">lasttimestamp</span><span class="p">:</span>
+<span class="ln">6</span>        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div><p>You can download the <em>com.vro.python</em> package containing the workflow from GitHub: <a href="https://github.com/kuklis/vro8-packages">https://github.com/kuklis/vro8-packages</a><p>
+Make sure to adjust workflow variables to your environment (hostname, credentials).</p>
+<p>See the output below. We prefix each log entry with the timestamp, severity and workflow item number to preserve useful information:</p>
+<p><img src="/cma/img/vro8-dump-workflow-logs/output.png" alt=""></p>
+<h2 id="running-it-standalone">Running it standalone</h2>
+<p>The motivation to create a standalone Python program is to follow long-running workflow output live. The vRO workflow above does logging in a single Python scriptable task, and will provide logs once the task is finished, at once. We might break it into multiple steps to dump logs from time to time, but we'd introduce the default workflow item number logging problem again.</p>
+<p>We keep the default <tt>handler()</tt> function but will feed it from command line arguments <tt>argv</tt>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ln"> 1</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="ln"> 2</span>    <span class="k">try</span><span class="p">:</span>
+<span class="ln"> 3</span>        <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
+<span class="ln"> 4</span>        <span class="s2">&#34;hostname&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="ln"> 5</span>        <span class="s2">&#34;username&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+<span class="ln"> 6</span>        <span class="s2">&#34;password&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+<span class="ln"> 7</span>        <span class="s2">&#34;workflow&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+<span class="ln"> 8</span>        <span class="s2">&#34;color_warn&#34;</span><span class="p">:</span> <span class="s2">&#34;</span><span class="se">\033</span><span class="s2">[93m&#34;</span><span class="p">,</span>
+<span class="ln"> 9</span>        <span class="s2">&#34;color_fail&#34;</span><span class="p">:</span> <span class="s2">&#34;</span><span class="se">\033</span><span class="s2">[91m&#34;</span><span class="p">,</span>
+<span class="ln">10</span>        <span class="s2">&#34;color_end&#34;</span><span class="p">:</span> <span class="s2">&#34;</span><span class="se">\033</span><span class="s2">[0m&#34;</span>
+<span class="ln">11</span>        <span class="p">}</span>
+</code></pre></div><p>Running the code in console also allows us some coloring:
+<img src="/cma/img/vro8-dump-workflow-logs/standalone.png" alt=""></p>
+<p>The code can be downloaded from <a href="https://github.com/kuklis/vro8-python/blob/main/followVROlogs.py">https://github.com/kuklis/vro8-python/blob/main/followVROlogs.py</a><br>
+The <em>com.vro.python</em> package containing the workflow is available at: <a href="https://github.com/kuklis/vro8-packages">https://github.com/kuklis/vro8-packages</a></p><script src="https://utteranc.es/client.js"
   repo="kuklis/cma"
   issue-term="title"
   label="Comment"
