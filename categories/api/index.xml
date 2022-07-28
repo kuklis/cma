@@ -6,7 +6,167 @@
     <description>Recent content in API on CMA</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
-    <lastBuildDate>Sun, 31 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/categories/api/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 29 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/categories/api/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>vRO8 Dump Workflow Logs</title>
+      <link>https://kuklis.github.io/cma/post/vro8-dump-workflow-logs/</link>
+      <pubDate>Fri, 29 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vro8-dump-workflow-logs/</guid>
+      <description>
+        
+          &lt;p&gt;How to get and filter workflow logs from vRO8&lt;/p&gt;
+&lt;div class=&#34;toc&#34;&gt;
+    &lt;H3&gt;Table of Contents&lt;/H3&gt;
+    &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#introduction&#34;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#api-definition&#34;&gt;API definition&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#import-using-cli&#34;&gt;Import using CLI&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#multipart-content-type&#34;&gt;Multipart Content-type&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#import-using-vro&#34;&gt;Import using vRO&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#the-inputs&#34;&gt;The inputs&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#mimeattachment-issues&#34;&gt;MimeAttachment issues&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#sending-the-file-to-vro-rest-api-using-python&#34;&gt;Sending the file to vRO REST API using Python&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#wrap-up&#34;&gt;Wrap-up&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+  &lt;/div&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;vRealize Orchestrator version 8 logs include workflow item names a separate log entries. Let&#39;s compare the output of the same workflow with the legacy version 7 client:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-dump-workflow-logs/vro8vro7compared.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;api-definition&#34;&gt;API definition&lt;/h2&gt;
+&lt;p&gt;The &lt;a href=&#34;https://developer.vmware.com/apis/1174&#34;&gt;vRealize Orchestrator API&lt;/a&gt; provides a REST API to interact with vRO. The &lt;a href=&#34;https://developer.vmware.com/apis/1174#/Content%20Service&#34;&gt;Content Service&lt;/a&gt; allows us to import a workflow. According to the specification the workflow is sent to &lt;tt&gt;/content/workflows/{categoryId}&lt;/tt&gt; as a Multipart Content-type. &lt;a href=&#34;https://datatracker.ietf.org/doc/html/rfc2387&#34;&gt;RFC 2387&lt;/a&gt; describes the details of this Content-type.&lt;/p&gt;
+&lt;p&gt;We need to know the Id of the folder (WorkflowCategory). The following Javascript code will print it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;folder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getWorkflowCategoryWithPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;test/import&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getObjectId&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;folder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There it is:
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;2021-10-31 21:02:06.118 +01:00 INFO __item_stack:/item1
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;2021-10-31 21:02:06.122 +01:00 INFO 8a7480e57c8e421d017cd78e673619f1
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;2021-10-31 21:02:06.126 +01:00 INFO __item_stack:/item0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/p&gt;
+&lt;h2 id=&#34;import-using-cli&#34;&gt;Import using CLI&lt;/h2&gt;
+&lt;p&gt;The Spring sample in the API documentation gives some hints how to format the Multipart data to post: the part representing the workflow should be called &lt;tt&gt;&amp;quot;file&amp;quot;&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;Using &lt;tt&gt;curl&lt;/tt&gt; we can upload a workflow to vRO with the following command, knowing the Workflow Category Id (target folder). In case a workflow with the same workflow Id exists, we overwrite it. The name of the object within the multipart data is specified by &lt;tt&gt;file=&lt;/tt&gt;. The actual file content is loaded by using the @ symbol.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;curl -k -u &lt;span class=&#34;s1&#34;&gt;&amp;#39;cfgadmin:VMware123!&amp;#39;&lt;/span&gt; -H &lt;span class=&#34;s1&#34;&gt;&amp;#39;Content-Type: multipart/form-data&amp;#39;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;https://vra8.corp.local/vco/api/content/workflows/8a7480e57c8e421d017cd78e673619f1?overwrite=true&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;-F &lt;span class=&#34;s1&#34;&gt;&amp;#39;file=@HelloWorld.workflow&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result:
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-import-workflow/helloworld.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;multipart-content-type&#34;&gt;Multipart Content-type&lt;/h3&gt;
+&lt;p&gt;Let&#39;s check what data did &lt;tt&gt;curl&lt;/tt&gt; send to upload the file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;curl -k -u &lt;span class=&#34;s1&#34;&gt;&amp;#39;cfgadmin:VMware123!&amp;#39;&lt;/span&gt; -H &lt;span class=&#34;s1&#34;&gt;&amp;#39;Content-Type: multipart/form-data&amp;#39;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;https://vra8.corp.local/vco/api/content/workflows/8a7480e57c8e421d017cd78e673619f1?overwrite=true&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;-F &lt;span class=&#34;s1&#34;&gt;&amp;#39;file=@HelloWorld.workflow&amp;#39;&lt;/span&gt; --trace-ascii -
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Highlighted are: the Content-type, boundary value and the Content-Disposition Headers:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;...
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;0000: POST /vco/api/content/workflows/8a7480e57c8e421d017cd78e673619f1
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;0040: ?overwrite=true HTTP/2
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;0058: Host: vra8.corp.local
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;0070: authorization: Basic Y2ZnYWRtaW46Vk13YXJlMTIzIQ==
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;00a3: user-agent: curl/7.68.0
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;00bc: accept: */*
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;00c9: content-length: 1202
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;00df: content-type: multipart/form-data; boundary=--------------------
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;011f: ----4a56c5c66e96749e
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;0135:
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&amp;lt;= Recv SSL data, 5 bytes (0x5)
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;0000: ....9
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;== Info: Connection state changed (MAX_CONCURRENT_STREAMS == 250)!
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;=&amp;gt; Send SSL data, 5 bytes (0x5)
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;0000: ....!
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;=&amp;gt; Send SSL data, 5 bytes (0x5)
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;0000: .....
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;=&amp;gt; Send data, 1202 bytes (0x4b2)
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;0000: --------------------------4a56c5c66e96749e
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;002c: Content-Disposition: form-data; name=&amp;#34;file&amp;#34;; filename=&amp;#34;HelloWorl
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;006c: d.workflow&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;0079: Content-Type: application/octet-stream
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;00a1:
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;00a3: PK........V._S................workflow-info.....0......!......pS
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;00e3: .....%=iQrrI&amp;lt;|{...C.n-.k.n.\.C........&amp;gt;....J.i..p..t.....s.%3.K.
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;0123: \|Z.Z..,LU.#....D.......l.)....PK......t...z...PK........V._S...
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;0163: .............workflow-content.U.n.@.=.~...H..8..J..Tu....$...Nj.
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;01a3: .+N....s.&amp;#39;.c;UJ.h..}...3..p..&amp;lt; E.....@..s....t.....f.1.!.3LU{.k
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;01e3: ...{.O0...V.Y..&amp;amp;D...2.3...-....p9..[!.G.H...TVn....6.Zrm..t8.&amp;gt;..
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;0223: 1...J&amp;lt;V..+.q.+F.e...m.*&amp;#39;F.uF&amp;amp;....,-/.7.{Y..Kj.^...KMb..OO.=.*...
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;0263: ..f...&amp;#34;.9.D*....?.....]=....*+.31=.&amp;#39;fL....G..w\.....G.&amp;#34;+.:_y..~.
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;02a3: U.&amp;lt;B..3..P.P.ie...tL..{.k.u....3}.../..T.G....Nk;...|..K(..&amp;lt;.Q.n
+&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;02e3: q.....EB..J.F....&amp;gt;.3NyVN.&amp;gt;.&amp;lt;.^.;...;...O .ce..u..:-.IF.J...*o#+.
+&lt;span class=&#34;ln&#34;&gt;35&lt;/span&gt;0323: ..%j}...?.V..q.....0!.......~=]G..8......T..%.....6.NY...a}z.v..
+&lt;span class=&#34;ln&#34;&gt;36&lt;/span&gt;0363: f...9c.;...]....R...9TD.;M.m.|..{dN..^..&amp;#34;..f..z..FG3...mK~.!.j..
+&lt;span class=&#34;ln&#34;&gt;37&lt;/span&gt;03a3: C.^.C%.j....]l....I....i.T}.{...K../...eO.......N.O...g..K{..a..
+&lt;span class=&#34;ln&#34;&gt;38&lt;/span&gt;03e3: PK....++c.......PK..........V._S....t...z.....................wo
+&lt;span class=&#34;ln&#34;&gt;39&lt;/span&gt;0423: rkflow-infoPK..........V._S..++c.........................workflo
+&lt;span class=&#34;ln&#34;&gt;40&lt;/span&gt;0463: w-contentPK..........y...P.....
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;41&lt;/span&gt;0484: --------------------------4a56c5c66e96749e--
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;42&lt;/span&gt;...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The actual file data is a ZIP file.&lt;/p&gt;
+&lt;h2 id=&#34;import-using-vro&#34;&gt;Import using vRO&lt;/h2&gt;
+&lt;h3 id=&#34;the-inputs&#34;&gt;The inputs&lt;/h3&gt;
+&lt;p&gt;To automate the workflow import with vRO, we need to load a the file and send its content via vRO REST API, using the Multipart Content-type format examined above.&lt;/p&gt;
+&lt;p&gt;The &lt;tt&gt;MimeAttachment&lt;/tt&gt; type allows us to upload files to vRO. We also want to select the folder to import the workflow into, we can use the &lt;tt&gt;WorkflowCategory&lt;/tt&gt; type for that input:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-import-workflow/import_inputs.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;On the Input Form designer let&#39;s change the display type of the WorkflowCategory type to Tree Picker to get a nice tree browser.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-import-workflow/import_form.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This will result in the following form:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-import-workflow/import_run.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-import-workflow/select_category.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;mimeattachment-issues&#34;&gt;MimeAttachment issues&lt;/h3&gt;
+&lt;p&gt;The &lt;a href=&#34;https://kb.vmware.com/s/article/59725&#34;&gt;Cumulative Update for vRealize Orchestrator 7.5&lt;/a&gt; ResolvedList describes a problem with binary data represented by MimeAttachment:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Previously instances of MimeAttachment provided only a property &amp;quot;content&amp;quot; which returns/accepts a string. This causes issues with non-textual data as the bytes are interpreted as String and the content is malformed. A new JavaScript type is exposed to the scripting api - ByteBuffer. It can be initialised from a base64 string or from an existing ByteBuffer. Instances of MimeAttachment now have a new get/set propety &amp;quot;buffer&amp;quot; which returns/accepts a ByteBuffer.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Unfortunately I could not find any examples on how to use this new &lt;tt&gt;buffer&lt;/tt&gt; property of &lt;tt&gt;ByteBuffer&lt;/tt&gt; type (and the &lt;tt&gt;content&lt;/tt&gt; property gives an HTTP 500 error on the API). If you know how to use it, please leave a comment at the bottom!&lt;/p&gt;
+&lt;h3 id=&#34;sending-the-file-to-vro-rest-api-using-python&#34;&gt;Sending the file to vRO REST API using Python&lt;/h3&gt;
+&lt;p&gt;vRO8 with vRA/vRealize Suite Advanced/vCloud Suite Advanced or Enterprise license is capable of running Python, NodeJS and PowerShell scripts as well. Let&#39;s try Python!&lt;/p&gt;
+&lt;p&gt;If we print the MimeAttachment object in Python, we&#39;ll see the following output:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;2021-10-31 23:54:57.647 +01:00 INFO [HelloWorld.workflow,application/octet-stream,991]
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;2021-10-31 23:54:57.648 +01:00 INFO UEsDBBQACAgIAFaxX1MAAAAAAAAAAAAAAAANAAAAd29ya2Z...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first line contains the filename and Content-type, the second line contains the base64 encoded file content. We&#39;ll use this information to extract the information from the object.&lt;/p&gt;
+&lt;p&gt;I reused Doug Hellmann&#39;s implementation of Multipart Content type available at &lt;a href=&#34;https://pymotw.com/3/urllib.request/&#34;&gt;Python 3 Module of the Week&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;io&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;mimetypes&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;urllib&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;uuid&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;ssl&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;base64&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;# Create the form with simple fields&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;form&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MultiPartForm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;# Add the file&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;form&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;add_file&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;        &lt;span class=&#34;s1&#34;&gt;&amp;#39;file&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;file&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;split&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;][&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:],&lt;/span&gt;       &lt;span class=&#34;c1&#34;&gt;# &amp;#39;HelloWorld.workflow&amp;#39;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;fileHandle&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;io&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BytesIO&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;base64&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b64decode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;inputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;file&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;split&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\n&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])))&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;# Build the request, including the byte-string&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;# for the data to be posted.&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;data&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;bytes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;form&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;r&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;vcoUrl&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/api/content/workflows/&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;categoryId&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;?overwrite=true&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;add_header&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Content-type&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;form&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;get_content_type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;add_header&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Authorization&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Bearer &amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;getToken&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]())&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;SERVER RESPONSE:&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;# disable SSL verification&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;urlopen&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ssl&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SSLContext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;read&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;decode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;MultiPartForm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;tt&gt;context[&amp;quot;vcoUrl&amp;quot;]&lt;/tt&gt; provides the internal vRO REST API URL &lt;tt&gt;http://localhost:8280/vco&lt;/tt&gt;, and the &lt;tt&gt;getToken()&lt;/tt&gt; function will acquire a valid token against the API.&lt;/p&gt;
+&lt;h2 id=&#34;wrap-up&#34;&gt;Wrap-up&lt;/h2&gt;
+&lt;p&gt;&lt;tt&gt;MimeAttachment&lt;/tt&gt; is a useful vRO type, when we need to process a file. Python can be used to communicate back to vRO using the loopback URL (&lt;tt&gt;context[&amp;quot;vcoUrl&amp;quot;]&lt;/tt&gt;) and a token provided by the &lt;tt&gt;getToken()&lt;/tt&gt; function.&lt;/p&gt;
+&lt;p&gt;You can download the &lt;em&gt;com.test.python&lt;/em&gt; package containing the workflow from GitHub: &lt;a href=&#34;https://github.com/kuklis/vro8-packages&#34;&gt;https://github.com/kuklis/vro8-packages&lt;/a&gt;&lt;/p&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>vRO8 Import Workflow</title>
       <link>https://kuklis.github.io/cma/post/vro8-import-workflow/</link>
