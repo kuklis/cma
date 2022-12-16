@@ -3,21 +3,30 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://kuklis.github.io/cma/</loc>
-    <lastmod>2022-07-28T00:00:00+00:00</lastmod>
+    <lastmod>2022-11-27T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://kuklis.github.io/cma/categories/api/</loc>
-    <lastmod>2022-07-28T00:00:00+00:00</lastmod>
+    <loc>https://kuklis.github.io/cma/post/vro-javascript-goto/</loc>
+    <lastmod>2022-11-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/</loc>
-    <lastmod>2022-07-28T00:00:00+00:00</lastmod>
+    <lastmod>2022-11-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/development/</loc>
+    <lastmod>2022-11-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/javascript/</loc>
+    <lastmod>2022-11-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/</loc>
-    <lastmod>2022-07-28T00:00:00+00:00</lastmod>
+    <lastmod>2022-11-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/</loc>
-    <lastmod>2022-07-28T00:00:00+00:00</lastmod>
+    <lastmod>2022-11-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/vro/</loc>
+    <lastmod>2022-11-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/api/</loc>
     <lastmod>2022-07-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vro8-dump-workflow-logs/</loc>
@@ -89,13 +98,7 @@
     <loc>https://kuklis.github.io/cma/post/custom-form-dropdown-external-source/</loc>
     <lastmod>2021-06-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://kuklis.github.io/cma/categories/development/</loc>
-    <lastmod>2021-05-19T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://kuklis.github.io/cma/post/fake-context-wrapper/</loc>
-    <lastmod>2021-05-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/javascript/</loc>
     <lastmod>2021-05-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/proxy/</loc>

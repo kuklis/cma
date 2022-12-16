@@ -1,18 +1,18 @@
 {
 	"version": 3,
 	"file": "styles.css",
-	"sourceRoot": "/home/kuklis/home/hugo/cma",
+	"sourceRoot": "/home/kuklis/hugo/cma",
 	"sources": [
 		"themes/hugo-clarity/assets/sass/main.sass",
-		"../../../../../../../home/kuklis/home/hugo/cma/themes/hugo-clarity/assets/sass/_variables.sass",
-		"../../../../../../../home/kuklis/home/hugo/cma/themes/hugo-clarity/assets/sass/_override.sass",
-		"../../../../../../../home/kuklis/home/hugo/cma/themes/hugo-clarity/assets/sass/_fonts.sass",
-		"../../../../../../../home/kuklis/home/hugo/cma/themes/hugo-clarity/assets/sass/_base.sass",
-		"../../../../../../../home/kuklis/home/hugo/cma/themes/hugo-clarity/assets/sass/_components.sass",
-		"../../../../../../../home/kuklis/home/hugo/cma/themes/hugo-clarity/assets/sass/_utils.sass",
-		"../../../../../../../home/kuklis/home/hugo/cma/themes/hugo-clarity/assets/sass/_mobile.sass",
-		"../../../../../../../home/kuklis/home/hugo/cma/themes/hugo-clarity/assets/sass/_syntax.sass",
-		"../../../../../../../home/kuklis/home/hugo/cma/themes/hugo-clarity/assets/sass/_custom.sass"
+		"themes/hugo-clarity/assets/sass/_variables.sass",
+		"themes/hugo-clarity/assets/sass/_override.sass",
+		"themes/hugo-clarity/assets/sass/_fonts.sass",
+		"themes/hugo-clarity/assets/sass/_base.sass",
+		"themes/hugo-clarity/assets/sass/_components.sass",
+		"themes/hugo-clarity/assets/sass/_utils.sass",
+		"themes/hugo-clarity/assets/sass/_mobile.sass",
+		"themes/hugo-clarity/assets/sass/_syntax.sass",
+		"themes/hugo-clarity/assets/sass/_custom.sass"
 	],
 	"sourcesContent": [
 		"@import 'variables';\n@import 'override';\n@import 'fonts';\n@import 'base';\n@import 'components';\n@import 'utils';\n@import 'mobile';\n@import 'syntax';\n@import 'custom';\n",
