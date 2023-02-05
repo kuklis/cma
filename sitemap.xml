@@ -3,7 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://kuklis.github.io/cma/</loc>
-    <lastmod>2023-01-25T00:00:00+00:00</lastmod>
+    <lastmod>2023-02-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/post/vra8-custom-resources-1/</loc>
+    <lastmod>2023-02-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/</loc>
+    <lastmod>2023-02-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/custom-resources/</loc>
+    <lastmod>2023-02-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/post/</loc>
+    <lastmod>2023-02-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/</loc>
+    <lastmod>2023-02-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
+    <lastmod>2023-02-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
+    <lastmod>2023-02-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/api/</loc>
     <lastmod>2023-01-25T00:00:00+00:00</lastmod>
@@ -11,28 +32,13 @@
     <loc>https://kuklis.github.io/cma/post/vra8-scaleout-1/</loc>
     <lastmod>2023-01-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://kuklis.github.io/cma/categories/</loc>
-    <lastmod>2023-01-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/post/</loc>
-    <lastmod>2023-01-25T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://kuklis.github.io/cma/tags/scaleout/</loc>
-    <lastmod>2023-01-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/</loc>
-    <lastmod>2023-01-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
     <lastmod>2023-01-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vro8-screen-real-estate/</loc>
     <lastmod>2022-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/gui/</loc>
-    <lastmod>2022-12-16T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
     <lastmod>2022-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vro-javascript-goto/</loc>
