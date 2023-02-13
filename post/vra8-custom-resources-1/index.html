@@ -236,7 +236,7 @@
 </code></pre></div><p>The new type appears in vRO inventory:<br>
 <img src="/cma/img/vra8-custom-resources-1/myObject.png" alt=""><br></p>
 <h2 id="find-by-id-workflow">Find By Id workflow</h2>
-<p>In order to get our new type working, we need to implement <tt>Find myNS-myObject By Id</tt> workflow. In our demo scenario this is a very simple SQL query. Real world cases typicall involve (possibly) several API calls or command invocations.</p>
+<p>In order to get our new type working, we need to implement <tt>Find myNS-myObject By Id</tt> workflow. In our demo scenario this is a very simple SQL query. Real world cases typically involve (possibly) several API calls or command invocations.</p>
 <p>Workflow inputs are <tt>type</tt> and <tt>id</tt>, output is the myObject instance found. The database is stored in the workflow variable <tt>db</tt> in our case.</p>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln"> 1</span><span class="nx">System</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;requested type: &#34;</span> <span class="o">+</span> <span class="nx">type</span><span class="p">);</span>
 <span class="ln"> 2</span><span class="nx">System</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;requested id: &#34;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">);</span>
@@ -372,6 +372,9 @@
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://kuklis.github.io/cma/post/vra8-custom-resources-2/" class="nav-link" title="Aria Automation Custom Resource Types - Schema update">Aria Automation Custom Resource Types - Schema update</a>
+      </li>
+      <li>
         <a href="https://kuklis.github.io/cma/post/vra8-scaleout-1/" class="nav-link" title="Aria Automation Deployment Scale Out">Aria Automation Deployment Scale Out</a>
       </li>
       <li>
@@ -392,9 +395,6 @@
       <li>
         <a href="https://kuklis.github.io/cma/post/vra8-logs-troubleshooting/" class="nav-link" title="vRA8 logs &amp; troubleshooting">vRA8 logs &amp; troubleshooting</a>
       </li>
-      <li>
-        <a href="https://kuklis.github.io/cma/post/vro8-import-workflow/" class="nav-link" title="vRO8 Import Workflow">vRO8 Import Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
@@ -409,6 +409,11 @@
           <span class="button_tally">4</span>
         </a>
         
+        <a href='https://kuklis.github.io/cma/categories/custom-resources/' class="post_tag button button_translucent" title="custom-resources">
+          CUSTOM-RESOURCES
+          <span class="button_tally">2</span>
+        </a>
+        
         <a href='https://kuklis.github.io/cma/categories/development/' class="post_tag button button_translucent" title="development">
           DEVELOPMENT
           <span class="button_tally">2</span>
@@ -417,11 +422,6 @@
         <a href='https://kuklis.github.io/cma/categories/public-cloud/' class="post_tag button button_translucent" title="public-cloud">
           PUBLIC-CLOUD
           <span class="button_tally">2</span>
-        </a>
-        
-        <a href='https://kuklis.github.io/cma/categories/custom-resources/' class="post_tag button button_translucent" title="custom-resources">
-          CUSTOM-RESOURCES
-          <span class="button_tally">1</span>
         </a>
         
         <a href='https://kuklis.github.io/cma/categories/storage/' class="post_tag button button_translucent" title="storage">
@@ -452,12 +452,12 @@
       <nav class="tags_nav">
         <a href='https://kuklis.github.io/cma/tags/vra8/' class="post_tag button button_translucent" title="vra8">
           VRA8
-          <span class="button_tally">11</span>
+          <span class="button_tally">12</span>
         </a>
         
         <a href='https://kuklis.github.io/cma/tags/vro/' class="post_tag button button_translucent" title="vro">
           VRO
-          <span class="button_tally">10</span>
+          <span class="button_tally">11</span>
         </a>
         
         <a href='https://kuklis.github.io/cma/tags/azure/' class="post_tag button button_translucent" title="azure">
