@@ -488,7 +488,7 @@ com.dynamictypes.myobject-2.package includes the modifications for Scenario 1, a
 &lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;42&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Create machine request has been successfully completed with machine id &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;machine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;iaas-api---create-machine&#34;&gt;IaaS API - Create machine&lt;/h2&gt;
-&lt;p&gt;Some code is copied from the sample workflow in &lt;tt&gt;/Library/vRealize Automation 8.x and Cloud Services/Infrastructure/Machines&lt;/tt&gt;&lt;/p&gt;
+&lt;p&gt;Some code is copied from the sample workflow in &lt;tt&gt;/Library/vRealize Automation 8.x and Cloud Services/Infrastructure/Machines/Create Machine&lt;/tt&gt;&lt;/p&gt;
 &lt;p&gt;We need to collect the following information to create the new VM:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;VM name (this is only a prefix)&lt;/li&gt;
