@@ -177,12 +177,14 @@
       </ul>
     </li>
     <li><a href="#multitenancy">Multitenancy</a></li>
+    <li><a href="#security-permissions">Security, Permissions</a></li>
   </ul>
 </nav>
   </div>
 <h2 id="introduction">Introduction</h2>
 <p>Besides the default JavaScript (ES5) language Aria Automation Orchestrator allows writing code in Python, JavaScript (NodeJS), and PowerShell (called polyglot scripting). Unlike ES5 JS, these languages do not have built-in support to use Orchestrator features, ie. configuration elements, other actions, plugins.</p>
 <p>To access Orchestrator or Automation, these actions (or scriptable tasks) need to call REST API directly. For that a token is required.</p>
+<p><em>Update: a new section is added about the permissions related to the acquired token</em></p>
 <h2 id="python">Python</h2>
 <h3 id="context-token">Context, Token</h3>
 <p>Let's see what we have in the context of Python runtime.</p>
@@ -350,6 +352,9 @@
 <p><img src="/cma/img/vro8-polyglot-token/callVRAapi_ps1.png" alt=""></p>
 <h2 id="multitenancy">Multitenancy</h2>
 <p>I could not test if Automation multitenancy allows using the token within all tenants besides the default one. I let you test it and leave a comment if you have some results.</p>
+<h2 id="security-permissions">Security, Permissions</h2>
+<p>Please note that the token created of the running user's context, so its permissions inherited from the running user. API calls allowed for the user will work: but if RBAC does not allow a certain call, the response will be forbidden. Make sure to either grant permissions to the running user to access the requested resource, or run the action/workflow's scriptable task by a user permitted to make the call.</p>
+<p>Thanks <a href="https://www.linkedin.com/in/ankush-sethi-11s/">Ankush sethi</a> for raising the point.</p>
 <p>You can download the <em>com.test.gettoken</em> package containing the code from GitHub: <a href="https://github.com/kuklis/vro8-packages">https://github.com/kuklis/vro8-packages</a></p><script src="https://utteranc.es/client.js"
   repo="kuklis/cma"
   issue-term="title"

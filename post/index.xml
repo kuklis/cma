@@ -43,12 +43,14 @@
       &lt;/ul&gt;
     &lt;/li&gt;
     &lt;li&gt;&lt;a href=&#34;#multitenancy&#34;&gt;Multitenancy&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#security-permissions&#34;&gt;Security, Permissions&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/nav&gt;
   &lt;/div&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Besides the default JavaScript (ES5) language Aria Automation Orchestrator allows writing code in Python, JavaScript (NodeJS), and PowerShell (called polyglot scripting). Unlike ES5 JS, these languages do not have built-in support to use Orchestrator features, ie. configuration elements, other actions, plugins.&lt;/p&gt;
 &lt;p&gt;To access Orchestrator or Automation, these actions (or scriptable tasks) need to call REST API directly. For that a token is required.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Update: a new section is added about the permissions related to the acquired token&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id=&#34;python&#34;&gt;Python&lt;/h2&gt;
 &lt;h3 id=&#34;context-token&#34;&gt;Context, Token&lt;/h3&gt;
 &lt;p&gt;Let&#39;s see what we have in the context of Python runtime.&lt;/p&gt;
@@ -216,6 +218,9 @@
 &lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-polyglot-token/callVRAapi_ps1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;multitenancy&#34;&gt;Multitenancy&lt;/h2&gt;
 &lt;p&gt;I could not test if Automation multitenancy allows using the token within all tenants besides the default one. I let you test it and leave a comment if you have some results.&lt;/p&gt;
+&lt;h2 id=&#34;security-permissions&#34;&gt;Security, Permissions&lt;/h2&gt;
+&lt;p&gt;Please note that the token created of the running user&#39;s context, so its permissions inherited from the running user. API calls allowed for the user will work: but if RBAC does not allow a certain call, the response will be forbidden. Make sure to either grant permissions to the running user to access the requested resource, or run the action/workflow&#39;s scriptable task by a user permitted to make the call.&lt;/p&gt;
+&lt;p&gt;Thanks &lt;a href=&#34;https://www.linkedin.com/in/ankush-sethi-11s/&#34;&gt;Ankush sethi&lt;/a&gt; for raising the point.&lt;/p&gt;
 &lt;p&gt;You can download the &lt;em&gt;com.test.gettoken&lt;/em&gt; package containing the code from GitHub: &lt;a href=&#34;https://github.com/kuklis/vro8-packages&#34;&gt;https://github.com/kuklis/vro8-packages&lt;/a&gt;&lt;/p&gt;
         
       </description>
