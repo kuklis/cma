@@ -3,27 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://kuklis.github.io/cma/</loc>
-    <lastmod>2023-10-03T00:00:00+00:00</lastmod>
+    <lastmod>2023-10-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/</loc>
-    <lastmod>2023-10-03T00:00:00+00:00</lastmod>
+    <lastmod>2023-10-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://kuklis.github.io/cma/post/vro8-polyglot-token/</loc>
-    <lastmod>2023-10-03T00:00:00+00:00</lastmod>
+    <loc>https://kuklis.github.io/cma/post/vra8-tanzu-day2/</loc>
+    <lastmod>2023-10-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/</loc>
-    <lastmod>2023-10-03T00:00:00+00:00</lastmod>
+    <lastmod>2023-10-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/</loc>
+    <lastmod>2023-10-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
+    <lastmod>2023-10-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
+    <lastmod>2023-10-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/xaas/</loc>
+    <lastmod>2023-10-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/post/vro8-polyglot-token/</loc>
     <lastmod>2023-10-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/tanzu/</loc>
     <lastmod>2023-10-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/vra/</loc>
-    <lastmod>2023-10-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
     <lastmod>2023-10-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vro8-run-helm/</loc>
@@ -33,9 +42,6 @@
     <lastmod>2023-02-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/custom-resources/</loc>
-    <lastmod>2023-02-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
     <lastmod>2023-02-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vra8-custom-resources-1/</loc>
@@ -69,9 +75,6 @@
     <lastmod>2022-07-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vra8-xaas-custom-destroy-workflow/</loc>
-    <lastmod>2022-05-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/categories/xaas/</loc>
     <lastmod>2022-05-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/placement/</loc>
