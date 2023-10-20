@@ -8,7 +8,7 @@
     <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
     <lastBuildDate>Fri, 20 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Getting pyodbc work within Aria Automation Orchestrator</title>
+      <title>Get pyodbc working within Aria Automation Orchestrator</title>
       <link>https://kuklis.github.io/cma/post/vro8-pyodbc/</link>
       <pubDate>Fri, 20 Oct 2023 00:00:00 +0000</pubDate>
       
