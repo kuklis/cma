@@ -1,8 +1,8 @@
 
 <!DOCTYPE html>
-<html lang="en" data-figures="">
+<html lang="en" data-figures="" class="page">
   <head>
-<title>Development | CMA</title>
+<title>Getting pyodbc work within Aria Automation Orchestrator | CMA</title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.81.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -14,17 +14,18 @@
   gtag('js', new Date());
   gtag('config', 'G-TW72DHK7SC');
 </script>
+  
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="">
+<meta name="description" content="Using the Python module pyodbc with unixODBC to connect to an MS SQL Server database">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="@kuklis_k">
-<meta name="twitter:title" content="Development" />
-<meta property="og:url" content="https://kuklis.github.io/cma/categories/development/" />
-<meta property="og:title" content="Development" />
-<meta property="og:description" content="" />
-<meta property="og:image" content="https://kuklis.github.io/cma/images/thumbnail.png" />
+<meta name="twitter:title" content="Getting pyodbc work within Aria Automation Orchestrator" />
+<meta property="og:url" content="https://kuklis.github.io/cma/post/vro8-pyodbc/" />
+<meta property="og:title" content="Getting pyodbc work within Aria Automation Orchestrator" />
+<meta property="og:description" content="Using the Python module pyodbc with unixODBC to connect to an MS SQL Server database" />
+<meta property="og:image" content="https://kuklis.github.io/cma/images/unixodbc.png" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://kuklis.github.io/cma/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://kuklis.github.io/cma/icons/favicon-32x32.png'>
 <link rel="manifest" href='https://kuklis.github.io/cma/icons/site.webmanifest'>
@@ -32,8 +33,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-<link rel="canonical" href="https://kuklis.github.io/cma/categories/development/">
-<link rel="alternate" type="application/rss+xml" href="https://kuklis.github.io/cma/categories/development/index.xml" title="CMA" />
+<link rel="canonical" href="https://kuklis.github.io/cma/post/vro8-pyodbc/">
 
     
 
@@ -51,7 +51,7 @@
   
     
   
-  <body data-code="7" data-lines="false" id="documentTop">
+  <body data-code="50" data-lines="false" id="documentTop">
 
 <header class="nav_header" >
   <nav class="nav"><a href='https://kuklis.github.io/cma/' class="nav_brand nav_item" title="CMA">
@@ -107,88 +107,167 @@
 </header>
 
     <main>
-
+  
 <div class="grid-inverse wrap content">
-  <ul class="posts" id="posts">
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://kuklis.github.io/cma/post/vro-javascript-goto/" title="Aria Automation Orchestrator Tips: JavaScript GOTO">Aria Automation Orchestrator Tips: JavaScript GOTO</a>
-      </h3>
-      <div class="post_meta">
+  <article class="post_content">
+    <h1 class="post_title">Getting pyodbc work within Aria Automation Orchestrator</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
-      Nov 27, 2022</span>
+      Oct 20, 2023</span>
       <a href='https://kuklis.github.io/cma/tags/vro' title="vRO" class="post_tag button button_translucent">vRO
       </a>
-      <a href='https://kuklis.github.io/cma/tags/javascript' title="JavaScript" class="post_tag button button_translucent">JavaScript
+      <a href='https://kuklis.github.io/cma/tags/python' title="Python" class="post_tag button button_translucent">Python
       </a>
 </div>
 
-    </div>
-    <div class="excerpt_footer partition">
-      <div class="excerpt_thumbnail">
-        <img src='https://kuklis.github.io/cma/images/goto.jpg' alt="Aria Automation Orchestrator Tips: JavaScript GOTO">
-      </div>
-      
-        <div>
-          <p class="pale">
-            
-              <p>How to exit or jump in JavaScript code within a scriptable task</p>
-            
-          </p>
-          <a href="https://kuklis.github.io/cma/post/vro-javascript-goto/" title="Read More" class="excerpt_more button">Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://kuklis.github.io/cma/post/fake-context-wrapper/" title="Fake Context Wrapper for vRO actions">Fake Context Wrapper for vRO actions</a>
-      </h3>
-      <div class="post_meta">
-  
-    <svg class="icon">
-  <use xlink:href="#calendar"></use>
+    
+  <div class="post_share">
+    Share on:
+    <a href="https://twitter.com/intent/tweet?text=Getting%20pyodbc%20work%20within%20Aria%20Automation%20Orchestrator&url=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvro8-pyodbc%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#twitter"></use>
 </svg>
-    <span class="post_date">
-      May 19, 2021</span>
-      <a href='https://kuklis.github.io/cma/tags/vro' title="vRO" class="post_tag button button_translucent">vRO
-      </a>
-      <a href='https://kuklis.github.io/cma/tags/javascript' title="JavaScript" class="post_tag button button_translucent">JavaScript
-      </a>
-</div>
+    </a>
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fkuklis.github.io%2fcma%2fpost%2fvro8-pyodbc%2f&t=Getting%20pyodbc%20work%20within%20Aria%20Automation%20Orchestrator" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#facebook"></use>
+</svg>
+    </a>
+    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+    </a>
+    <a href="https://kuklis.github.io/cma/post/vro8-pyodbc/" title="Copy Link" class="link link_yank">
+      <svg class="icon">
+  <use xlink:href="#copy"></use>
+</svg>
+    </a>
+  </div>
 
-    </div>
-    <div class="excerpt_footer partition">
-      <div class="excerpt_thumbnail">
-        <img src='https://kuklis.github.io/cma/images/vro.png' alt="Fake Context Wrapper for vRO actions">
-      </div>
-      
-        <div>
-          <p class="pale">
-            
-              <p>A possible method how to run vRO actions requiring System Context</p>
-            
-          </p>
-          <a href="https://kuklis.github.io/cma/post/fake-context-wrapper/" title="Read More" class="excerpt_more button">Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
-    <li>
-
-
-    </li>
+    
+    <p>Using the Python module pyodbc with unixODBC to connect to an MS SQL Server database</p>
+<div class="toc">
+    <H3>Table of Contents</H3>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#preface">Preface</a></li>
+    <li><a href="#photon-os-4">Photon OS 4</a></li>
+    <li><a href="#install-dependencies-on-the-local-vm">Install dependencies on the local VM</a></li>
+    <li><a href="#test-pyodbc-functionality-on-the-local-vm">Test pyodbc functionality on the local VM</a></li>
+    <li><a href="#packaging-into-an-orchestrator-action">Packaging into an Orchestrator action</a></li>
+    <li><a href="#trying-the-action">Trying the action</a></li>
+    <li><a href="#final-thoughts">Final thoughts</a></li>
   </ul>
+</nav>
+  </div>
+<h2 id="preface">Preface</h2>
+<p>pyodbc is an open source Python module that makes accessing ODBC databases simple. Aria Automation Orchestrator provides Python runtime environment that can be extended with additional modules. However, pyodbc requires some packages on the host OS to function properly, and we found these components are missing from the underlying container image so pyodbc does not work out of box.</p>
+<p>Our goal is to fill the gaps and make this module working.</p>
+<h2 id="photon-os-4">Photon OS 4</h2>
+<p>During my initial attempts of to run pyodbc code I received some weird error messages from the Python runtime. I followed the official documentation on how to <a href="https://docs.vmware.com/en/vRealize-Automation/8.11/Using-and-Managing-Cloud-Assembly/GUID-CC6DEEF1-49E8-4881-82A6-FA10DC0135E8.html">Create a ZIP package for Python runtime extensibility actions</a>, but still received this error:</p>
+<blockquote>
+<p><tt>ModuleNotFoundError: No module named 'pyodbc'</tt></p>
+</blockquote>
+<p>After searching on Stackoverflow I realized my problem might be having a different Python runtime version locally. I also found out that I'll have to install some additional OS packages, so decided to install the same OS and continue the preparations on this virtual machine.</p>
+<p>The container images providing Python runtime based on Photon OS. To get the exact version and packages installed, let's run the following code:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ln">1</span><span class="kn">import</span> <span class="nn">os</span>
+<span class="ln">2</span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+<span class="ln">3</span>    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&#34;cat /etc/photon-release&#34;</span><span class="p">)</span>
+<span class="ln">4</span>    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&#34;tdnf --disablerepo=* info|grep &#39;Name          :&#39;&#34;</span><span class="p">)</span>
+<span class="ln">5</span>    <span class="k">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">)</span>
+<span class="ln">6</span>    <span class="k">return</span> <span class="s2">&#34;done&#34;</span>
+</code></pre></div><p><img src="/cma/img/vro8-pyodbc/rpmlist.png" alt=""></p>
+<p>Let's install this build <a href="https://github.com/vmware/photon/wiki/Downloading-Photon-OS#downloading-photon-os-40-rev2">Photon OS 4.0 Rev2</a> and login to the VM.</p>
+<h2 id="install-dependencies-on-the-local-vm">Install dependencies on the local VM</h2>
+<p>The first goal is to figure out what needs to be installed and configured to run pyodbc with Microsoft ODBC driver 18. Following the <a href="https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server">official documentation</a> we need to install unixODBC and msodbcsql18 packages. Unfortunately the latter is not released for Photon OS but we try which binary works for us.</p>
+<p>Let's start with unixODBC and add zip package too.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>tdnf -y install unixODBC zip
+</code></pre></div><p>Then install MS ODBC for SLES15 (this is what I found working).</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>mkdir unixODBC
+<span class="ln">2</span>curl -sSL https://packages.microsoft.com/sles/15/prod/Packages/m/msodbcsql18-18.3.2.1-1.x86_64.rpm -O --output-dir unixODBC
+<span class="ln">3</span><span class="nv">ACCEPT_EULA</span><span class="o">=</span>Y tdnf install --nogpgcheck -y unixODBC/msodbcsql18-18.3.2.1-1.x86_64.rpm 
+</code></pre></div><p>To install pip we need to download the installer first, as it is not available in Photon repos.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>curl -sS https://files.pythonhosted.org/packages/e0/63/b428aaca15fcd98c39b07ca7149e24bc14205ad0f1c80ba2b01835aedde1/pip-23.3-py3-none-any.whl -O
+<span class="ln">2</span>python pip-23.3-py3-none-any.whl/pip install --no-index pip-23.3-py3-none-any.whl
+</code></pre></div><p>Now we can install pyodbc.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>pip install pyodbc
+</code></pre></div><h2 id="test-pyodbc-functionality-on-the-local-vm">Test pyodbc functionality on the local VM</h2>
+<p>Let's try to connect to our MS SQL server and run a query.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ln"> 1</span><span class="kn">import</span> <span class="nn">pyodbc</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="n">SERVER</span> <span class="o">=</span> <span class="s1">&#39;mssql.cloud.lab&#39;</span>
+<span class="ln"> 4</span><span class="n">DATABASE</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+<span class="ln"> 5</span><span class="n">USERNAME</span> <span class="o">=</span> <span class="s1">&#39;sa&#39;</span>
+<span class="ln"> 6</span><span class="n">PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;P@ssw0rd&#39;</span>
+<span class="ln"> 7</span>
+<span class="ln"> 8</span><span class="n">connectionString</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD};TrustServerCertificate=yes;&#39;</span>
+<span class="ln"> 9</span>
+<span class="ln">10</span><span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connectionString</span><span class="p">)</span>
+<span class="ln">11</span>
+<span class="ln">12</span><span class="n">SQL_QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT * FROM myObjects;&#39;</span>
+<span class="ln">13</span>
+<span class="ln">14</span><span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="ln">15</span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">SQL_QUERY</span><span class="p">)</span>
+<span class="ln">16</span><span class="n">records</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="ln">17</span><span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="ln">18</span>    <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</code></pre></div><p>The driver works, displaying the myObjects database table of our <a href="/cma/post/vra8-custom-resources-1/">Custom Resource Type</a>:<br>
+<img src="/cma/img/vro8-pyodbc/testODBC.png" alt=""></p>
+<h2 id="packaging-into-an-orchestrator-action">Packaging into an Orchestrator action</h2>
+<p>We need to make sure all the dependencies are installed on the Python container as well. For that we'll copy the dependencies onto the runtime environment and use some OS commands introduced in <a href="/cma/post/vro8-run-helm/">my previous post on Helm</a>.</p>
+<p>Based on the RPM list the following packages are missing: <tt>unixODBC, libstdc++, glibc-iconv</tt><br>
+Let's download them, with pyodbc, on our Photon OS VM:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span>tdnf reinstall -y --downloadonly --downloaddir unixODBC --disableexcludes unixODBC libstdc++ glibc-iconv
+<span class="ln">2</span>pip install --no-cache-dir pyodbc --target<span class="o">=</span>unixODBC/lib
+</code></pre></div><p>Let's extend our test Python script to install the packages prior to pyodbc usage. Only after the dependencies installation we can import pyodbc.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ln"> 1</span><span class="kn">import</span> <span class="nn">os</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+<span class="ln"> 4</span>    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&#34;ACCEPT_EULA=Y tdnf --disablerepo=* --nogpgcheck -y install ./unixODBC-2.3.9-1.ph4.x86_64.rpm ./msodbcsql18-18.3.2.1-1.x86_64.rpm ./glibc-iconv-2.32-11.ph4.x86_64.rpm ./libstdc++-10.2.0-2.ph4.x86_64.rpm&#34;</span><span class="p">)</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span>    <span class="kn">import</span> <span class="nn">pyodbc</span>
+<span class="ln"> 7</span>    <span class="n">SERVER</span> <span class="o">=</span> <span class="s1">&#39;mssql.cloud.lab&#39;</span>
+<span class="ln"> 8</span>    <span class="n">DATABASE</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+<span class="ln"> 9</span>    <span class="n">USERNAME</span> <span class="o">=</span> <span class="s1">&#39;sa&#39;</span>
+<span class="ln">10</span>    <span class="n">PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;P@ssw0rd&#39;</span>
+<span class="ln">11</span>
+<span class="ln">12</span>    <span class="n">connectionString</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD};TrustServerCertificate=yes;&#39;</span>
+<span class="ln">13</span>
+<span class="ln">14</span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connectionString</span><span class="p">)</span>
+<span class="ln">15</span>
+<span class="ln">16</span>    <span class="n">SQL_QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT * FROM dbo.myObjects;&#39;</span>
+<span class="ln">17</span>
+<span class="ln">18</span>    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="ln">19</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">SQL_QUERY</span><span class="p">)</span>
+<span class="ln">20</span>    <span class="n">records</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="ln">21</span>    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="ln">22</span>        <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="ln">23</span>
+<span class="ln">24</span>    <span class="k">return</span> <span class="s2">&#34;done&#34;</span>
+</code></pre></div><p>After we saved this in <tt>unixODBC/handler.py</tt>, let's create the ZIP package to import the code into our Orchestrator action.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="ln">1</span><span class="nb">cd</span> unixODBC
+<span class="ln">2</span>zip -r ../unixODBC.zip .
+</code></pre></div><h2 id="trying-the-action">Trying the action</h2>
+<p>After creating the action let's try to run it:</p>
+<p><img src="/cma/img/vro8-pyodbc/pyodbc_logs.png" alt=""></p>
+<p>As we can see in the logs, the packages are installed and then pyodbc can read from the MS SQL Server database.</p>
+<h2 id="final-thoughts">Final thoughts</h2>
+<p>Altough the SQL plugin of Orchestartor is capable of connecting SQL Servers, we cannot use it in Python actions. Python has a huge library of modules suitable for a lot of usecases we may need: the above method allows to use databases via the ODBC connector within Python code.</p>
+<p>You can download the <em>com.test.unixodbc.mssql</em> package containing the code from GitHub: <a href="https://github.com/kuklis/vro8-packages">https://github.com/kuklis/vro8-packages</a></p><script src="https://utteranc.es/client.js"
+  repo="kuklis/cma"
+  issue-term="title"
+  label="Comment"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+  </article>
 <aside class="sidebar">
   <section class="sidebar_inner">
     
@@ -198,9 +277,6 @@
       </div>
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
-      <li>
-        <a href="https://kuklis.github.io/cma/post/vro8-pyodbc/" class="nav-link" title="Getting pyodbc work within Aria Automation Orchestrator">Getting pyodbc work within Aria Automation Orchestrator</a>
-      </li>
       <li>
         <a href="https://kuklis.github.io/cma/post/vra8-tanzu-day2/" class="nav-link" title="Custom day 2 actions for Tanzu in Aria Automation">Custom day 2 actions for Tanzu in Aria Automation</a>
       </li>
@@ -221,6 +297,9 @@
       </li>
       <li>
         <a href="https://kuklis.github.io/cma/post/vro8-screen-real-estate/" class="nav-link" title="Aria Automation Orchestrator Tips: Maximize editor area">Aria Automation Orchestrator Tips: Maximize editor area</a>
+      </li>
+      <li>
+        <a href="https://kuklis.github.io/cma/post/vro-javascript-goto/" class="nav-link" title="Aria Automation Orchestrator Tips: JavaScript GOTO">Aria Automation Orchestrator Tips: JavaScript GOTO</a>
       </li>
     </ul>
     <div>
@@ -429,9 +508,8 @@
   </section>
 </aside>
 
+  
 </div>
-
-
     </main><svg width="0" height="0" class="hidden">
   <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
     <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>
