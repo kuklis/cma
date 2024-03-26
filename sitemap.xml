@@ -3,27 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://kuklis.github.io/cma/</loc>
-    <lastmod>2023-12-13T00:00:00+00:00</lastmod>
+    <lastmod>2024-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/post/vra8-custom-resources-3/</loc>
+    <lastmod>2024-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/</loc>
+    <lastmod>2024-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/custom-resources/</loc>
+    <lastmod>2024-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/post/</loc>
+    <lastmod>2024-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/</loc>
+    <lastmod>2024-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
+    <lastmod>2024-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
+    <lastmod>2024-03-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vra8-ipam-in-vro/</loc>
     <lastmod>2023-12-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://kuklis.github.io/cma/categories/</loc>
-    <lastmod>2023-12-13T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://kuklis.github.io/cma/categories/ipam/</loc>
-    <lastmod>2023-12-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/post/</loc>
-    <lastmod>2023-12-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/</loc>
-    <lastmod>2023-12-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
-    <lastmod>2023-12-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vro/</loc>
     <lastmod>2023-12-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/api/</loc>
@@ -51,9 +57,6 @@
     <lastmod>2023-09-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vra8-custom-resources-2/</loc>
-    <lastmod>2023-02-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/categories/custom-resources/</loc>
     <lastmod>2023-02-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vra8-custom-resources-1/</loc>
