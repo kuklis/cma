@@ -6,7 +6,209 @@
     <description>Recent content on CMA</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
-    <lastBuildDate>Tue, 12 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 03 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Aria Automation Custom Resource Types - Update Custom Properties</title>
+      <link>https://kuklis.github.io/cma/post/vra8-custom-resources-4/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vra8-custom-resources-4/</guid>
+      <description>
+        
+          &lt;p&gt;How to update custom properties in deployments of a custom resource type&lt;/p&gt;
+&lt;div class=&#34;toc&#34;&gt;
+    &lt;H3&gt;Table of Contents&lt;/H3&gt;
+    &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#deployment-resources&#34;&gt;Deployment resources&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#recap-of-the-previous-posts&#34;&gt;Recap of the previous posts&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#virtual-machine-folder-as-a-custom-resource-type&#34;&gt;Virtual Machine folder as a Custom Resource Type&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#create-vm-folder-workflow&#34;&gt;Create VM folder workflow&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#update-vm-folder-delete-vm-folder-workflows&#34;&gt;Update VM folder, Delete VM folder workflows&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#define-vmfolder-custom-resource-type&#34;&gt;Define VMfolder Custom Resource Type&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#cloud-template&#34;&gt;Cloud Template&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#updating-properties&#34;&gt;Updating properties&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#updating-custom-properties&#34;&gt;Updating custom properties&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#introducting-a-fake-input&#34;&gt;Introducting a fake input&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#updating-the-custom-property-with-the-fake-input&#34;&gt;Updating the custom property with the fake input&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#wrap-up&#34;&gt;Wrap-up&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+  &lt;/div&gt;
+&lt;h2 id=&#34;deployment-resources&#34;&gt;Deployment resources&lt;/h2&gt;
+&lt;p&gt;Aria Automation deployment resources can be assigned custom properties. These properties can have an impact on how the resource created (name, size, ...), but can also store arbitrary metadata we want to use later for automation purposes (for example backup policy name).&lt;/p&gt;
+&lt;p&gt;Sometimes we need to change these values during the lifetime of the resource. For virtual machines the IaaS API provides a convinient way to do that via PATCHing /iaas/api/machines/{id}: we can specify the custom properties and values. The same API is exposed via &lt;a href=&#34;https://marketplace.cloud.vmware.com/services/details/vmware-vrealize-orchestrator-plug-in-for-vrealize-automation-8-4-2-1?slug=true&#34;&gt;Orchestrator Plug-in for vRealize Automation&lt;/a&gt;, one can use
+&lt;tt&gt;com.vmware.library.vra.infrastructure.machine/createMachineCustomProperties&lt;/tt&gt; action to update the VM&#39;s custom properties.&lt;/p&gt;
+&lt;p&gt;There is no such interface for deployment resources in general, and for custom resource types in particular either. This article discusses the challenges and a solution to update custom properties of deployment resources with custom resource type.&lt;/p&gt;
+&lt;h2 id=&#34;recap-of-the-previous-posts&#34;&gt;Recap of the previous posts&lt;/h2&gt;
+&lt;p&gt;In the previous posts &lt;a href=&#34;https://kuklis.github.io/cma/cma/post/vra8-custom-resources-1&#34;&gt;Aria Automation Custom Resource Types - The Easy Way&lt;/a&gt; and &lt;a href=&#34;https://kuklis.github.io/cma/cma/post/vra8-custom-resources-3&#34;&gt;Aria Automation Custom Resource Types - Schema update&lt;/a&gt; we created, and updated a custom resource type definition. In the third part &lt;a href=&#34;https://kuklis.github.io/cma/cma/post/vra8-custom-resources-3&#34;&gt;Aria Automation Custom Resource Types - Onboarding&lt;/a&gt; we discussed how to get an existing resource under management.&lt;/p&gt;
+&lt;h2 id=&#34;virtual-machine-folder-as-a-custom-resource-type&#34;&gt;Virtual Machine folder as a Custom Resource Type&lt;/h2&gt;
+&lt;p&gt;In this fourth part we well use VC:VmFolder Orchestrator type implemented by the vSphere vCenter Plug-in. Previously we used a Dynamic Type, but we can use any existing vRO inventory object type (provided by plugins) as well as CRT. It does not matter for the current discussion as both work the same way.&lt;/p&gt;
+&lt;h3 id=&#34;create-vm-folder-workflow&#34;&gt;Create VM folder workflow&lt;/h3&gt;
+&lt;p&gt;The inputs of create workflow are: &lt;tt&gt;name&lt;/tt&gt; of folder and &lt;tt&gt;owner&lt;/tt&gt; (for demonstration purposes). The type of output is a &lt;tt&gt;VC:VmFolder&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;To create a folder, we need a parent folder. For the sake of simplicity we will use a slightly modified version of &lt;tt&gt;com.vmware.library.vc.folder/getRootVmFolder&lt;/tt&gt; code, not to fail in case of multiple Datacenters found, always selecting the first one:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;vimHosts&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;VcPlugin&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;getVimHosts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;rootFolder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;vimHosts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;].&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;rootFolder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;datacenters&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getAllDatacenters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;rootFolder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Datacenter: &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;datacenters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;].&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;rootVMfolder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;datacenters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;].&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;vmFolder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;getAllDatacenters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;folder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After calling the &lt;tt&gt;Library/vCenter/Folder management/VM folder/Create virtual machine folder&lt;/tt&gt; to create the folder within the root folder, we set the &lt;tt&gt;owner&lt;/tt&gt; Custom Attribute. For that to work, we need to create a new custom attribute in vCenter to store our value:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/new_custom_attribute.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;The code to store the value, with returning the workflow output object:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;newFolder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;setCustomValue&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;owner&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;owner&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;folder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;newFolder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;update-vm-folder-delete-vm-folder-workflows&#34;&gt;Update VM folder, Delete VM folder workflows&lt;/h3&gt;
+&lt;p&gt;The update workflow must have an input and output of type VC:VmFolder. We also add the &lt;tt&gt;name&lt;/tt&gt; of folder to allow folder renaming.&lt;/p&gt;
+&lt;p&gt;This workflow is just a wrapper: first we call &lt;tt&gt;Library/vCenter/Folder management/VM folder/Rename virtual machine folder&lt;/tt&gt; workflow, and return the VC:VmFolder object.&lt;/p&gt;
+&lt;p&gt;The delete workflow calls &lt;tt&gt;Library/vCenter/Folder management/VM folder/Delete virtual machine folder&lt;/tt&gt; workflow.&lt;/p&gt;
+&lt;p&gt;With all 3 workflows implemented, we can start defining the CRT.&lt;/p&gt;
+&lt;h2 id=&#34;define-vmfolder-custom-resource-type&#34;&gt;Define VMfolder Custom Resource Type&lt;/h2&gt;
+&lt;p&gt;Refresh the workflow inventory in Cloud Assembly (Start Data Collection):
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-2/datacollection.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Define the CRT:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/new_crt.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;The schema is automatically created:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/schema.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;The input properties &lt;tt&gt;name&lt;/tt&gt; and &lt;tt&gt;owner&lt;/tt&gt; added from the create workflow inputs, and the output properties &lt;tt&gt;sdkId&lt;/tt&gt;, &lt;tt&gt;name&lt;/tt&gt; and &lt;tt&gt;id&lt;/tt&gt; added from the plugin object type definition of &lt;tt&gt;VC:VmFolder&lt;/tt&gt;. This works the same as Dynamic Types.&lt;/p&gt;
+&lt;p&gt;With that completed, we have a simple CRT to test with.&lt;/p&gt;
+&lt;h2 id=&#34;cloud-template&#34;&gt;Cloud Template&lt;/h2&gt;
+&lt;p&gt;We define three inputs for the template: &lt;tt&gt;name&lt;/tt&gt; of the folder, &lt;tt&gt;owner&lt;/tt&gt; and a &lt;tt&gt;comment&lt;/tt&gt;. Each input is mapped as a property of the resource.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;formatVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;inputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;owner&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;comment&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;Custom_vmfolder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Custom.vmfolder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;preventDelete&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;properties&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${input.name}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;owner&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${input.owner}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;comment&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${input.comment}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The properties &lt;tt&gt;name&lt;/tt&gt; and &lt;tt&gt;owner&lt;/tt&gt; are directly used by the create workflow inputs, the &lt;tt&gt;comment&lt;/tt&gt; property will be a custom property assigned to the resource. The &lt;tt&gt;&lt;a href=&#34;https://docs.vmware.com/en/VMware-Aria-Automation/8.17/Using-Automation-Assembler/GUID-B76918AE-D18D-4821-B160-F0CFAE173359.html&#34;&gt;preventDelete&lt;/a&gt;&lt;/tt&gt; resource flag prevents folder deletion in case of resource request (update) performed on the object.&lt;/p&gt;
+&lt;p&gt;This is the new input form when deploying:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/inputs.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;The created resource:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/resource_created.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Note that the &lt;tt&gt;name&lt;/tt&gt; and &lt;tt&gt;owner&lt;/tt&gt; properties are visible on the GUI, but the &lt;tt&gt;comment&lt;/tt&gt; is not. However, we can get it via API:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;$ curl -sSk -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Authorization: Bearer &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$token&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;https://vra8.corp.local/deployment/api/resources?resourceTypes=Custom.vmfolder&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;jq .
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;c6b68e9f-bc00-4371-962a-0dfbeefde4c5&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder1&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;Custom.vmfolder&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;properties&amp;#34;&lt;/span&gt;: &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;owner&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;kuklis&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder&amp;#34;&lt;/span&gt;: &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;group-v51870&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder1&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;VmFolder&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;@type&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;VmFolder&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;sdkId&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;vc.corp.local/group-v51870&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;dunesId&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;vc.corp.local,id:group-v51870&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;@fullType&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;VC:VmFolder&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder1&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;resourceName&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder1&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;comment&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;comment1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;a8caa348-7980-4da9-b4ee-c8f9647b619c&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;      &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;createdAt&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;2024-07-03T18:28:02.245705Z&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;syncStatus&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;SUCCESS&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;origin&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;DEPLOYED&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;deploymentId&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;6341b47c-0f1d-4330-82ac-1eecfa0f8d87&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;projectId&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;ffab9ffd-a072-4617-bbb4-54101b3b5dd1&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;orgId&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;360bc331-1360-4d76-8000-aae9f7491989&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;billable&amp;#34;&lt;/span&gt;: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;  &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The resulting VM folder on vCenter:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/vmfolder.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;updating-properties&#34;&gt;Updating properties&lt;/h2&gt;
+&lt;p&gt;Custom properties are directly mapped to deployment inputs. We can change them by updating (changing) the inputs.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/update_menu.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/update_inputs.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/update_plan.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;The updated deployment resource has updated custom properties (top) and resource properties (bottom):&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/resource_updated.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;The VM folder is renamed:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/vmfolder2.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;updating-custom-properties&#34;&gt;Updating custom properties&lt;/h3&gt;
+&lt;p&gt;Let&#39;s try to update a custom property, the &lt;tt&gt;comment&lt;/tt&gt; field:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/update_comment.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;We see that Aria Automation detects the resource does not need to be updated, as the input has no effect on the object (not mapped to an input):&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/update_plan2.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;If we submit the update request, and check the &lt;tt&gt;comment&lt;/tt&gt; custom property, we see no change:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;curl -sSk -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Authorization: Bearer &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$token&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;https://vra8.corp.local/deployment/api/resources?resourceTypes=Custom.vmfolder&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;jq .
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;c6b68e9f-bc00-4371-962a-0dfbeefde4c5&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder2&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;Custom.vmfolder&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;properties&amp;#34;&lt;/span&gt;: &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;owner&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;kuklis&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder&amp;#34;&lt;/span&gt;: &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;group-v51870&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder2&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;VmFolder&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;@type&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;VmFolder&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;sdkId&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;vc.corp.local/group-v51870&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;dunesId&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;vc.corp.local,id:group-v51870&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;@fullType&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;VC:VmFolder&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder_in&amp;#34;&lt;/span&gt;: &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;vc2.poc.local,id:group-v51870&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;          &lt;span class=&#34;s2&#34;&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;VC:VmFolder&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder2&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;resourceName&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;folder2&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;comment&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;comment1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;a8caa348-7980-4da9-b4ee-c8f9647b619c&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;      &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;createdAt&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;2024-07-03T18:28:02.245705Z&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;syncStatus&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;SUCCESS&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;origin&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;DEPLOYED&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;deploymentId&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;6341b47c-0f1d-4330-82ac-1eecfa0f8d87&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;projectId&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;ffab9ffd-a072-4617-bbb4-54101b3b5dd1&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;orgId&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;360bc331-1360-4d76-8000-aae9f7491989&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;billable&amp;#34;&lt;/span&gt;: &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;35&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;36&lt;/span&gt;  &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;37&lt;/span&gt;...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In order to update a resource property, we need to add the property as an input to the &lt;em&gt;create&lt;/em&gt; and &lt;em&gt;update&lt;/em&gt; workflows to trigger a deployment resource update.&lt;/p&gt;
+&lt;h3 id=&#34;introducting-a-fake-input&#34;&gt;Introducting a fake input&lt;/h3&gt;
+&lt;p&gt;This will have no direct affect on the VM folder creation or update process, but will trick the automation engine to run the update workflow and update the custom property a the same time.&lt;/p&gt;
+&lt;p&gt;We need to refresh the workflow inventory in Cloud Assembly (Start Data Collection) again, and update the custom resource type schema:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/schema_update.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;updating-the-custom-property-with-the-fake-input&#34;&gt;Updating the custom property with the fake input&lt;/h3&gt;
+&lt;p&gt;Let&#39;s try to update the &lt;tt&gt;comment&lt;/tt&gt; custom field now. It triggers a deployment resource update and changes the comment property:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-custom-resources-4/comment_updated.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Note that the property is visible on the GUI now.&lt;/p&gt;
+&lt;h2 id=&#34;wrap-up&#34;&gt;Wrap-up&lt;/h2&gt;
+&lt;p&gt;In order to update a custom property, we also need to change any property that is an input of the &lt;em&gt;create&lt;/em&gt; and &lt;em&gt;update&lt;/em&gt; workflows. This can be the property itself, by adding it as an input to these workflows (as in the example above).&lt;/p&gt;
+&lt;p&gt;But if we want to keep it hidden off the GUI, we can introduce another fake input, for example &lt;tt&gt;updateVersion&lt;/tt&gt;. In this case, by changing both the (hidden) property and the &lt;tt&gt;updateVersion&lt;/tt&gt; inputs, we can force a resource update and the custom property value updated at the same time.&lt;/p&gt;
+&lt;p&gt;You can find the sample workflows at GitHub: &lt;a href=&#34;https://github.com/kuklis/vro8-packages&#34;&gt;https://github.com/kuklis/vro8-packages&lt;/a&gt;&lt;br&gt;
+com.dynamictypes.vmfolder.package includes the original workflows, and com.dynamictypes.vmfolder2.package the updated versions.&lt;/p&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>Aria Automation Custom Resource Types - Onboarding</title>
       <link>https://kuklis.github.io/cma/post/vra8-custom-resources-3/</link>
