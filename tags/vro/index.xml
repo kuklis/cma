@@ -48,7 +48,7 @@
 &lt;p&gt;There is a catch with this approach: each command can have a different output format, and we rely on string processing to gather the results. Here are the output of running the two scripts above:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-powershell-result/host_output.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;get-results-as-json&#34;&gt;Get Results as JSON&lt;/h2&gt;
-&lt;p&gt;This workflow use the &lt;tt&gt;getResults()&lt;/tt&gt; function of the &lt;tt&gt;PowerShellInvocationResult&lt;/tt&gt; object. This function returns a PowerShellRemotePSObject. This object has a getAsJson() function.&lt;/p&gt;
+&lt;p&gt;This workflow use the &lt;tt&gt;getResults()&lt;/tt&gt; function of the &lt;tt&gt;PowerShellInvocationResult&lt;/tt&gt; object. This function returns a &lt;tt&gt;PowerShellRemotePSObject&lt;/tt&gt;. This object has a getAsJson() function.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Completed&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;getInvocationState&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;json&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;getResults&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;getAsJson&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;resultObj&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;JSON&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;parse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
@@ -82,7 +82,7 @@
 &lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-powershell-result/result_xml_json.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;wrap-up&#34;&gt;Wrap up&lt;/h2&gt;
 &lt;p&gt;PowerShell script result can be a complex object, and parsing the JSON/XML representations of it is complex. The method above provides a simple way to do that.&lt;/p&gt;
-&lt;p&gt;Bear in mind that the polyglot PowerShell engine is available only within Orchestrator intances licenced with Automation Automation.&lt;/p&gt;
+&lt;p&gt;Bear in mind that the polyglot PowerShell engine is available only within Orchestrator intances licenced with Aria Automation.&lt;/p&gt;
 &lt;p&gt;You can find the sample workflows at GitHub: &lt;a href=&#34;https://github.com/kuklis/vro8-packages&#34;&gt;https://github.com/kuklis/vro8-packages&lt;/a&gt;&lt;br&gt;
 Package com.test.powershell&lt;/p&gt;
         

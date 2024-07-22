@@ -182,7 +182,7 @@
 <p>There is a catch with this approach: each command can have a different output format, and we rely on string processing to gather the results. Here are the output of running the two scripts above:</p>
 <p><img src="/cma/img/vro8-powershell-result/host_output.png" alt=""></p>
 <h2 id="get-results-as-json">Get Results as JSON</h2>
-<p>This workflow use the <tt>getResults()</tt> function of the <tt>PowerShellInvocationResult</tt> object. This function returns a PowerShellRemotePSObject. This object has a getAsJson() function.</p>
+<p>This workflow use the <tt>getResults()</tt> function of the <tt>PowerShellInvocationResult</tt> object. This function returns a <tt>PowerShellRemotePSObject</tt>. This object has a getAsJson() function.</p>
 <div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="ln">1</span><span class="k">if</span> <span class="p">(</span><span class="s2">&#34;Completed&#34;</span> <span class="p">==</span> <span class="n">result</span><span class="p">.</span><span class="n">getInvocationState</span><span class="p">())</span> <span class="p">{</span>
 <span class="ln">2</span>    <span class="n">var</span> <span class="n">json</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">getResults</span><span class="p">().</span><span class="n">getAsJson</span><span class="p">();</span>
 <span class="ln">3</span>    <span class="n">var</span> <span class="n">resultObj</span> <span class="p">=</span> <span class="n">JSON</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="n">json</span><span class="p">);</span>
@@ -216,7 +216,7 @@
 <p><img src="/cma/img/vro8-powershell-result/result_xml_json.png" alt=""></p>
 <h2 id="wrap-up">Wrap up</h2>
 <p>PowerShell script result can be a complex object, and parsing the JSON/XML representations of it is complex. The method above provides a simple way to do that.</p>
-<p>Bear in mind that the polyglot PowerShell engine is available only within Orchestrator intances licenced with Automation Automation.</p>
+<p>Bear in mind that the polyglot PowerShell engine is available only within Orchestrator intances licenced with Aria Automation.</p>
 <p>You can find the sample workflows at GitHub: <a href="https://github.com/kuklis/vro8-packages">https://github.com/kuklis/vro8-packages</a><br>
 Package com.test.powershell</p><script src="https://utteranc.es/client.js"
   repo="kuklis/cma"
