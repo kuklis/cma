@@ -3,24 +3,39 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://kuklis.github.io/cma/</loc>
-    <lastmod>2024-07-21T00:00:00+00:00</lastmod>
+    <lastmod>2025-01-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/api/</loc>
+    <lastmod>2025-01-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/</loc>
-    <lastmod>2024-07-21T00:00:00+00:00</lastmod>
+    <lastmod>2025-01-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://kuklis.github.io/cma/categories/development/</loc>
-    <lastmod>2024-07-21T00:00:00+00:00</lastmod>
+    <loc>https://kuklis.github.io/cma/categories/gui/</loc>
+    <lastmod>2025-01-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/</loc>
+    <lastmod>2025-01-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/</loc>
+    <lastmod>2025-01-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/validation/</loc>
+    <lastmod>2025-01-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/post/vra8-input-validations/</loc>
+    <lastmod>2025-01-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
+    <lastmod>2025-01-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://kuklis.github.io/cma/categories/development/</loc>
     <lastmod>2024-07-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/powershell/</loc>
     <lastmod>2024-07-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vro8-powershell-result/</loc>
-    <lastmod>2024-07-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/tags/</loc>
     <lastmod>2024-07-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/tags/vro/</loc>
@@ -32,9 +47,6 @@
     <loc>https://kuklis.github.io/cma/categories/custom-resources/</loc>
     <lastmod>2024-07-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://kuklis.github.io/cma/tags/vra8/</loc>
-    <lastmod>2024-07-03T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://kuklis.github.io/cma/post/vra8-custom-resources-3/</loc>
     <lastmod>2024-03-12T00:00:00+00:00</lastmod>
   </url><url>
@@ -43,9 +55,6 @@
   </url><url>
     <loc>https://kuklis.github.io/cma/categories/ipam/</loc>
     <lastmod>2023-12-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/categories/api/</loc>
-    <lastmod>2023-10-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vro8-pyodbc/</loc>
     <lastmod>2023-10-20T00:00:00+00:00</lastmod>
@@ -81,9 +90,6 @@
     <lastmod>2023-01-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vro8-screen-real-estate/</loc>
-    <lastmod>2022-12-16T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://kuklis.github.io/cma/categories/gui/</loc>
     <lastmod>2022-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://kuklis.github.io/cma/post/vro-javascript-goto/</loc>

@@ -6,7 +6,161 @@
     <description>Recent content in API on CMA</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
-    <lastBuildDate>Fri, 20 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/categories/api/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 18 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/categories/api/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF Automation Input Validations</title>
+      <link>https://kuklis.github.io/cma/post/vra8-input-validations/</link>
+      <pubDate>Sat, 18 Jan 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vra8-input-validations/</guid>
+      <description>
+        
+          &lt;p&gt;Validating Automation inputs from GUI and API&lt;/p&gt;
+&lt;div class=&#34;toc&#34;&gt;
+    &lt;H3&gt;Table of Contents&lt;/H3&gt;
+    &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#introduction&#34;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#cloud-template-validations&#34;&gt;Cloud Template Validations&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#service-broker-behaviour&#34;&gt;Service Broker behaviour&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#rest-api-behaviour&#34;&gt;REST API behaviour&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#custom-form-value-options&#34;&gt;Custom Form value options&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&#34;#service-broker-functioning&#34;&gt;Service Broker functioning&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&#34;#rest-api-functioning&#34;&gt;REST API functioning&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#service-broker-validations&#34;&gt;Service Broker Validations&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#summary&#34;&gt;Summary&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+  &lt;/div&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Validating inputs of VCF Automation can be implemented in a couple of ways. In this post we&#39;ll explore the different approaches and their limitations.&lt;/p&gt;
+&lt;h2 id=&#34;cloud-template-validations&#34;&gt;Cloud Template Validations&lt;/h2&gt;
+&lt;p&gt;Cloud template syntax provides the first layer of validations. The input properties are documented at Broadcom documentation &lt;a href=&#34;https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-automation/8-18/assembler-on-prem-using-and-managing-master-map-8-18/maphead-designing-your-deployments/user-input-at-request-time.html&#34;&gt;User input in VMware Aria Automation requests&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Here is a simple cloud template for demonstration purposes:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;formatVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;inputs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;integer&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;minimum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;maximum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;zone&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;enum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;lan&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;dmz&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;dc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;minLength&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;maxLength&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;pattern&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;^dc[0-9]+$&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;az&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;$dynamicEnum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/data/vro-actions/com.test.validations/getAZs&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;security&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;$dynamicEnum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/data/vro-actions/com.test.validations/protectionOptions?securityzone={{zone}}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;photon&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Cloud.vSphere.Machine&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;properties&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${input.count}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;photon&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;flavor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;small&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;templateprop&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;dc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${input.dc}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;az&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${input.az}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;zone&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${input.zone}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;35&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;tags&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;36&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;zone&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;37&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${input.zone}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;38&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;networks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;39&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;network&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${resource.net0.id}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;40&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;net0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;41&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Cloud.vSphere.Network&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;42&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;properties&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;43&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;networkType&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;existing&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;44&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;constraints&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;45&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;zone:${input.zone}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We have 5 inputs.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/inputs.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The number of VMs in a deployment can be defined by the &lt;tt&gt;count&lt;/tt&gt; input. The &lt;tt&gt;minimum&lt;/tt&gt; and &lt;tt&gt;maximum&lt;/tt&gt; values provide a simple validation for this field.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;tt&gt;zone&lt;/tt&gt; input has a predefined list of valid choices: &lt;tt&gt;lan&lt;/tt&gt; and &lt;tt&gt;dmz&lt;/tt&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;tt&gt;dc&lt;/tt&gt; field must be 3-5 characters long, must start by &lt;tt&gt;dc&lt;/tt&gt; followed by digits.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;tt&gt;az&lt;/tt&gt; field values are defined by the return value of &lt;tt&gt;com.test.validations/getAZs&lt;/tt&gt; Orchestrator action. This action returns an array of Strings: &lt;tt&gt;[&amp;quot;zone1&amp;quot;, &amp;quot;zone2&amp;quot;, &amp;quot;zone3&amp;quot;, &amp;quot;zone4&amp;quot;, &amp;quot;zone5&amp;quot;]&lt;/tt&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The possible &lt;tt&gt;security&lt;/tt&gt; input values are returned by the Orcherstartor action &lt;tt&gt;com.test.validations/protectionOptions&lt;/tt&gt;. This action has a string input &lt;tt&gt;securityzone&lt;/tt&gt;. We bind this action input to the template input &lt;tt&gt;zone&lt;/tt&gt;. If the user selects &lt;tt&gt;dmz&lt;/tt&gt; as &lt;tt&gt;zone&lt;/tt&gt;, the only option of &lt;tt&gt;security&lt;/tt&gt; input is &lt;tt&gt;hardened&lt;/tt&gt;. For &lt;tt&gt;lan&lt;/tt&gt; input there are 2 possible choices: &lt;tt&gt;hardened&lt;/tt&gt; and &lt;tt&gt;relaxed&lt;/tt&gt;. This is a simple illustration of inputs depending on each other.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/input_dependency.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h3 id=&#34;service-broker-behaviour&#34;&gt;Service Broker behaviour&lt;/h3&gt;
+&lt;p&gt;Count field validated as expected:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/count.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Zone is a selectable dropdown:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/zone.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;The dc field must match the regex:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/dc.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Az can be selected from the dropdown generated by Orchestrator action:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/az.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Security depends on the zone, here only hardened can be chosen for &lt;tt&gt;dmz&lt;/tt&gt; zone.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/security.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;These simple validations were provided by the Cloud Template syntax only.&lt;/p&gt;
+&lt;h3 id=&#34;rest-api-behaviour&#34;&gt;REST API behaviour&lt;/h3&gt;
+&lt;p&gt;Let&#39;s test our cloud template via the Catalog API:&lt;/p&gt;
+&lt;p&gt;If we provide valid inputs, the request is accepted and the deployment creation process starts:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/deployment_success.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Trying invalid count, zone, dc, az and security values:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/deployment_failure.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;The last case demonstrates the validation of combination of values provided to &lt;tt&gt;zone&lt;/tt&gt; and &lt;tt&gt;security&lt;/tt&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;custom-form-value-options&#34;&gt;Custom Form value options&lt;/h2&gt;
+&lt;p&gt;Custom Form provides an additional layer to provide input validations. This has already been discussed in the post &lt;a href=&#34;https://kuklis.github.io/cma/cma/post/custom-form-dropdown-external-source&#34;&gt;vRA Custom Form Dropdowns with External Source&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Let&#39;s try to restrict the Prod1 project to allow to select AZs &lt;tt&gt;zone1&lt;/tt&gt; and &lt;tt&gt;zone2&lt;/tt&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;ffab9ffd-a072-4617-bbb4-54101b3b5dd1&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;project&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;zone1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;zone2&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;zone1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;zone2&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;zone3&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;zone4&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;zone5&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the sake of simplicity we hardcode the projecId here.&lt;/p&gt;
+&lt;p&gt;Let&#39;s enable and add this to the custom form:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/az_byproject.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;We cannot use this action on the cloud template, as we cannot bind the project to the action&#39;s input. The custom form allows that.&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&#34;service-broker-functioning&#34;&gt;Service Broker functioning&lt;/h3&gt;
+&lt;p&gt;Let&#39;s see how the form behaves now:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/az_cf.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;For the Prod1 project we can select only the first 2 zones.&lt;/p&gt;
+&lt;h3 id=&#34;rest-api-functioning&#34;&gt;REST API functioning&lt;/h3&gt;
+&lt;p&gt;Let&#39;s try to ask for zone3:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/zone3.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Unfortunately that custom form dropdown action did not prevent the user to request zone3.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;service-broker-validations&#34;&gt;Service Broker Validations&lt;/h2&gt;
+&lt;p&gt;To solve that, we can define additional validating actions on the form, and these also run in case the REST API is used.
+The validation action must return an empty string if the input is valid. Otherwise the returned string is displayed as a validation error message.&lt;/p&gt;
+&lt;p&gt;The script is written to avoid code dumplication: we call the custom form action to get the accepted values, and check if the input is on the list.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/validateaz.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Drag this to the custom form, and bind inputs:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/validations.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Now, if we try to request zone3 for Prod1 project:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vra8-input-validations/invalid.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Now REST API is also protected against invalid input combinations.&lt;/p&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;Cloud Template input properties, Custom Form value options and Custom Form validations has been demonstrated. Make sure to apply the correct combination of these to provide an easy-to-use GUI and prevent accepting invalid data via the REST API.&lt;/p&gt;
+&lt;p&gt;You can download the &lt;em&gt;com.test.validations&lt;/em&gt; package containing the sample actions from GitHub: &lt;a href=&#34;https://github.com/kuklis/vro8-packages&#34;&gt;https://github.com/kuklis/vro8-packages&lt;/a&gt;&lt;/p&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>Get pyodbc working within Aria Automation Orchestrator</title>
       <link>https://kuklis.github.io/cma/post/vro8-pyodbc/</link>
