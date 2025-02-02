@@ -123,6 +123,8 @@ Then we print the first 20 characters and save it into the resource element fold
 &lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;folder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;path&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;filename&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34; saved.&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The input form:&lt;br&gt;
 &lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-http-binary-files/select_category.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Webserver response:&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-http-binary-files/file_download_response.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
 &lt;p&gt;The downloaded file saved as a resource element:&lt;br&gt;
 &lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vro8-http-binary-files/resource_element.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
 &lt;h3 id=&#34;file-upload&#34;&gt;File upload&lt;/h3&gt;
