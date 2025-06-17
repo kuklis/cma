@@ -6,7 +6,89 @@
     <description>Recent content in API on CMA</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
-    <lastBuildDate>Sun, 02 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/categories/api/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 12 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/categories/api/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 Getting Passwords - login to Automation appliance via SSH</title>
+      <link>https://kuklis.github.io/cma/post/vcf9-getting-fleet-passwords/</link>
+      <pubDate>Thu, 12 Jun 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vcf9-getting-fleet-passwords/</guid>
+      <description>
+        
+          &lt;p&gt;How to get generated passwords via Fleet Management API, and login to Automation appliance via SSH&lt;/p&gt;
+&lt;div class=&#34;toc&#34;&gt;
+    &lt;H3&gt;Table of Contents&lt;/H3&gt;
+    &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#fleet-management&#34;&gt;Fleet Management&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#api-documentation&#34;&gt;API documentation&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#finding-and-getting-the-password&#34;&gt;Finding and getting the password&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#login-to-automation-appliance-via-ssh&#34;&gt;Login to Automation appliance via SSH&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+  &lt;/div&gt;
+&lt;h2 id=&#34;fleet-management&#34;&gt;Fleet Management&lt;/h2&gt;
+&lt;p&gt;Fleet Management is the new LCM (Lifecycle Manager). Unfortunately getting passwords via the GUI is no longer available, but we can still fetch the passwords via API. Here is the filtered list of passwords within VCF Operations:
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-getting-fleet-passwords/passwords.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h2 id=&#34;api-documentation&#34;&gt;API documentation&lt;/h2&gt;
+&lt;p&gt;The Swagger API documentation can be found under &lt;tt&gt;Developer Center / APIs &amp;amp; SDKs / Fleet Manageent API&lt;/tt&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-getting-fleet-passwords/api_docs.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Switch to &lt;em&gt;private-internal-api&lt;/em&gt;&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-getting-fleet-passwords/private-internal-api.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h2 id=&#34;finding-and-getting-the-password&#34;&gt;Finding and getting the password&lt;/h2&gt;
+&lt;p&gt;Let&#39;s search for the &lt;tt&gt;vmid&lt;/tt&gt; of the entries.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-getting-fleet-passwords/search.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;$ curl -sSk -u &lt;span class=&#34;s2&#34;&gt;&amp;#34;admin@local:&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$PASS&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;https://vcf-fleet.vcf.lab/lcm/locker/api/v2/passwords?aliasQuery=vra-node&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;jq
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;page&amp;#34;&lt;/span&gt;: 0,
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;total&amp;#34;&lt;/span&gt;: 3,
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;passwords&amp;#34;&lt;/span&gt;: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;vmid&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;8c21d751-cd4c-4b3a-814c-b298bc02784d&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;tenant&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;alias&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;ebedd246-9b29-4057-b2e0-759254aa97b7-vra-node-4458c2e8-3476-4b13-8d5b-842486ba8338&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;PASSWORD****&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;createdOn&amp;#34;&lt;/span&gt;: 1746749129326,
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;lastUpdatedOn&amp;#34;&lt;/span&gt;: 1746749129326,
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;referenced&amp;#34;&lt;/span&gt;: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;vmid&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;cbb67f03-7e34-4c1b-a5f9-e556888af220&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;tenant&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;alias&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;ebedd246-9b29-4057-b2e0-759254aa97b7-vra-node-bd33924c-a92f-4c9a-8572-5cba5a964bbf&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;PASSWORD****&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;createdOn&amp;#34;&lt;/span&gt;: 1746749129344,
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;lastUpdatedOn&amp;#34;&lt;/span&gt;: 1746749129344,
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;referenced&amp;#34;&lt;/span&gt;: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;vmid&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;4511cb1b-3f55-4447-b637-73427e5e298d&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;tenant&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;alias&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;ebedd246-9b29-4057-b2e0-759254aa97b7-vra-node-e36c8ae7-b72a-4362-9e1a-f982fa6672ce&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;PASSWORD****&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;createdOn&amp;#34;&lt;/span&gt;: 1746749129362,
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;lastUpdatedOn&amp;#34;&lt;/span&gt;: 1746749129362,
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;referenced&amp;#34;&lt;/span&gt;: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;  &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The password can be retrieved via this API call, providing the root password in addition to the admin password:&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-getting-fleet-passwords/decrypted.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ curl -sSk -u &lt;span class=&#34;s2&#34;&gt;&amp;#34;admin@local:&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$PASS&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;https://vcf-fleet.vcf.lab/lcm/locker/api/v2/passwords/8c21d751-cd4c-4b3a-814c-b298bc
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;02784d/decrypted&amp;#39;&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;rootPassword&amp;#34;:&amp;#34;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$ROOTPASS&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;#34;}&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;passwordVmid&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;8c21d751-cd4c-4b3a-814c-b298bc02784d&amp;#34;&lt;/span&gt;,&lt;span class=&#34;s2&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;Q82fkjj43jkldfjaA!F&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;login-to-automation-appliance-via-ssh&#34;&gt;Login to Automation appliance via SSH&lt;/h2&gt;
+&lt;p&gt;Let&#39;s try to login. The username is &lt;tt&gt;vmware-system-user&lt;/tt&gt; as seen in Fleet Management above.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ ssh vmware-system-user@vra-va-7l9cj.vcf.lab
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;Password:
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;Last login: Wed Jun &lt;span class=&#34;m&#34;&gt;11&lt;/span&gt; 19:16:37 &lt;span class=&#34;m&#34;&gt;2025&lt;/span&gt; from 10.1.95.3
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;vmware-system-user@vra-va-7l9cj &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ sudo -i
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;root@vra-va-7l9cj &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;#&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>Downloading and uploading binary files with VCF Orchestrator</title>
       <link>https://kuklis.github.io/cma/post/vro8-http-binary-files/</link>

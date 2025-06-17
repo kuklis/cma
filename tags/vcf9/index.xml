@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VCF9 on CMA</title>
+    <link>https://kuklis.github.io/cma/tags/vcf9/</link>
+    <description>Recent content in VCF9 on CMA</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright © 2021, Krisztian Kuklis; all rights reserved.</copyright>
+    <lastBuildDate>Thu, 12 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://kuklis.github.io/cma/tags/vcf9/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCF9 Getting Passwords - login to Automation appliance via SSH</title>
+      <link>https://kuklis.github.io/cma/post/vcf9-getting-fleet-passwords/</link>
+      <pubDate>Thu, 12 Jun 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vcf9-getting-fleet-passwords/</guid>
+      <description>
+        
+          &lt;p&gt;How to get generated passwords via Fleet Management API, and login to Automation appliance via SSH&lt;/p&gt;
+&lt;div class=&#34;toc&#34;&gt;
+    &lt;H3&gt;Table of Contents&lt;/H3&gt;
+    &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#fleet-management&#34;&gt;Fleet Management&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#api-documentation&#34;&gt;API documentation&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#finding-and-getting-the-password&#34;&gt;Finding and getting the password&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#login-to-automation-appliance-via-ssh&#34;&gt;Login to Automation appliance via SSH&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+  &lt;/div&gt;
+&lt;h2 id=&#34;fleet-management&#34;&gt;Fleet Management&lt;/h2&gt;
+&lt;p&gt;Fleet Management is the new LCM (Lifecycle Manager). Unfortunately getting passwords via the GUI is no longer available, but we can still fetch the passwords via API. Here is the filtered list of passwords within VCF Operations:
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-getting-fleet-passwords/passwords.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h2 id=&#34;api-documentation&#34;&gt;API documentation&lt;/h2&gt;
+&lt;p&gt;The Swagger API documentation can be found under &lt;tt&gt;Developer Center / APIs &amp;amp; SDKs / Fleet Manageent API&lt;/tt&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-getting-fleet-passwords/api_docs.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;Switch to &lt;em&gt;private-internal-api&lt;/em&gt;&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-getting-fleet-passwords/private-internal-api.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h2 id=&#34;finding-and-getting-the-password&#34;&gt;Finding and getting the password&lt;/h2&gt;
+&lt;p&gt;Let&#39;s search for the &lt;tt&gt;vmid&lt;/tt&gt; of the entries.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-getting-fleet-passwords/search.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;$ curl -sSk -u &lt;span class=&#34;s2&#34;&gt;&amp;#34;admin@local:&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$PASS&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;https://vcf-fleet.vcf.lab/lcm/locker/api/v2/passwords?aliasQuery=vra-node&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;jq
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;page&amp;#34;&lt;/span&gt;: 0,
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;total&amp;#34;&lt;/span&gt;: 3,
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;passwords&amp;#34;&lt;/span&gt;: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;vmid&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;8c21d751-cd4c-4b3a-814c-b298bc02784d&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;tenant&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;alias&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;ebedd246-9b29-4057-b2e0-759254aa97b7-vra-node-4458c2e8-3476-4b13-8d5b-842486ba8338&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;PASSWORD****&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;createdOn&amp;#34;&lt;/span&gt;: 1746749129326,
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;lastUpdatedOn&amp;#34;&lt;/span&gt;: 1746749129326,
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;referenced&amp;#34;&lt;/span&gt;: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;vmid&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;cbb67f03-7e34-4c1b-a5f9-e556888af220&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;tenant&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;alias&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;ebedd246-9b29-4057-b2e0-759254aa97b7-vra-node-bd33924c-a92f-4c9a-8572-5cba5a964bbf&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;PASSWORD****&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;createdOn&amp;#34;&lt;/span&gt;: 1746749129344,
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;lastUpdatedOn&amp;#34;&lt;/span&gt;: 1746749129344,
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;referenced&amp;#34;&lt;/span&gt;: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;vmid&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;4511cb1b-3f55-4447-b637-73427e5e298d&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;tenant&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;alias&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;ebedd246-9b29-4057-b2e0-759254aa97b7-vra-node-e36c8ae7-b72a-4362-9e1a-f982fa6672ce&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;: &lt;span class=&#34;s2&#34;&gt;&amp;#34;PASSWORD****&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;createdOn&amp;#34;&lt;/span&gt;: 1746749129362,
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;lastUpdatedOn&amp;#34;&lt;/span&gt;: 1746749129362,
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;#34;referenced&amp;#34;&lt;/span&gt;: &lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;  &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The password can be retrieved via this API call, providing the root password in addition to the admin password:&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-getting-fleet-passwords/decrypted.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ curl -sSk -u &lt;span class=&#34;s2&#34;&gt;&amp;#34;admin@local:&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$PASS&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;https://vcf-fleet.vcf.lab/lcm/locker/api/v2/passwords/8c21d751-cd4c-4b3a-814c-b298bc
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;02784d/decrypted&amp;#39;&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;rootPassword&amp;#34;:&amp;#34;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$ROOTPASS&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;#34;}&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;passwordVmid&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;8c21d751-cd4c-4b3a-814c-b298bc02784d&amp;#34;&lt;/span&gt;,&lt;span class=&#34;s2&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;Q82fkjj43jkldfjaA!F&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;login-to-automation-appliance-via-ssh&#34;&gt;Login to Automation appliance via SSH&lt;/h2&gt;
+&lt;p&gt;Let&#39;s try to login. The username is &lt;tt&gt;vmware-system-user&lt;/tt&gt; as seen in Fleet Management above.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ ssh vmware-system-user@vra-va-7l9cj.vcf.lab
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;Password:
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;Last login: Wed Jun &lt;span class=&#34;m&#34;&gt;11&lt;/span&gt; 19:16:37 &lt;span class=&#34;m&#34;&gt;2025&lt;/span&gt; from 10.1.95.3
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;vmware-system-user@vra-va-7l9cj &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;$ sudo -i
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;root@vra-va-7l9cj &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;#&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>VCF9 Operations Orchestartor - bootstrap fix</title>
+      <link>https://kuklis.github.io/cma/post/vcf9-oo-bootsrap-fix/</link>
+      <pubDate>Thu, 12 Jun 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vcf9-oo-bootsrap-fix/</guid>
+      <description>
+        
+          &lt;p&gt;How to fix Operations Orchestator 9 first boot&lt;/p&gt;
+&lt;div class=&#34;toc&#34;&gt;
+    &lt;H3&gt;Table of Contents&lt;/H3&gt;
+    &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#operations-orchestrator-9-issue&#34;&gt;Operations Orchestrator 9 issue&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#the-first-error-message&#34;&gt;The first error message&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#an-old-regression&#34;&gt;An old regression&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#reboot-and-test&#34;&gt;Reboot and test&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+  &lt;/div&gt;
+&lt;h2 id=&#34;operations-orchestrator-9-issue&#34;&gt;Operations Orchestrator 9 issue&lt;/h2&gt;
+&lt;p&gt;While &lt;a href=&#34;https://kuklis.github.io/cma/cma/post/vcfa9-external-orchestrator/&#34;&gt;setting up external Orchestrator 9.0 for VCF Automation&lt;/a&gt;, I faced with an old problem that prevents the appliance to properly startup kube-api-server endpoint. Let&#39;s troubleshoot the issue and present a possible solution.&lt;/p&gt;
+&lt;h2 id=&#34;the-first-error-message&#34;&gt;The first error message&lt;/h2&gt;
+&lt;p&gt;I tried to setup authentication against the automation appliance, and got the following error message.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vro &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# vracli vro authentication set -p tm -f -k -u admin -hn https://vra.vcf.lab --tenant automation&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;error: error validating &lt;span class=&#34;s2&#34;&gt;&amp;#34;/etc/vmware-prelude/vracli-command-templates/rbac.yaml&amp;#34;&lt;/span&gt;: error validating data: failed to download openapi: Get &lt;span class=&#34;s2&#34;&gt;&amp;#34;http://localhost:8080/openapi/v2?timeout=32s&amp;#34;&lt;/span&gt;: dial tcp 127.0.0.1:8080: connect: connection refused&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; you choose to ignore these errors, turn validation off with --validate&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;2025-05-30 13:15:03,324 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;ERROR&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; Could not create a service account &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; executing vro commands.
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;NoneType: None
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;Could not create a service account &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; executing vro commands.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When I tried to check the kubernetes cluster, I got error messages again.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vro &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# kubectl get po -n prelude&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;E0530 13:15:24.705385    &lt;span class=&#34;m&#34;&gt;9597&lt;/span&gt; memcache.go:265&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Unhandled Error&amp;#34;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;err&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;couldn&amp;#39;t get current server API group list: Get \&amp;#34;http://localhost:8080/api?timeout=32s\&amp;#34;: dial tcp 127.0.0.1:8080: connect: connection refused&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;E0530 13:15:24.707548    &lt;span class=&#34;m&#34;&gt;9597&lt;/span&gt; memcache.go:265&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Unhandled Error&amp;#34;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;err&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;couldn&amp;#39;t get current server API group list: Get \&amp;#34;http://localhost:8080/api?timeout=32s\&amp;#34;: dial tcp 127.0.0.1:8080: connect: connection refused&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;E0530 13:15:24.709500    &lt;span class=&#34;m&#34;&gt;9597&lt;/span&gt; memcache.go:265&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Unhandled Error&amp;#34;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;err&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;couldn&amp;#39;t get current server API group list: Get \&amp;#34;http://localhost:8080/api?timeout=32s\&amp;#34;: dial tcp 127.0.0.1:8080: connect: connection refused&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;E0530 13:15:24.711222    &lt;span class=&#34;m&#34;&gt;9597&lt;/span&gt; memcache.go:265&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Unhandled Error&amp;#34;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;err&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;couldn&amp;#39;t get current server API group list: Get \&amp;#34;http://localhost:8080/api?timeout=32s\&amp;#34;: dial tcp 127.0.0.1:8080: connect: connection refused&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;E0530 13:15:24.712975    &lt;span class=&#34;m&#34;&gt;9597&lt;/span&gt; memcache.go:265&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Unhandled Error&amp;#34;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;err&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;couldn&amp;#39;t get current server API group list: Get \&amp;#34;http://localhost:8080/api?timeout=32s\&amp;#34;: dial tcp 127.0.0.1:8080: connect: connection refused&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;The connection to the server localhost:8080 was refused - did you specify the right host or port?
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;First I tried to fix the cluster by running &lt;tt&gt;/opt/scripts/deploy.sh&lt;/tt&gt;, but it could not complete.&lt;/p&gt;
+&lt;p&gt;Checking and starting kubelet did not work either.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;root@vro [ /etc ]# systemctl status kubelet
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;○ kubelet.service - kubelet: The Kubernetes Node Agent
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;     Loaded: loaded (/etc/systemd/system/kubelet.service; disabled; preset: enabled)
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;    Drop-In: /usr/lib/systemd/system/kubelet.service.d
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;             └─20-10-k8s-config.conf
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;     Active: inactive (dead)
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;       Docs: http://kubernetes.io/docs/
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;root@vro [ ~ ]# systemctl start kubelet
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;Job for kubelet.service failed because the control process exited with error code.
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;See &amp;#34;systemctl status kubelet.service&amp;#34; and &amp;#34;journalctl -xeu kubelet.service&amp;#34; for details.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Checking the logs I found a suspicious entry:
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;root@vro &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# journalctl&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;...
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;May &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; 12:56:42 vro.vcf.lab sh&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;850&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;: Couldn&lt;span class=&#34;s1&#34;&gt;&amp;#39;t reach NTP server 172.16.0.2: [Errno 101] Network is unreachable
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;May 30 12:56:42 vro.vcf.lab sh[850]: Couldn&amp;#39;&lt;/span&gt;t reach NTP server 172.16.0.3: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;Errno 101&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; Network is unreachable
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;May &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; 12:56:42 vro.vcf.lab sh&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;850&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;: No reachable NTP server found
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;May &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; 12:56:42 vro.vcf.lab sh&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;850&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;: 2025-05-30 12:56:42Z Script /etc/bootstrap/firstboot.d/00-apply-ntp-servers.sh failed, error status &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;May &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; 12:56:42 vro.vcf.lab systemd&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;1&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;: run-bootstrap.service: Main process exited, &lt;span class=&#34;nv&#34;&gt;code&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;exited, &lt;span class=&#34;nv&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;1/FAILURE
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;May &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; 12:56:42 vro.vcf.lab systemd&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;1&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;: run-bootstrap.service: Failed with result &lt;span class=&#34;s1&#34;&gt;&amp;#39;exit-code&amp;#39;&lt;/span&gt;.
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;May &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; 12:56:42 vro.vcf.lab systemd&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;1&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;: run-bootstrap.service: Unit process &lt;span class=&#34;m&#34;&gt;850&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;tee&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; remains running after unit stopped.
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;May &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; 12:56:42 vro.vcf.lab systemd&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;1&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;: Failed to start Run firstboot or everyboot script.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/p&gt;
+&lt;p&gt;So firstboot service failed, and it could not properly setup the appliance.&lt;/p&gt;
+&lt;h2 id=&#34;an-old-regression&#34;&gt;An old regression&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://knowledge.broadcom.com/external/article?legacyId=82295&#34;&gt;KB82295&lt;/a&gt; describes a similar kube-api-server problem, so I checked &lt;tt&gt;/etc/hosts&lt;/tt&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vro &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# cat /etc/hosts&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;127.0.0.1 localhost
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;127.0.0.1 photon- 7b4cab7f611127.0.0.1 vra-k8s.local
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Bingo! The file is corrupted. Let&#39;s fix it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;127.0.0.1 localhost
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;127.0.0.1 photon-7b4cab7f611
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;127.0.0.1 vra-k8s.local
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;reboot-and-test&#34;&gt;Reboot and test&lt;/h2&gt;
+&lt;p&gt;Let&#39;s restart the server and see if it works now.&lt;/p&gt;
+&lt;p&gt;Kubelet started.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;root@vro &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# systemctl status kubelet&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;● kubelet.service - kubelet: The Kubernetes Node Agent
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;     Loaded: loaded &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;/etc/systemd/system/kubelet.service&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; enabled&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; preset: enabled&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;    Drop-In: /usr/lib/systemd/system/kubelet.service.d
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;             └─20-10-k8s-config.conf
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;     Active: active &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;running&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; since Fri 2025-05-30 14:55:17 UTC&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; hour ago
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;       Docs: http://kubernetes.io/docs/
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;   Main PID: &lt;span class=&#34;m&#34;&gt;12477&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;kubelet&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;      Tasks: &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;limit: 14297&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;     Memory: 144.8M
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;        CPU: 0h 24min 11.136s
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;     CGroup: /system.slice/kubelet.service
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;             ├─ &lt;span class=&#34;m&#34;&gt;12477&lt;/span&gt; /usr/bin/kubelet --config&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/var/lib/kubelet/config.yaml --kubeconfig&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/etc/kubernetes/kubelet.conf --bootstrap-kubeconfig&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/etc/kubernetes/kubelet-bootstrap.conf
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;             ├─ &lt;span class=&#34;m&#34;&gt;12481&lt;/span&gt; /bin/bash /opt/scripts/http-watchdog &lt;span class=&#34;m&#34;&gt;12477&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;20&lt;/span&gt; https://vro.vcf.lab:10250/healthz --cacert /etc/kubernetes/pki/ca.crt --cert /etc/kubernetes/pki/apiserver-kubelet-clie&amp;gt;
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;             └─182085 sleep &lt;span class=&#34;m&#34;&gt;96&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Pods are up and running.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vro &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# kubectl get po -n prelude&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;NAME                                      READY   STATUS    RESTARTS       AGE
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;contour-contour-77cbcf7fd5-ggzlt          1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;              1h
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;contour-envoy-hn6ff                       2/2     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;              1h
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;ndc-controller-manager-55b44d46b7-vpsqf   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;              1h
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;orchestration-ui-app-7cb66d9947-7w2s2     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;              1h
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;postgres-0                                1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;              1h
+&lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;proxy-service-54445dcf68-pv86x            1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;              1h
+&lt;span class=&#34;ln&#34;&gt;9&lt;/span&gt;vco-app-94cf5ffb9-kx9mm                   2/2     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;              1h
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;tt&gt;/etc/hosts&lt;/tt&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vro &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# cat /etc/hosts&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;127.0.0.1 localhost
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;127.0.0.1 photon-7b4cab7f611
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;127.0.0.1 vra-k8s.local
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;### k8s service hostnames follow. *.svc.cluster.local are automatically updated ###&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;10.244.6.164 pgpool.prelude.svc.cluster.local
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;10.244.7.59 proxy-service.prelude.svc.cluster.local
+&lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;10.244.5.161 vco-service.prelude.svc.cluster.local
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Operations Orchestrator started&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcf9-oo-bootstrap-fix/vcf_oo.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;HTH&lt;/p&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>VCF9 Automation - Adding external Orchestartor</title>
+      <link>https://kuklis.github.io/cma/post/vcfa9-external-orchestrator/</link>
+      <pubDate>Wed, 11 Jun 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://kuklis.github.io/cma/post/vcfa9-external-orchestrator/</guid>
+      <description>
+        
+          &lt;p&gt;How to install and configure an external Orchestator for your VCFA Organization&lt;/p&gt;
+&lt;div class=&#34;toc&#34;&gt;
+    &lt;H3&gt;Table of Contents&lt;/H3&gt;
+    &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#tenancy-and-embedded-orchestrator&#34;&gt;Tenancy and Embedded Orchestrator&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#installing-an-external-orchestator-instance&#34;&gt;Installing an External Orchestator instance&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#publish-orchestrator-rights-bundle&#34;&gt;Publish Orchestrator Rights Bundle&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#login-to-organization&#34;&gt;Login to Organization&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#add-integration&#34;&gt;Add Integration&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#logging-into-orchestrator&#34;&gt;Logging into Orchestrator&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#role-based-access-control&#34;&gt;Role Based Access Control&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#summary&#34;&gt;Summary&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+  &lt;/div&gt;
+&lt;h2 id=&#34;tenancy-and-embedded-orchestrator&#34;&gt;Tenancy and Embedded Orchestrator&lt;/h2&gt;
+&lt;p&gt;VCF Automation comes with tenancy built-in, called Organizations. The default &lt;tt&gt;Provider Consumption org&lt;/tt&gt; tenant is not meant to be used by user workloads (disabled by default). The system administrator is advised to create a new organization to consume IT services.&lt;/p&gt;
+&lt;p&gt;The appliance(s) running VCFA include an embedded Orchestrator component, just like the Aria Automation 8 version. However, the embedded Orchestrator is tied to the &lt;tt&gt;Provider Consumption org&lt;/tt&gt;, so any additional organization require an external Orchestrator instance configured for Automation extensibility.&lt;/p&gt;
+&lt;h2 id=&#34;installing-an-external-orchestator-instance&#34;&gt;Installing an External Orchestator instance&lt;/h2&gt;
+&lt;p&gt;Follow the official documentation to download and configure a standalone Orchestrator instance. At the time of writing this blog post only Orchestrator 8.18 documentation is available (VCF9 is still BETA), but make sure to download and install Orchestrator 9.x.&lt;/p&gt;
+&lt;p&gt;Until 9.0 released, follow the 8.18 install guide: &lt;a href=&#34;https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-automation/8-18/vco-installing-and-configuring-8-18/installing-and-upgrading-orchestrator/download-and-deploy-the-vco-va.html&#34;&gt;Download and Deploy the Automation Orchestrator Appliance&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Login to the appliance and configure authentication. Provide the System Administrator username (admin), the VCFA URL (&lt;tt&gt;https&lt;nolink&gt;://vra.vcf.lab&lt;/tt&gt;) and the tenant name (&lt;tt&gt;automation&lt;/tt&gt;) you want to connect the external appliance.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vro &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# vracli vro authentication set -p tm -f -k -u admin -hn https://vra.vcf.lab --tenant automation&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;Enter credentials &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; authentication &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;could be API token, Bearer Token, Password&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;:
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;The authentication provider has been successfully registered.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;(&lt;em&gt;In case an error message appears with validation error, try a possible fix described here: &lt;a href=&#34;https://kuklis.github.io/cma/cma/post/vcf9-oo-bootstrap-fix/&#34;&gt;VCF9 Operations Orchestartor - bootstrap fix&lt;/a&gt;&lt;/em&gt;)&lt;/p&gt;
+&lt;p&gt;Restart Orchestrator application.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vro &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# kubectl rollout restart deployment vco-app -n prelude&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;deployment.apps/vco-app restarted
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Watch the application restarted.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;root@vro &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; ~ &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# watch kubectl -n prelude get pods -l=app=vco-app&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It will show starting:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;Every 2.0s: kubectl -n prelude get pods -l=app=vco-app                                                                                                           vro.vcf.lab: Sun Jun  8 17:58:28 2025
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;NAME                      READY   STATUS     RESTARTS   AGE
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;vco-app-94cf5ffb9-kx9mm   0/2     Init:1/2   0          12s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Restart completed, pods are ready:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;Every 2.0s: kubectl -n prelude get pods -l=app=vco-app                                                                                                           vro.vcf.lab: Sun Jun  8 18:12:00 2025
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;NAME                      READY   STATUS    RESTARTS      AGE
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;vco-app-94cf5ffb9-kx9mm   2/2     Running   1 (33s ago)   13m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;br&gt;
+&lt;h2 id=&#34;publish-orchestrator-rights-bundle&#34;&gt;Publish Orchestrator Rights Bundle&lt;/h2&gt;
+&lt;p&gt;To togin to VCFA Provider Management, choose &lt;tt&gt;system&lt;/tt&gt; for organization name at your VCFA login URL to use Provider Management org.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/vcfa_choose_org.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+Login with your &lt;em&gt;System Administrator&lt;/em&gt; user created at install time (we used &lt;tt&gt;admin&lt;/tt&gt; here).&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/login_system.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+Publish the Rights bundle to the organization at &lt;tt&gt;Administration / Access Control / Rights Bundles&lt;/tt&gt;.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/rights_bundle.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+Enable it to the pre-created organization (our org is &lt;tt&gt;automation&lt;/tt&gt;).&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/enable_bundle.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h2 id=&#34;login-to-organization&#34;&gt;Login to Organization&lt;/h2&gt;
+&lt;p&gt;The &lt;em&gt;System Administrator&lt;/em&gt; user can login to any tenant and do initial configuration. First navigate to &lt;tt&gt;Infrastructure / Organizations&lt;/tt&gt; page, and click on the organization name.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/organizations.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+Click on &lt;tt&gt;Launch Organization Portal&lt;/tt&gt; link.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/org_portal.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h2 id=&#34;add-integration&#34;&gt;Add Integration&lt;/h2&gt;
+&lt;p&gt;Now within our &lt;tt&gt;automation&lt;/tt&gt; tenant let&#39;s setup external Orchestartor. Navigate to &lt;tt&gt;Administer / Connections / Integrations&lt;/tt&gt;, and click &lt;tt&gt;Add Integration&lt;/tt&gt;.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/add_integration.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+Choose &lt;tt&gt;Orchestrator&lt;/tt&gt; as integration type.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/integration_type.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+Provide a name and URL of the external appliance.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/new_integration.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+Accept certificate.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/cert.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+Credentials (we configured on the Orchestartor appliance earlier) are accepted.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/validated_successfully.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+After adding and reopening the integration, data collection starts.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/data_collection.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h2 id=&#34;logging-into-orchestrator&#34;&gt;Logging into Orchestrator&lt;/h2&gt;
+&lt;p&gt;Navigate to the external Orchestartor URL at least once to load the webservice certificate. Our &lt;em&gt;System Administrator&lt;/em&gt; user can login now. (This step may or may not be required.)&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/appliance.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+Now navigate to the Orchestrate tab of VCFA, it loads the integrated Orchestrator instance.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/orchestrate.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h2 id=&#34;role-based-access-control&#34;&gt;Role Based Access Control&lt;/h2&gt;
+&lt;p&gt;The Organization Administrator has all the privileges to use (administer) the Orchestrator instance associated. If we log out with the user &lt;em&gt;System Administrator&lt;/em&gt;, we can login to our tenant with the local user of the organization (Organization Administrator). Click on &lt;tt&gt;Change Organization&lt;/tt&gt; on VCF Automation login page, and type the name of your tenant (for us, it is &lt;tt&gt;automation&lt;/tt&gt;). Then login with tenant admin user.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/login_automation.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;We have configured LDAP as identity source (&lt;tt&gt;Administer / Identity Providers / LDAP&lt;/tt&gt;), so we can add additional organization users. Let&#39;s configure Orchestrator access to a regular organization user.&lt;/p&gt;
+&lt;p&gt;First we create a new role at &lt;tt&gt;Administer / Access Control / Roles / New&lt;/tt&gt;.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/add_role.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;At &lt;tt&gt;Users&lt;/tt&gt; tab we can import LDAP users. Let&#39;s search for the user and add &lt;tt&gt;Organization User&lt;/tt&gt; and &lt;tt&gt;Orchestrator Admin&lt;/tt&gt; (custom) role.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/import_users.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;em&gt;We have switched off &amp;quot;Inherit roles from groups&amp;quot; as it prevents the user to login to the organization. This is a BETA version bug that will be fixed in the released product.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Let&#39;s login with the imported user. &lt;tt&gt;user1&lt;/tt&gt; can use Orchestrator.&lt;br&gt;
+&lt;img src=&#34;https://kuklis.github.io/cma/cma/img/vcfa9-external-orchestrator/user_vro.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;The main steps again:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create an organization&lt;/li&gt;
+&lt;li&gt;Deploy an external Orchestrator&lt;/li&gt;
+&lt;li&gt;Setup Orchestrator authentication&lt;/li&gt;
+&lt;li&gt;Publish Rights Bundle&lt;/li&gt;
+&lt;li&gt;Add integration into org&lt;/li&gt;
+&lt;li&gt;RBAC setup&lt;/li&gt;
+&lt;/ul&gt;
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>
